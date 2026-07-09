@@ -1,0 +1,47 @@
+@import "tailwindcss";
+
+* {
+  scroll-behavior: smooth;
+  user-select: none;
+}
+body {
+  overflow-x: hidden;
+  width: 100%;
+  background-color: #E3E2DC;
+}
+body::-webkit-scrollbar {
+  display: none;
+}
+.scroller_none::-webkit-scrollbar {
+  display: none;
+}
+button {
+  cursor: pointer;
+}
+.center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.padding {
+  padding-inline: 1rem;
+}
+.container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding-inline: 1rem;
+  max-width: 1920px;
+  margin-inline: auto;
+}
+@media (min-width: 750px) {
+  .padding,
+  .container {
+    padding-inline: 2.5rem;
+  }
+}
+.cover {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
