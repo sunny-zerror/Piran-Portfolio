@@ -62,7 +62,7 @@ const ParticleSystem = ({ gridPositions, logoPositions, hasTarget }) => {
 
             // ── Bulge repulsion ──
             // Full strength in grid mode, 25% when logo is formed
-            float bulgeWeight = mix(1.0, 0.25, uMorph);
+            float bulgeWeight = mix(1.0, 0.45, uMorph);
 
             if (d < radius) {
               float f   = pow(1.0 - d / radius, 2.0);
