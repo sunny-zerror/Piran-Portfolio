@@ -4,6 +4,7 @@ import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { Flip } from 'gsap/dist/Flip';
 import { RiPlayFill } from '@remixicon/react';
+import LogoParticles from './LogoParticles';
 
 gsap.registerPlugin(Flip);
 
@@ -35,10 +36,8 @@ const Hero = () => {
 
   return (
     <div className="w-full h-screen relative bg-[#0B1A2C] text-white overflow-hidden">
-      
-      <div className="absolute inset-0 w-full h-full z-0 opacity-80 pointer-events-none center">
-        <img className="w-full h-full object-cover" src="/images/homepage/hero_bg.png" alt="" />
-      </div>
+
+      <LogoParticles />
 
       <div className="container  pb-5 relative z-10 w-full h-full flex flex-col justify-between  pointer-events-none">
         
