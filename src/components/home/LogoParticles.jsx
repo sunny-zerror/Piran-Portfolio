@@ -7,29 +7,38 @@ import * as THREE from 'three';
 const ParticleSystem = ({ gridPositions, logoPositions, hasTarget }) => {
   const pointsRef = useRef();
   const mouseWorld = useRef(new THREE.Vector3(9999, 9999, 0));
+  const previousMouseWorld = useRef(new THREE.Vector3(9999, 9999, 0));
+  const smoothedVelocity = useRef(0.0);
   const morphProgress = useRef(0);
   const inCenter = useRef(false);
 
-  // Global mouse tracking
+  // Global mouse tracking and intro animation
   useEffect(() => {
     const onMove = (e) => {
       mouseWorld.current.x = (e.clientX / window.innerWidth) * 2 - 1;
       mouseWorld.current.y = -(e.clientY / window.innerHeight) * 2 + 1;
-
-      // Center 30% zone check
-      const nx = e.clientX / window.innerWidth;
-      const ny = e.clientY / window.innerHeight;
-      inCenter.current = nx > 0.35 && nx < 0.65 && ny > 0.35 && ny < 0.65;
+      
+      if (previousMouseWorld.current.x === 9999) {
+        previousMouseWorld.current.x = mouseWorld.current.x;
+        previousMouseWorld.current.y = mouseWorld.current.y;
+      }
     };
     const onLeave = () => {
-      inCenter.current = false;
       mouseWorld.current.set(9999, 9999, 0);
+      previousMouseWorld.current.set(9999, 9999, 0);
     };
     window.addEventListener('mousemove', onMove);
     window.addEventListener('mouseleave', onLeave);
+    
+    // Intro animation: form logo after 1 second
+    const timeoutId = setTimeout(() => {
+      inCenter.current = true;
+    }, 1000);
+
     return () => {
       window.removeEventListener('mousemove', onMove);
       window.removeEventListener('mouseleave', onLeave);
+      clearTimeout(timeoutId);
     };
   }, []);
 
@@ -38,12 +47,14 @@ const ParticleSystem = ({ gridPositions, logoPositions, hasTarget }) => {
       new THREE.ShaderMaterial({
         uniforms: {
           uMouse: { value: new THREE.Vector3(9999, 9999, 0) },
+          uMouseVelocity: { value: 0.0 },
           uMorph: { value: 0.0 },
           uColor: { value: new THREE.Color('#ffffff') },
           uResolution: { value: new THREE.Vector2(1, 1) },
         },
         vertexShader: `
           uniform vec3  uMouse;
+          uniform float uMouseVelocity;
           uniform float uMorph;
           uniform vec2  uResolution;
 
@@ -58,11 +69,13 @@ const ParticleSystem = ({ gridPositions, logoPositions, hasTarget }) => {
             vec3 pos = mix(position, aLogoPos, uMorph);
 
             float d      = distance(pos.xy, uMouse.xy);
-            float radius = 1.8;
+            
+            // Base radius + scales up based on mouse speed
+            float radius = 1.5 + uMouseVelocity * 1.5;
 
             // ── Bulge repulsion ──
-            // Full strength in grid mode, 25% when logo is formed
-            float bulgeWeight = mix(1.0, 0.45, uMorph);
+            // Modulated by uMouseVelocity so it scales with movement speed
+            float bulgeWeight = mix(1.0, 0.65, uMorph) * uMouseVelocity * 1.5;
 
             if (d < radius) {
               float f   = pow(1.0 - d / radius, 2.0);
@@ -72,11 +85,12 @@ const ParticleSystem = ({ gridPositions, logoPositions, hasTarget }) => {
             }
 
             // ── Logo-mode: magnetic pull + spotlight glow ──
-            float glowRadius = 1.0;
+            float glowRadius = 1.0 + uMouseVelocity * 0.8;
             vGlow = 0.0;
 
             if (uMorph > 0.1 && d < glowRadius && aHasTarget > 0.5) {
-              float proximity = 1.0 - d / glowRadius;
+              // Fade effect when mouse stops moving
+              float proximity = (1.0 - d / glowRadius) * uMouseVelocity;
               float morphFactor = smoothstep(0.1, 0.6, uMorph);
 
               // Gentle magnetic pull toward cursor
@@ -90,8 +104,8 @@ const ParticleSystem = ({ gridPositions, logoPositions, hasTarget }) => {
             // Alpha: grid → 0.4 uniform │ logo → target 0.95, non-target 0
             vAlpha = mix(0.4, aHasTarget > 0.5 ? 0.95 : 0.0, uMorph);
 
-            // Size: grid → uniform 2.2 │ logo → target 3.8, non-target 0
-            float sz = mix(2.2, aHasTarget > 0.5 ? 3.8 : 0.0, uMorph);
+            // Size: grid → uniform 2.64 (+20%) │ logo → target 3.8, non-target 0
+            float sz = mix(2.64, aHasTarget > 0.5 ? 3.8 : 0.0, uMorph);
 
             // Spotlight: dots near cursor scale up in logo mode
             sz += vGlow * 1.8;
@@ -138,14 +152,32 @@ const ParticleSystem = ({ gridPositions, logoPositions, hasTarget }) => {
     // Mouse → world coords
     const mx = (mouseWorld.current.x * vp.width) / 2;
     const my = (mouseWorld.current.y * vp.height) / 2;
+    // Smoother easing for mouse tracking
     pointsRef.current.material.uniforms.uMouse.value.lerp(
       new THREE.Vector3(mx, my, 0),
-      0.08,
+      0.12, 
     );
+    
+    // Calculate instantaneous mouse velocity
+    let speed = 0;
+    if (mouseWorld.current.x !== 9999 && previousMouseWorld.current.x !== 9999) {
+      const dx = mouseWorld.current.x - previousMouseWorld.current.x;
+      const dy = mouseWorld.current.y - previousMouseWorld.current.y;
+      speed = Math.sqrt(dx * dx + dy * dy);
+    }
+    
+    previousMouseWorld.current.x = mouseWorld.current.x;
+    previousMouseWorld.current.y = mouseWorld.current.y;
+    
+    // Map speed to a reasonable range and smoothly ease it
+    const targetVelocity = Math.min(speed * 40.0, 1.2); 
+    smoothedVelocity.current += (targetVelocity - smoothedVelocity.current) * 0.1;
+    
+    pointsRef.current.material.uniforms.uMouseVelocity.value = smoothedVelocity.current;
 
     // Smooth morph easing
     const target = inCenter.current ? 1.0 : 0.0;
-    morphProgress.current += (target - morphProgress.current) * 0.12;
+    morphProgress.current += (target - morphProgress.current) * 0.084; // Slower by ~30%
     pointsRef.current.material.uniforms.uMorph.value = morphProgress.current;
 
     pointsRef.current.material.uniforms.uResolution.value.set(

@@ -57,11 +57,10 @@ const WorkBehindGrowth = () => {
             tl.to(`${parentSelector} .tags_btns`, {
                 scale: 1,
                 stagger: 0.1,
-                duration: 0.4,
-                ease: "power1.inOut"
+                ease: "back.out"
             }, 0);
 
-            tl.to(`.circ_${i+1}`, {
+            tl.to(`.circ_${i + 1}`, {
                 scale: 1,
                 backgroundColor: "white",
                 duration: 0.4,
@@ -83,7 +82,7 @@ const WorkBehindGrowth = () => {
 
     return (
         <>
-            <div className="container  bg-[#182532] mt-24 py-24 space-y-16">
+            <div className="container  bg-[#0B1A2C] mt-24 py-24 space-y-16">
                 <div className="w-full relative z-10 text-center">
                     <h2 className='leading-none text-white'>The Work Behind <br />   The Growth</h2>
                 </div>
