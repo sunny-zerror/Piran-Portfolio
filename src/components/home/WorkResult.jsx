@@ -1,50 +1,10 @@
 "use client";
 import React, { useEffect, useMemo, useRef, useState } from 'react'
-const DOT_SIZE = 12;
-const GAP = 6;
+import ExecutionCanvas from './canvasComponent/ExecutionCanvas';
+import CapitalAccess from './canvasComponent/CapitalAccess';
+import ClarityCanvas from './canvasComponent/ClarityCanvas';
 
 const WorkResult = () => {
-  const ref = useRef(null);
-
-  const [grid, setGrid] = useState({
-    rows: 0,
-    cols: 0,
-  });
-
-  const [hovered, setHovered] = useState(null);
-
-  useEffect(() => {
-    const update = () => {
-      if (!ref.current) return;
-
-      const { width, height } = ref.current.getBoundingClientRect();
-
-      const step = DOT_SIZE + GAP;
-
-      setGrid({
-        cols: Math.floor(width / step),
-        rows: Math.floor(height / step),
-      });
-    };
-
-    update();
-
-    const ro = new ResizeObserver(update);
-    ro.observe(ref.current);
-
-    return () => ro.disconnect();
-  }, []);
-
-  const barWidth = 3;
-
-  const barCount = Math.floor(grid.cols / barWidth);
-
-  const heights = useMemo(() => {
-    return Array.from({ length: barCount }, () =>
-      Math.floor(Math.random() * (grid.rows * 0.65)) +
-      Math.floor(grid.rows * 0.2)
-    );
-  }, [barCount, grid.rows]);
 
   return (
     <>
@@ -54,6 +14,8 @@ const WorkResult = () => {
           <p className='opacity-70 leading-tight col-span-2 text-lg'>Behind every result is a process built on clarity, creativity, and execution—transforming ideas into experiences that create lasting impact.</p>
         </div>
         <div className="w-full border border-black/20">
+
+
           <div className=" h-100 grid grid-cols-8 p-8">
             <div className="  col-span-3 flex flex-col justify-between">
               <div className="">
@@ -65,10 +27,16 @@ const WorkResult = () => {
               </div>
             </div>
             <div className=""></div>
-            <div className="  col-span-4 "></div>
+            <div className="  col-span-4 ">
+              <ClarityCanvas />
+            </div>
           </div>
+
+
           <div className=" h-100 grid grid-cols-8 p-8 text-white bg-[#0B1A2C]">
-            <div className="  col-span-4 "></div>
+            <div className="  col-span-4 ">
+              <ExecutionCanvas />
+            </div>
             <div className=""></div>
             <div className="  col-span-3 flex flex-col justify-between">
               <div className="">
@@ -80,6 +48,8 @@ const WorkResult = () => {
               </div>
             </div>
           </div>
+
+
           <div className="h-100 grid grid-cols-8 p-8">
             <div className="col-span-3 flex flex-col justify-between">
               <div>
@@ -98,56 +68,7 @@ const WorkResult = () => {
             <div />
 
             <div className="col-span-4">
-              <div
-                ref={ref}
-                className="w-full h-full grid"
-                style={{
-                  gridTemplateColumns: `repeat(${grid.cols}, ${DOT_SIZE}px)`,
-                  gridAutoRows: `${DOT_SIZE}px`,
-                  gap: `${GAP}px`,
-                }}
-              >
-                {Array.from({ length: grid.rows }).map((_, row) =>
-                  Array.from({ length: grid.cols }).map((_, col) => {
-                    const bar = Math.floor(col / barWidth);
-                    const inside = col % barWidth;
-
-                    let active = false;
-
-                    if (inside < 2 && bar < heights.length) {
-                      const current =
-                        hovered === bar ? grid.rows : heights[bar];
-
-                      active = row >= grid.rows - current;
-                    }
-
-                    return (
-                      <div
-                        key={`${row}-${col}`}
-                        onMouseEnter={() => inside < 2 && setHovered(bar)}
-                        onMouseLeave={() => setHovered(null)}
-                        className="flex items-center justify-center rounded-full bg-[#B7C19A]"
-                        style={{
-                          width: DOT_SIZE,
-                          height: DOT_SIZE,
-                        }}
-                      >
-                        <div
-                          className="rounded-full bg-white transition-transform duration-300 ease-out"
-                          style={{
-                            width: DOT_SIZE,
-                            height: DOT_SIZE,
-                            transform: `scale(${active ? 1 : 0})`,
-                            transitionDelay: active
-                              ? `${(grid.rows - row) * 18}ms` // bottom -> top
-                              : "0ms",
-                          }}
-                        />
-                      </div>
-                    );
-                  })
-                )}
-              </div>
+              <CapitalAccess />
             </div>
           </div>
         </div>

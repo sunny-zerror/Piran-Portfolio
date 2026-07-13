@@ -3,6 +3,8 @@ import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import React from 'react'
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
+import WorkBehindBg from './WorkBehindBg';
+import { WavePlaneCanvas } from './canvasComponent/Waveplane3d';
 gsap.registerPlugin(ScrollTrigger)
 
 const data = [
@@ -82,7 +84,7 @@ const WorkBehindGrowth = () => {
 
     return (
         <>
-            <div className="container  bg-[#0B1A2C] mt-24 py-24 space-y-16">
+            <div className="container  bg-[#0B1A2C] mt-24 pt-24 space-y-16">
                 <div className="w-full relative z-10 text-center">
                     <h2 className='leading-none text-white'>The Work Behind <br />   The Growth</h2>
                 </div>
@@ -117,8 +119,11 @@ const WorkBehindGrowth = () => {
                     ))}
                 </div>
 
-                <img className='absolute inset-0 cover ' src="/images/homepage/workResult/wave_stroke_bg.png" alt="" />
             </div>
+                <div className="w-full h-[60vh] bg-[#0B1A2C] relative">
+                    {/* <WorkBehindBg /> */}
+                    <WavePlaneCanvas/>
+                </div>
         </>
     )
 }

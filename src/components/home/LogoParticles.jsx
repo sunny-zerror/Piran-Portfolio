@@ -78,7 +78,8 @@ const ParticleSystem = ({ gridPositions, logoPositions, hasTarget }) => {
             float bulgeWeight = mix(1.0, 0.65, uMorph) * uMouseVelocity * 1.5;
 
             if (d < radius) {
-              float f   = pow(1.0 - d / radius, 2.0);
+              // smoothstep creates a smooth, rounded bell curve rather than a pointed tip
+              float f   = smoothstep(radius, 0.0, d);
               vec2  dir = normalize(pos.xy - uMouse.xy + 0.0001);
               pos.xy   += dir * f * 0.6 * bulgeWeight;
               pos.z    += f * 0.4 * bulgeWeight;
@@ -89,8 +90,8 @@ const ParticleSystem = ({ gridPositions, logoPositions, hasTarget }) => {
             vGlow = 0.0;
 
             if (uMorph > 0.1 && d < glowRadius && aHasTarget > 0.5) {
-              // Fade effect when mouse stops moving
-              float proximity = (1.0 - d / glowRadius) * uMouseVelocity;
+              // Smooth rounded falloff for the glow/pull effect
+              float proximity = smoothstep(glowRadius, 0.0, d) * uMouseVelocity;
               float morphFactor = smoothstep(0.1, 0.6, uMorph);
 
               // Gentle magnetic pull toward cursor

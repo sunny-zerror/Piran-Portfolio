@@ -2,7 +2,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { RiArrowRightUpLine, RiArrowUpLine } from '@remixicon/react';
-import FooterWave from './FooterWave';
+import FooterPhysicsBalls from './FooterPhysicsBalls';
 
 const Footer = () => {
   const scrollToTop = () => {
@@ -15,7 +15,7 @@ const Footer = () => {
     <div className="w-full bg-[#883F27] text-white relative">
       {/* CTA / Wave Section */}
       <div className="w-full h-[80vh] relative flex flex-col items-center py-24 text-center overflow-hidden">
-        <div className="relative z-10 flex flex-col items-center gap-y-5">
+        <div className="relative pointer-events-none z-10 flex flex-col items-center gap-y-5">
           <p className="text-sm font-medium opacity-90">Get Started Now</p>
           <h2 className="leading-none">Building Something<br/>Worth Lasting?</h2>
           <button className="bg-white text-[#883F27] rounded-full  px-6 hover:pl-2 leading-none h-12 text-sm group   transition-all duration-300 flex items-center gap-2">
@@ -25,7 +25,7 @@ const Footer = () => {
             START A CONVERSATION
           </button>
         </div>
-        <FooterWave />
+        <FooterPhysicsBalls />
       </div>
 
       <div className="container py-12 relative z-10">
