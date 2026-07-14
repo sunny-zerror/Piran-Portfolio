@@ -21,6 +21,7 @@ const growthPartnersData = Array.from({ length: 18 }).map((_, i) => ({
     description: ""
 }));
 
+
 const Partners = () => {
     const [selectedPartner, setSelectedPartner] = useState(null);
     const [isDescOpen, setIsDescOpen] = useState(false);
