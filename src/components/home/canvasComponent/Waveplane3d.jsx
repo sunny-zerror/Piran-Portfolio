@@ -27,6 +27,7 @@ uniform float uScrollProgress;
 uniform vec2  uMouseOffset;
 varying vec2  vUv;
 varying float vTerrainHeight;
+varying vec2  vScreenPos;
 
 // Simplex 3D Noise
 vec3 mod289v3(vec3 x){return x-floor(x*(1./289.))*289.;}
@@ -101,6 +102,7 @@ void main(){
   
   vTerrainHeight = newPosition.z;
   vUv = uv;
+  vScreenPos = projectedPosition.xy / projectedPosition.w;
   gl_Position = projectedPosition;
 }
 `;
@@ -113,6 +115,7 @@ uniform bool  uShowGrid;
 uniform float uGridSize;
 varying vec2  vUv;
 varying float vTerrainHeight;
+varying vec2  vScreenPos;
 
 void main(){
   // Line thickness
@@ -134,8 +137,10 @@ void main(){
   float dist = distance(vUv, vec2(0.5, 0.5));
   float fog = smoothstep(0.5, 0.15, dist);
   
-  // Mix background and line color based on line alpha and fog
-  vec3 finalColorRGB = mix(bgColor, lineCol, alphaY * fog);
+  // Screen-space bottom gradient fade (exactly matches the old HTML overlay)
+  // vScreenPos.y goes from -1 (bottom of screen) to 1 (top of screen)
+  float bottomFade = smoothstep(-1.0, 0.0, vScreenPos.y);
+  vec3 finalColorRGB = mix(bgColor, lineCol, alphaY * fog * bottomFade);
   
   // The plane itself is now completely opaque to occlude the moon
   vec4 finalColour = vec4(finalColorRGB, 1.0);
