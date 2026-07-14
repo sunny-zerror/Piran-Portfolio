@@ -38,8 +38,8 @@ const Partners = () => {
     return (
         <div className="container bg-[#0B1A2C]  text-white font-sans relative h-[200vh]!">
 
-            <div className=" sticky  pt-24 top-0 h-screen ">
-                <div className="grid gap-x-20 grid-cols-3">
+            <div className=" sticky  pt-24 top-0 h-screen flex items-center w-full ">
+                <div className=" w-full grid gap-x-20 grid-cols-3">
 
                     <div className="w-full flex flex-col justify-between col-span-1">
                         <h2 data-para-effect className="leading-none">Ventures Founded</h2>
@@ -61,8 +61,8 @@ const Partners = () => {
                 </div>
             </div>
 
-            <div className=" pt-24 bg-[#0B1A2C] z-10 relative h-screen">
-                <div className="grid gap-x-20 grid-cols-3">
+            <div className=" pt-24 bg-[#0B1A2C] z-10 relative h-screen flex items-center w-full">
+                <div className=" w-full grid gap-x-20 grid-cols-3">
 
                     <div className="w-full col-span-1 flex  flex-col justify-between ">
                         <h2 data-para-effect className="leading-none">Growth Partners</h2>

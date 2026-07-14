@@ -4,7 +4,7 @@ import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 
 // Exact dimensions from the image
-const ROWS = 18;
+const ROWS = 16;
 const COLS = 33;
 const PAD_X = 2; // 2 columns padding on left/right
 const PAD_Y = 2; // 2 rows padding on top/bottom
@@ -12,7 +12,7 @@ const PAD_Y = 2; // 2 rows padding on top/bottom
 const BAR_WIDTH = 2;
 const GAP = 1;
 const DOT_SIZE = 1;
-const DOT_SPACING = 1.4;
+const DOT_SPACING = 1.2;
 
 const Dots = () => {
     const borderMeshRef = useRef();

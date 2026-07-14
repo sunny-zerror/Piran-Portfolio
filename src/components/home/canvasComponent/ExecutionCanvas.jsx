@@ -1,37 +1,13 @@
 "use client";
-import React, { useRef, useMemo, useEffect } from 'react';
+import React, { useRef, useMemo, useEffect, useState } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 
-// 42x21 pixel matrix forming exactly the image pattern
-const horseMask = [
-    "..........................................",
-    ".........................s................",
-    "........................s.O...............",
-    "......................O.O.................",
-    "......................O.x.................",
-    ".......................x.x..x.x.x.s.O.....",
-    "........................x.x.x.x.x.x.x.x...",
-    ".......................s.x.x.x.O.s.O.O.O..",
-    "....O.O.O.O.s.s.s.O.O.O.O.O.s.x.x.s.O.s.s.",
-    "....O.O.s.O..x.O.s.O.O.x.s.O.O.x.x.x.s.s..",
-    "........s.x.O.O.O.O.O.s.O.O.s.O.x.x.......",
-    ".........x.x.O.O.O.O.O.O.O.x.O.O.s........",
-    ".........x.O.x.O.O.O.O.O.x.O.x.O.s........",
-    "..........O.x.O.s.O.O.O.s.x.x.O.s.........",
-    "..........x.x.O.x...O.x.s...x.s...........",
-    "...........O.O.s....O.s......x.s..........",
-    ".........s..s.......O.........s...........",
-    "...O.O..................O.................",
-    "..................................O.......",
-    "...................................s......",
-    "..........................................",
-];
-
-const ROWS = horseMask.length;
-const COLS = horseMask[0].length;
+import { horseFrames } from './horseFrames';
+const ROWS = horseFrames[0].length;
+const COLS = horseFrames[0][0].length;
 const DOT_SIZE = 1;
-const DOT_SPACING = 1.3;
+const DOT_SPACING = 1.2;
 
 const Dots = () => {
     const bgMeshRef = useRef();
@@ -44,6 +20,9 @@ const Dots = () => {
     const fgDummy = useMemo(() => new THREE.Object3D(), []);
     const dmDummy = useMemo(() => new THREE.Object3D(), []);
     const smDummy = useMemo(() => new THREE.Object3D(), []);
+
+    const [isHovered, setIsHovered] = useState(false);
+    const timeAcc = useRef(0);
 
     // Create a stable random array for initial phases to make the wave organic
     const randomPhases = useMemo(() => {
@@ -65,7 +44,7 @@ const Dots = () => {
             for (let c = 0; c < COLS; c++) {
                 const posX = startX + c * DOT_SPACING;
                 const posY = startY - r * DOT_SPACING;
-                const char = horseMask[r][c];
+                const char = horseFrames[0][r][c];
 
                 // Setup background static dots
                 if (bgMeshRef.current) {
@@ -109,9 +88,13 @@ const Dots = () => {
         if (smallMeshRef.current) smallMeshRef.current.instanceMatrix.needsUpdate = true;
     }, [bgDummy, fgDummy, dmDummy, smDummy]);
 
-    useFrame((state) => {
+    useFrame((state, delta) => {
         if (!fgMeshRef.current) return;
-        const time = state.clock.getElapsedTime();
+        
+        // Normal speed = 0.48 (1.2x of previous 0.4), Hover speed = 0.576 (1.2x of normal)
+        const speedMultiplier = isHovered ? 2.5 : 1;
+        timeAcc.current += delta * speedMultiplier;
+        
         let i = 0;
 
         const totalWidth = COLS * DOT_SPACING;
@@ -119,22 +102,25 @@ const Dots = () => {
         const startX = -totalWidth / 2 + DOT_SPACING / 2;
         const startY = totalHeight / 2 - DOT_SPACING / 2;
 
+        const frameIndex = Math.floor(timeAcc.current * 12) % horseFrames.length;
+
+        // Jump logic removed as requested
+
         for (let r = 0; r < ROWS; r++) {
             for (let c = 0; c < COLS; c++) {
-                const isHorse = horseMask[r][c] === 'O';
+                const isHorse = horseFrames[frameIndex][r][c] === 'O';
 
                 if (isHorse) {
-                    // Create a dynamic, flowing wave animation passing horizontally
-                    const wave = Math.sin(c * 0.4 + r * 0.2 - time * 5 + randomPhases[i] * 0.8);
-
-                    // Scale oscillates organically between 0.3 and 1.2
-                    const scale = 0.75 + wave * 0.45;
-                    fgDummy.position.set(startX + c * DOT_SPACING, startY - r * DOT_SPACING, 0);
-                    fgDummy.scale.setScalar(scale);
+                    fgDummy.position.set(
+                        startX + c * DOT_SPACING, 
+                        startY - r * DOT_SPACING, 
+                        0 // flat, no wave effect
+                    );
+                    fgDummy.scale.setScalar(1.0); // equal size to dummy dots
                     fgDummy.updateMatrix();
                     fgMeshRef.current.setMatrixAt(i, fgDummy.matrix);
                 } else {
-                    // Make sure animated layer is hidden for non-horse dots
+                    // Animated layer hidden for non-horse dots
                     fgDummy.scale.setScalar(0);
                     fgDummy.updateMatrix();
                     fgMeshRef.current.setMatrixAt(i, fgDummy.matrix);
@@ -148,24 +134,28 @@ const Dots = () => {
     const gridWidth = COLS * DOT_SPACING;
     const gridHeight = ROWS * DOT_SPACING;
 
-    // Scale to fit perfectly in the container
+    // Scale to fit dynamically on all devices without cropping (leaving a 5% margin)
     const scale = Math.min(viewport.width / gridWidth, viewport.height / gridHeight) * 0.95;
 
     return (
         <group scale={scale}>
+            <mesh position={[0, 0, 2]} onPointerOver={() => setIsHovered(true)} onPointerOut={() => setIsHovered(false)}>
+                <planeGeometry args={[gridWidth, gridHeight]} />
+                <meshBasicMaterial transparent opacity={0} depthWrite={false} />
+            </mesh>
             <instancedMesh ref={bgMeshRef} args={[null, null, ROWS * COLS]}>
                 <circleGeometry args={[DOT_SIZE * 0.5, 32]} />
-                <meshBasicMaterial color="#1E2A3A" />
+                <meshBasicMaterial color="#ffffff" transparent opacity={0.05} />
             </instancedMesh>
 
             <instancedMesh ref={smallMeshRef} args={[null, null, ROWS * COLS]}>
                 <circleGeometry args={[DOT_SIZE * 0.15, 32]} />
-                <meshBasicMaterial color="#ffffff" transparent opacity={0.8} depthTest={false} />
+                <meshBasicMaterial color="#ffffff" transparent opacity={0.05} depthTest={false} />
             </instancedMesh>
 
             <instancedMesh ref={dummyMeshRef} args={[null, null, ROWS * COLS]}>
                 <circleGeometry args={[DOT_SIZE * 0.45, 32]} />
-                <meshBasicMaterial color="#ffffff" transparent opacity={0.4} depthTest={false} />
+                <meshBasicMaterial color="#ffffff" transparent opacity={0.05} depthTest={false} />
             </instancedMesh>
 
             <instancedMesh ref={fgMeshRef} args={[null, null, ROWS * COLS]}>
