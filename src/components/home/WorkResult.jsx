@@ -10,8 +10,8 @@ const WorkResult = () => {
     <>
       <div className="container pt-24 space-y-16 bg-[#E3E2DC]">
         <div className="w-full grid grid-cols-6 items-end">
-          <h2 className=' col-span-4 leading-none'>The Work Behind <br /> the Results</h2>
-          <p className='opacity-70 leading-tight col-span-2 text-lg'>Behind every result is a process built on clarity, creativity, and execution—transforming ideas into experiences that create lasting impact.</p>
+          <h2 data-para-effect className=' col-span-4 leading-none'>The Work Behind <br /> the Results</h2>
+          <p data-para-effect className='opacity-70 leading-tight col-span-2 text-lg'>Behind every result is a process built on clarity, creativity, and execution—transforming ideas into experiences that create lasting impact.</p>
         </div>
         <div className="w-full border border-black/20">
 
@@ -22,7 +22,7 @@ const WorkResult = () => {
                 <img src="/images/homepage/workResult/clarity.svg" alt="" />
               </div>
               <div className="space-y-2">
-                <h4>Clarity</h4>
+                <h4 data-para-effect>Clarity</h4>
                 <p className='opacity-70 leading-tight'>I help founders define positioning, sharpen strategic direction, clarify market relevance, and establish a narrative that aligns teams, investors, customers, and partners around the same future.</p>
               </div>
             </div>
@@ -43,7 +43,7 @@ const WorkResult = () => {
                 <img src="/images/homepage/workResult/execution.svg" alt="" />
               </div>
               <div className="space-y-2">
-                <h4>Execution</h4>
+                <h4 data-para-effect>Execution</h4>
                 <p className='opacity-70 leading-tight'>Together, we translate ideas into operating realities—aligning leadership, decision-making, priorities, partnerships, and growth initiatives around a coherent strategic framework.</p>
               </div>
             </div>
@@ -57,7 +57,7 @@ const WorkResult = () => {
               </div>
 
               <div className="space-y-2">
-                <h4>Capital Access</h4>
+                <h4 data-para-effect>Capital Access</h4>
                 <p className="opacity-70 leading-tight">
                   I help companies become investment-ready by strengthening the narrative,
                   strategic positioning, and credibility required to engage investors.

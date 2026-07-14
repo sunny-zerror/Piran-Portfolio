@@ -42,8 +42,8 @@ const Partners = () => {
                 <div className="grid gap-x-20 grid-cols-3">
 
                     <div className="w-full flex flex-col justify-between col-span-1">
-                        <h2 className="leading-none">Ventures Founded</h2>
-                        <p className="opacity-60 leading-tight col-span-2 text-lg">Companies built from the <br /> ground up.</p>
+                        <h2 data-para-effect className="leading-none">Ventures Founded</h2>
+                        <p data-para-effect className="opacity-60 leading-tight col-span-2 text-lg">Companies built from the <br /> ground up.</p>
                     </div>
                     <div className="w-full col-span-2 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2">
                         {venturesData.map((item,i) => (
@@ -65,8 +65,8 @@ const Partners = () => {
                 <div className="grid gap-x-20 grid-cols-3">
 
                     <div className="w-full col-span-1 flex  flex-col justify-between ">
-                        <h2 className="leading-none">Growth Partners</h2>
-                        <p className="opacity-60 leading-tight col-span-2 text-lg">Businesses supported <br /> through investment and <br /> strategic growth.</p>
+                        <h2 data-para-effect className="leading-none">Growth Partners</h2>
+                        <p data-para-effect className="opacity-60 leading-tight col-span-2 text-lg">Businesses supported <br /> through investment and <br /> strategic growth.</p>
                     </div>
                     <div className="w-full col-span-2  items-start content-start grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
                         {growthPartnersData.map((item,i) => (
@@ -97,7 +97,7 @@ const Partners = () => {
                         <div className="bg-[#0B1A2C10] rounded-2xl p-6">
                             <div className="flex items-center gap-3 mb-8">
                                 <div className="w-8 h-8 bg-[#883F27] rounded-sm transform rotate-45 flex-shrink-0 mt-1"></div>
-                                <h3 className="text-4xl font-bold text-[#883F27] tracking-tight">{dummyDetails.name}</h3>
+                                <h3 data-para-effect className="text-4xl font-bold text-[#883F27] tracking-tight">{dummyDetails.name}</h3>
                             </div>
 
                             <div className="flex flex-wrap items-center justify-between mb-8 gap-4">

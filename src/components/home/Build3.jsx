@@ -96,7 +96,7 @@ const Build3 = () => {
 
                     {/* Text Overlay (Z-index higher than cards) */}
                     <div className="absolute inset-0 flex flex-col items-center justify-center z-50 ">
-                        <h2 className="text-center leading-none">
+                        <h2 data-para-effect className="text-center uppercase leading-none">
                             Currently Building<br />Fintech Infrastructure
                         </h2>
 
@@ -113,10 +113,10 @@ const Build3 = () => {
                 </div>
 
                 {/* Bottom Text Elements */}
-                <h5 className="absolute bottom-10 left-6 md:left-12  uppercase z-50  leading-tight">
-                    INTO BUILD3,<br />BUILDING AGAIN
+                <h5 data-para-effect className="absolute bottom-10 left-6 md:left-12   z-50  leading-tight">
+                    Into Build3,<br />Building Again
                 </h5>
-                <h5 className="absolute bottom-10 right-6 md:right-12 leading-tight z-50">
+                <h5 data-para-effect className="absolute bottom-10 right-6 md:right-12 leading-tight z-50">
                     2026
                 </h5>
 

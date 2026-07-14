@@ -86,7 +86,7 @@ const WorkBehindGrowth = () => {
         <>
             <div className="container  bg-[#0B1A2C] mt-24 pt-24 space-y-16">
                 <div className="w-full relative z-10 text-center">
-                    <h2 className='leading-none text-white'>The Work Behind <br />   The Growth</h2>
+                    <h2 data-para-effect className='leading-none text-white'>The Work Behind <br />   The Growth</h2>
                 </div>
 
                 <div className="anim_pren relative z-10 space-y-5">
@@ -121,7 +121,6 @@ const WorkBehindGrowth = () => {
 
             </div>
                 <div className="w-full h-[60vh] bg-[#0B1A2C] relative">
-                    {/* <WorkBehindBg /> */}
                     <WavePlaneCanvas/>
                 </div>
         </>

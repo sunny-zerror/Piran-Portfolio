@@ -14,6 +14,7 @@ import React, {
   useEffect,
   useMemo,
   useRef,
+  useState,
 } from "react";
 import * as THREE from "three";
 import { ShaderMaterial, Vector3 } from "three";
@@ -115,7 +116,7 @@ varying float vTerrainHeight;
 
 void main(){
   // Line thickness
-  float thick = 0.03;
+  float thick = 0.12;
   
   // Flow lines based on mouse offset and time to match ocean direction
   float linePosY = fract(vUv.y * uGridSize - uMouseOffset.y * 2.0 - uTime * 0.05);
@@ -126,18 +127,22 @@ void main(){
   // Warm gold / beige color from the image
   vec3 lineCol = vec3(0.82, 0.73, 0.58);
   
-  // The background is completely transparent so the underlying dark blue shows through
-  vec4 finalColour = vec4(lineCol, alphaY);
+  // Background color #0B1A2C
+  vec3 bgColor = vec3(0.0431, 0.1020, 0.1725);
   
-  // Soft radial fade-out (fog) at the edges of the plane
+  // Soft radial fade-out (fog) at the edges of the plane for the lines
   float dist = distance(vUv, vec2(0.5, 0.5));
   float fog = smoothstep(0.5, 0.15, dist);
   
-  finalColour.a *= fog;
+  // Mix background and line color based on line alpha and fog
+  vec3 finalColorRGB = mix(bgColor, lineCol, alphaY * fog);
   
-  // Only show if grid is enabled, else transparent
+  // The plane itself is now completely opaque to occlude the moon
+  vec4 finalColour = vec4(finalColorRGB, 1.0);
+  
+  // Only show if grid is enabled
   if (!uShowGrid) {
-    finalColour.a = 0.0;
+    finalColour = vec4(bgColor, 1.0);
   }
 
   gl_FragColor = finalColour;
@@ -241,10 +246,17 @@ const WavePlane = ({
         uShowGrid={showGrid}
         uGridSize={60}
         transparent
+        depthWrite={false}
       />
     </mesh>
   );
 };
+
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useGSAP } from "@gsap/react";
+
+gsap.registerPlugin(ScrollTrigger);
 
 // ─── Moon Globe Component ──────────────────────────────────────────────────
 
@@ -335,23 +347,100 @@ const MoonGlobe = () => {
           }
         `,
         transparent: true,
+        depthWrite: false,
       }),
     []
   );
 
   const sphereRef = useRef();
+  const [isDragging, setIsDragging] = useState(false);
+  const velocity = useRef({ x: 0.002, y: 0.005 });
+  const targetVelocity = useRef({ x: 0.002, y: 0.005 });
+  const lastPointer = useRef({ x: 0, y: 0, time: 0 });
+  const { gl } = useThree();
 
-  useFrame((state) => {
-    if (sphereRef.current) {
-      sphereRef.current.rotation.y = state.clock.elapsedTime * 0.05;
-      sphereRef.current.rotation.x = state.clock.elapsedTime * 0.02;
-      // Fixed position, no mousemove parallax
+  useGSAP(() => {
+    gsap.fromTo(
+      sphereRef.current.position,
+      { y: -4.0 }, // Starts fully hidden below
+      {
+        y: 0,   // Animates to 80% hidden behind stroke
+        duration: 1.5,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: gl.domElement,
+          start: "top center",
+          toggleActions: "play none none reverse"
+        }
+      }
+    );
+  }, { scope: gl.domElement });
+
+  useFrame(() => {
+    if (sphereRef.current && !isDragging) {
+      // Smoothly interpolate velocity towards target steady state
+      velocity.current.x += (targetVelocity.current.x - velocity.current.x) * 0.05;
+      velocity.current.y += (targetVelocity.current.y - velocity.current.y) * 0.05;
+      
+      sphereRef.current.rotation.x += velocity.current.x;
+      sphereRef.current.rotation.y += velocity.current.y;
     }
   });
 
+  const handlePointerDown = (e) => {
+    e.stopPropagation();
+    setIsDragging(true);
+    e.target.setPointerCapture(e.pointerId);
+    lastPointer.current = { x: e.clientX, y: e.clientY, time: performance.now() };
+  };
+
+  const handlePointerMove = (e) => {
+    if (isDragging && sphereRef.current) {
+      e.stopPropagation();
+      const now = performance.now();
+      const dt = Math.max(1, now - lastPointer.current.time);
+      const dx = e.clientX - lastPointer.current.x;
+      const dy = e.clientY - lastPointer.current.y;
+      
+      // Instant 1:1 rotation drag
+      sphereRef.current.rotation.y += dx * 0.01;
+      sphereRef.current.rotation.x += dy * 0.01;
+      
+      // Calculate velocity (radians per 16ms frame)
+      const vx = (dy * 0.01) / dt * 16;
+      const vy = (dx * 0.01) / dt * 16;
+      
+      velocity.current = { x: vx, y: vy };
+      lastPointer.current = { x: e.clientX, y: e.clientY, time: now };
+    }
+  };
+
+  const handlePointerUp = (e) => {
+    e.stopPropagation();
+    setIsDragging(false);
+    e.target.releasePointerCapture(e.pointerId);
+    
+    // Set continuous steady rotation based on throw direction
+    const vy = velocity.current.y;
+    const vx = velocity.current.x;
+    
+    const steadyY = vy >= 0 ? 0.005 : -0.005;
+    const steadyX = vx >= 0 ? 0.002 : -0.002;
+    
+    targetVelocity.current = { x: steadyX, y: steadyY };
+  };
+
   return (
-    <mesh ref={sphereRef} position={[0, 0.5, -2]}>
-      <sphereGeometry args={[1.5, 64, 64]} />
+    <mesh 
+      ref={sphereRef} 
+      position={[0, -0.8, -4]}
+      renderOrder={-1}
+      onPointerDown={handlePointerDown}
+      onPointerMove={handlePointerMove}
+      onPointerUp={handlePointerUp}
+      onPointerOut={handlePointerUp}
+    >
+      <sphereGeometry args={[2.5, 64, 64]} />
       <primitive object={material} attach="material" />
     </mesh>
   );
@@ -391,7 +480,7 @@ export const WavePlaneCanvas = ({
       className={className}
       camera={{ position: [0, 0, 5], fov: 60, far: 20, near: 0.001 }}
       gl={{ alpha: true, antialias: false, powerPreference: "high-performance" }}
-      style={{ background: "transparent" }}
+      style={{ background: "#0B1A2C" }}
     >
       <MoonGlobe />
       <WavePlane showGrid={showGrid} palette={palette} />

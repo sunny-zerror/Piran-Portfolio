@@ -46,3 +46,15 @@ button {
   height: 100%;
   object-fit: cover;
 }
+
+.line-wrapper {
+  overflow: hidden;
+  width: 100%;
+  height: fit-content;
+  display: block;
+}
+.split-line {
+  display: block;
+  text-align: inherit;
+  will-change: transform;
+}

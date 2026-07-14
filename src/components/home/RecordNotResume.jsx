@@ -43,10 +43,10 @@ const RecordNotResume = () => {
             <div className="grid grid-cols-3 gap-x-20">
 
                 <div className="w-full col-span-1 flex flex-col justify-between">
-                    <h2 className="leading-none">
+                    <h2 data-para-effect className="leading-none">
                         A Record, <br /> Not A Resume
                     </h2>
-                    <p className="opacity-70 leading-tight text-lg">
+                    <p data-para-effect className="opacity-70 leading-tight text-lg">
                         Creating meaningful outcomes <br /> through strategy, action, and <br /> partnership.
                     </p>
                 </div>
@@ -60,7 +60,7 @@ const RecordNotResume = () => {
                                     </div>
                             </div>
                             <div className="">
-                            <h4 className="">7+ Years</h4>
+                            <h4 data-para-effect className="">7+ Years</h4>
                             <p className=" opacity-60 leading-tight">Building trusted relationships that drive <br /> meaningful business outcomes.</p>
                             </div>
                         </div>
@@ -73,7 +73,7 @@ const RecordNotResume = () => {
                                     </div>
                                 </div>
                                 <div className="">
-                                <h4 className="">150+</h4>
+                                <h4 data-para-effect className="">150+</h4>
                                 <p className="opacity-60 leading-tight">Founders & Leaders Advised</p>
                                 </div>
                             </div>
@@ -84,7 +84,7 @@ const RecordNotResume = () => {
                                     </div>
                                 </div>
                                 <div className="">
-                                <h4 className="">5</h4>
+                                <h4 data-para-effect className="">5</h4>
                                 <p className="opacity-60 leading-tight">Continents Worked Across</p>
                                 </div>
                             </div>

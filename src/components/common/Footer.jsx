@@ -16,8 +16,8 @@ const Footer = () => {
       {/* CTA / Wave Section */}
       <div className="w-full h-[80vh] relative flex flex-col items-center py-24 text-center overflow-hidden">
         <div className="relative pointer-events-none z-10 flex flex-col items-center gap-y-5">
-          <p className="text-sm font-medium opacity-90">Get Started Now</p>
-          <h2 className="leading-none">Building Something<br/>Worth Lasting?</h2>
+          <p data-para-effect className="text-sm font-medium opacity-90">Get Started Now</p>
+          <h2 data-para-effect className="leading-none">Building Something<br/>Worth Lasting?</h2>
           <button className="bg-white text-[#883F27] rounded-full  px-6 hover:pl-2 leading-none h-12 text-sm group   transition-all duration-300 flex items-center gap-2">
             <span className="w-2 h-2 center text-white group-hover:h-8 group-hover:w-8 rounded-full bg-[#883F27] transition-all duration-300">
               <RiArrowRightUpLine className={` scale-0 group-hover:scale-100 transition-all duration-300`}/>
@@ -50,7 +50,7 @@ const Footer = () => {
         <div className="flex flex-col md:flex-row justify-between items-start mb-10">
           {/* Left Text */}
           <div className="max-w-[340px]">
-            <p className="text-lg leading-tight">
+            <p data-para-effect className="text-lg leading-tight">
               Start Compounding Your Brand Equity<br/> for Long-Term Business Growth.
             </p>
           </div>

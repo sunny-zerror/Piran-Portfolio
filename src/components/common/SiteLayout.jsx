@@ -10,6 +10,7 @@ import gsap from "gsap";
 import ScrollTrigger from "gsap/dist/ScrollTrigger";
 import { ViewTransitions } from "next-view-transitions";
 import ZerrorSignature from "./ZerrorSignature";
+import GlobalParaReveal from "../animation/GlobalParaReveal";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -45,6 +46,9 @@ export default function SiteLayout({ children }) {
     <ViewTransitions>
       <ZerrorSignature />
       <LenisScroll>
+
+        <GlobalParaReveal />
+
         <header>
           <Header />
         </header>
