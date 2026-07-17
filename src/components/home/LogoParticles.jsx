@@ -4,11 +4,10 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 
 /* ═══════════════════════ Particle System ═══════════════════════ */
-const ParticleSystem = ({ gridPositions, logoPositions, hasTarget }) => {
+const ParticleSystem = ({ gridPositions, logoPositions, randomDirs, edgeDists, hasTarget }) => {
   const pointsRef = useRef();
   const mouseWorld = useRef(new THREE.Vector3(9999, 9999, 0));
-  const previousMouseWorld = useRef(new THREE.Vector3(9999, 9999, 0));
-  const smoothedVelocity = useRef(0.0);
+  const hoverStrength = useRef(0.0);
   const morphProgress = useRef(0);
   const inCenter = useRef(false);
 
@@ -17,19 +16,13 @@ const ParticleSystem = ({ gridPositions, logoPositions, hasTarget }) => {
     const onMove = (e) => {
       mouseWorld.current.x = (e.clientX / window.innerWidth) * 2 - 1;
       mouseWorld.current.y = -(e.clientY / window.innerHeight) * 2 + 1;
-      
-      if (previousMouseWorld.current.x === 9999) {
-        previousMouseWorld.current.x = mouseWorld.current.x;
-        previousMouseWorld.current.y = mouseWorld.current.y;
-      }
     };
     const onLeave = () => {
       mouseWorld.current.set(9999, 9999, 0);
-      previousMouseWorld.current.set(9999, 9999, 0);
     };
     window.addEventListener('mousemove', onMove);
     window.addEventListener('mouseleave', onLeave);
-    
+
     // Intro animation: form logo after 1 second
     const timeoutId = setTimeout(() => {
       inCenter.current = true;
@@ -46,70 +39,83 @@ const ParticleSystem = ({ gridPositions, logoPositions, hasTarget }) => {
     () =>
       new THREE.ShaderMaterial({
         uniforms: {
+          uTime: { value: 0 },
+          uMorph: { value: 0 },
           uMouse: { value: new THREE.Vector3(9999, 9999, 0) },
-          uMouseVelocity: { value: 0.0 },
-          uMorph: { value: 0.0 },
+          uHover: { value: 0.0 },
+          uResolution: { value: new THREE.Vector2() },
           uColor: { value: new THREE.Color('#ffffff') },
-          uResolution: { value: new THREE.Vector2(1, 1) },
         },
         vertexShader: `
-          uniform vec3  uMouse;
-          uniform float uMouseVelocity;
+          uniform float uTime;
           uniform float uMorph;
+          uniform vec3  uMouse;
+          uniform float uHover;
           uniform vec2  uResolution;
 
           attribute vec3  aLogoPos;
+          attribute vec3  aRandomDir;
           attribute float aHasTarget;
+          attribute float aEdgeDist;
 
           varying float vAlpha;
           varying float vGlow;
+          varying float vShadow;
 
           void main() {
-            // Interpolate grid ↔ logo
-            vec3 pos = mix(position, aLogoPos, uMorph);
-
-            float d      = distance(pos.xy, uMouse.xy);
+            // Fast sweeping parabolic paths during wander phase
+            vec3 wanderPos = position + aRandomDir * uTime * 0.5;
+            wanderPos.x += sin(uTime * 0.4 + position.y) * 10.0;
+            wanderPos.y += cos(uTime * 0.4 + position.x) * 10.0;
+            vec3 pos = mix(wanderPos, aLogoPos, uMorph);
             
-            // Base radius + scales up based on mouse speed
-            float radius = 1.5 + uMouseVelocity * 1.5;
+            // 3D Shadow & Depth logic for logo
+            float normalizedDist = aEdgeDist;
+            
+            // Push center back to create a 3D bowl shape
+            float zOffset = mix(0.0, -2.5 * (1.0 - normalizedDist), uMorph);
+            pos.z += zOffset;
 
-            // ── Bulge repulsion ──
-            // Modulated by uMouseVelocity so it scales with movement speed
-            float bulgeWeight = mix(1.0, 0.65, uMorph) * uMouseVelocity * 1.5;
+            // Shadow varying for fragment (center is darker)
+            vShadow = mix(1.0, mix(0.3, 1.0, normalizedDist), uMorph);
 
-            if (d < radius) {
-              // smoothstep creates a smooth, rounded bell curve rather than a pointed tip
-              float f   = smoothstep(radius, 0.0, d);
-              vec2  dir = normalize(pos.xy - uMouse.xy + 0.0001);
-              pos.xy   += dir * f * 0.6 * bulgeWeight;
-              pos.z    += f * 0.4 * bulgeWeight;
+            float d = distance(pos.xy, uMouse.xy);
+            
+            // ── Gradual Dome Bulge (no hard circle edge) ──
+            // Large soft radius — effect fades smoothly, no visible boundary
+            float bulgeRadius = 1.0;
+            float falloff = exp(-d * d / (bulgeRadius * bulgeRadius)); // Gaussian bell curve
+            
+            if (falloff > 0.01 && uMorph > 0.1) {
+              // Smooth dome height using gaussian — gradually builds toward center
+              pos.z += falloff * 0.5 * uHover;
+              
+              // Gradually spread dots outward in XY — creates visible gaps near center
+              vec2 dir = normalize(pos.xy - uMouse.xy + 0.0001);
+              pos.xy += dir * falloff * 0.5 * uHover;
             }
 
-            // ── Logo-mode: magnetic pull + spotlight glow ──
-            float glowRadius = 1.0 + uMouseVelocity * 0.8;
+            // ── Spotlight glow ──
+            float glowRadius = 1.2;
             vGlow = 0.0;
 
             if (uMorph > 0.1 && d < glowRadius && aHasTarget > 0.5) {
-              // Smooth rounded falloff for the glow/pull effect
-              float proximity = smoothstep(glowRadius, 0.0, d) * uMouseVelocity;
+              float proximity = smoothstep(glowRadius, 0.0, d) * uHover;
               float morphFactor = smoothstep(0.1, 0.6, uMorph);
-
-              // Gentle magnetic pull toward cursor
-              vec2 pullDir = normalize(uMouse.xy - pos.xy + 0.0001);
-              pos.xy += pullDir * proximity * 0.08 * morphFactor;
-
-              // Glow intensity for fragment shader
               vGlow = proximity * morphFactor;
             }
 
-            // Alpha: grid → 0.4 uniform │ logo → target 0.95, non-target 0
-            vAlpha = mix(0.4, aHasTarget > 0.5 ? 0.95 : 0.0, uMorph);
+            // Alpha: wander → 0.4 uniform │ logo → target depends on dist, non-target 0
+            float logoAlpha = mix(0.2, 0.95, normalizedDist);
+            vAlpha = mix(0.4, aHasTarget > 0.5 ? logoAlpha : 0.0, uMorph);
 
-            // Size: grid → uniform 2.64 (+20%) │ logo → target 3.8, non-target 0
-            float sz = mix(2.64, aHasTarget > 0.5 ? 3.8 : 0.0, uMorph);
+            // Size curve
+            float sizeCurve = pow(normalizedDist, 3.0);
+            float logoTargetSize = mix(2.2, 10.0, sizeCurve); 
+            float sz = mix(6.0, aHasTarget > 0.5 ? logoTargetSize : 0.0, uMorph);
 
             // Spotlight: dots near cursor scale up in logo mode
-            sz += vGlow * 1.8;
+            sz += vGlow * 4.0;
 
             // Kill invisible particles early
             if (sz < 0.1 || vAlpha < 0.01) {
@@ -126,6 +132,7 @@ const ParticleSystem = ({ gridPositions, logoPositions, hasTarget }) => {
           uniform vec3 uColor;
           varying float vAlpha;
           varying float vGlow;
+          varying float vShadow;
 
           void main() {
             if (vAlpha < 0.01) discard;
@@ -134,7 +141,7 @@ const ParticleSystem = ({ gridPositions, logoPositions, hasTarget }) => {
             float edge = smoothstep(0.45, 0.35, d);
 
             // Spotlight: boost brightness near cursor in logo mode
-            vec3 col = uColor + vGlow * 0.3;
+            vec3 col = (uColor * vShadow) + vGlow * 0.3;
 
             gl_FragColor = vec4(col, edge * min(vAlpha + vGlow * 0.3, 1.0));
           }
@@ -150,36 +157,34 @@ const ParticleSystem = ({ gridPositions, logoPositions, hasTarget }) => {
     if (!pointsRef.current) return;
     const vp = state.viewport;
 
-    // Mouse → world coords
-    const mx = (mouseWorld.current.x * vp.width) / 2;
-    const my = (mouseWorld.current.y * vp.height) / 2;
-    // Smoother easing for mouse tracking
-    pointsRef.current.material.uniforms.uMouse.value.lerp(
-      new THREE.Vector3(mx, my, 0),
-      0.12, 
-    );
-    
-    // Calculate instantaneous mouse velocity
-    let speed = 0;
-    if (mouseWorld.current.x !== 9999 && previousMouseWorld.current.x !== 9999) {
-      const dx = mouseWorld.current.x - previousMouseWorld.current.x;
-      const dy = mouseWorld.current.y - previousMouseWorld.current.y;
-      speed = Math.sqrt(dx * dx + dy * dy);
+    // Smooth hover fade in/out
+    const isHovering = mouseWorld.current.x !== 9999;
+    hoverStrength.current += ((isHovering ? 1.0 : 0.0) - hoverStrength.current) * 0.03; // Ultra smooth fade
+    pointsRef.current.material.uniforms.uHover.value = hoverStrength.current;
+
+    // Smooth easing for mouse tracking
+    if (isHovering) {
+      const mx = (mouseWorld.current.x * vp.width) / 2;
+      const my = (mouseWorld.current.y * vp.height) / 2;
+
+      if (pointsRef.current.material.uniforms.uMouse.value.x === 9999) {
+        // Snap immediately if it was out of bounds
+        pointsRef.current.material.uniforms.uMouse.value.set(mx, my, 0);
+      } else {
+        // Extremely smooth tracking
+        pointsRef.current.material.uniforms.uMouse.value.lerp(
+          new THREE.Vector3(mx, my, 0),
+          0.02 // Slower and smoother than before
+        );
+      }
     }
-    
-    previousMouseWorld.current.x = mouseWorld.current.x;
-    previousMouseWorld.current.y = mouseWorld.current.y;
-    
-    // Map speed to a reasonable range and smoothly ease it
-    const targetVelocity = Math.min(speed * 40.0, 1.2); 
-    smoothedVelocity.current += (targetVelocity - smoothedVelocity.current) * 0.1;
-    
-    pointsRef.current.material.uniforms.uMouseVelocity.value = smoothedVelocity.current;
 
     // Smooth morph easing
     const target = inCenter.current ? 1.0 : 0.0;
     morphProgress.current += (target - morphProgress.current) * 0.084; // Slower by ~30%
     pointsRef.current.material.uniforms.uMorph.value = morphProgress.current;
+
+    pointsRef.current.material.uniforms.uTime.value = state.clock.elapsedTime;
 
     pointsRef.current.material.uniforms.uResolution.value.set(
       state.size.width,
@@ -191,9 +196,11 @@ const ParticleSystem = ({ gridPositions, logoPositions, hasTarget }) => {
     const g = new THREE.BufferGeometry();
     g.setAttribute('position', new THREE.BufferAttribute(gridPositions, 3));
     g.setAttribute('aLogoPos', new THREE.BufferAttribute(logoPositions, 3));
+    g.setAttribute('aRandomDir', new THREE.BufferAttribute(randomDirs, 3));
+    g.setAttribute('aEdgeDist', new THREE.BufferAttribute(edgeDists, 1));
     g.setAttribute('aHasTarget', new THREE.BufferAttribute(hasTarget, 1));
     return g;
-  }, [gridPositions, logoPositions, hasTarget]);
+  }, [gridPositions, logoPositions, randomDirs, edgeDists, hasTarget]);
 
   return <points ref={pointsRef} geometry={geometry} material={material} />;
 };
@@ -209,7 +216,8 @@ export default function LogoParticles() {
       /* ── 1. Sample logo pixels ── */
       const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d');
-      const sw = 250;
+      // Sub-pixel anti-aliasing logic to remove grid zig-zags on the edges
+      const sw = 500; // Render at much higher resolution
       const aspect = img.height / img.width;
       const sh = Math.round(sw * aspect);
       canvas.width = sw;
@@ -222,36 +230,124 @@ export default function LogoParticles() {
       const logoW = 5;
       const logoH = logoW * aspect;
       const logoPoints = [];
-      const logoStep = 4;
-      for (let y = 0; y < sh; y += logoStep) {
-        for (let x = 0; x < sw; x += logoStep) {
-          if (imgData[(y * sw + x) * 4] > 80) {
-            logoPoints.push({
-              x: (x / sw - 0.5) * logoW,
-              y: -(y / sh - 0.5) * logoH,
-            });
+      const boundaryPoints = [];
+      const logoStep = 5; // 1000/12 matches the density of 250/3
+
+      const colsCount = Math.ceil(sw / logoStep);
+      const rowsCount = Math.ceil(sh / logoStep);
+
+      // Pass 1: find center-of-mass for each block to allow smooth edge positioning
+      const blocks = [];
+      for (let r = 0; r < rowsCount; r++) {
+        blocks[r] = [];
+        for (let c = 0; c < colsCount; c++) {
+          let sumWeight = 0, sumX = 0, sumY = 0, maxVal = 0;
+          let startY = r * logoStep, startX = c * logoStep;
+
+          for (let dy = 0; dy < logoStep; dy++) {
+            for (let dx = 0; dx < logoStep; dx++) {
+              let px = startX + dx, py = startY + dy;
+              if (px < sw && py < sh) {
+                let weight = imgData[(py * sw + px) * 4];
+                if (weight > maxVal) maxVal = weight;
+                let w = weight > 128 ? weight : 0; // high contrast weight
+                sumWeight += w;
+                sumX += px * w;
+                sumY += py * w;
+              }
+            }
+          }
+          if (maxVal > 80 && sumWeight > 0) {
+            blocks[r][c] = { avgX: sumX / sumWeight, avgY: sumY / sumWeight };
+          } else {
+            blocks[r][c] = null;
           }
         }
       }
+
+      // Pass 2: generate points and find boundaries
+      for (let r = 0; r < rowsCount; r++) {
+        for (let c = 0; c < colsCount; c++) {
+          const b = blocks[r][c];
+          if (b) {
+            let isBoundary = false;
+            // Check adjacent blocks
+            for (let dr = -1; dr <= 1; dr++) {
+              for (let dc = -1; dc <= 1; dc++) {
+                if (dr === 0 && dc === 0) continue;
+                let nr = r + dr, nc = c + dc;
+                if (nr < 0 || nr >= rowsCount || nc < 0 || nc >= colsCount || !blocks[nr][nc]) {
+                  isBoundary = true;
+                }
+              }
+            }
+            const pt = {
+              x: (b.avgX / sw - 0.5) * logoW,
+              y: -(b.avgY / sh - 0.5) * logoH,
+              isBoundary
+            };
+            logoPoints.push(pt);
+            if (isBoundary) boundaryPoints.push(pt);
+          }
+        }
+      }
+
+      // Calculate distance to nearest boundary for each point
+      let maxDist = 0;
+      logoPoints.forEach(p => {
+        if (p.isBoundary) {
+          p.edgeDist = 0;
+        } else {
+          let minDist = Infinity;
+          boundaryPoints.forEach(bp => {
+            const dx = p.x - bp.x;
+            const dy = p.y - bp.y;
+            const d = Math.sqrt(dx * dx + dy * dy);
+            if (d < minDist) minDist = d;
+          });
+          p.edgeDist = minDist;
+          if (minDist > maxDist) maxDist = minDist;
+        }
+      });
+
+      // Normalize edge distance (1.0 = boundary, 0.0 = innermost)
+      logoPoints.forEach(p => {
+        p.normalizedEdge = maxDist > 0 ? 1.0 - (p.edgeDist / maxDist) : 1.0;
+      });
+
+      // Calculate bounding box to perfectly center the logo and fix any asymmetrical weighting
+      let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+      logoPoints.forEach(p => {
+        if (p.x < minX) minX = p.x;
+        if (p.x > maxX) maxX = p.x;
+        if (p.y < minY) minY = p.y;
+        if (p.y > maxY) maxY = p.y;
+      });
+      const cx = (minX + maxX) / 2;
+      const cy = (minY + maxY) / 2;
+
+      // Apply exact centering
+      logoPoints.forEach(p => {
+        p.x -= cx;
+        p.y -= cy;
+      });
+
       // Sort from centre outward so inner dots claim nearest grid dots first
       logoPoints.sort(
         (a, b) => a.x * a.x + a.y * a.y - (b.x * b.x + b.y * b.y),
       );
 
-      /* ── 2. Create uniform grid ── */
-      const viewW = 19;
-      const viewH = 10.5;
-      const cols = 80;
-      const rows = 48;
-      const total = cols * rows;
+      /* ── 2. Create random points ── */
+      const viewW = 60; // much wider area to allow starting outside
+      const viewH = 40; // much taller area
+      // Ensure we have enough total points to perfectly render every logo point, plus a few extras
+      const total = logoPoints.length + 400;
       const grid = [];
-      for (let r = 0; r < rows; r++) {
-        for (let c = 0; c < cols; c++) {
-          grid.push({
-            x: ((c + 0.5) / cols - 0.5) * viewW,
-            y: ((r + 0.5) / rows - 0.5) * viewH,
-          });
-        }
+      for (let i = 0; i < total; i++) {
+        grid.push({
+          x: (Math.random() - 0.5) * viewW,
+          y: (Math.random() - 0.5) * viewH,
+        });
       }
 
       /* ── 3. Nearest-neighbour 1:1 assignment ── */
@@ -281,13 +377,22 @@ export default function LogoParticles() {
       /* ── 4. Build typed-array buffers ── */
       const positions = new Float32Array(total * 3);
       const logoPositions = new Float32Array(total * 3);
+      const randomDirsArray = new Float32Array(total * 3);
+      const edgeDists = new Float32Array(total);
       const hasTarget = new Float32Array(total);
 
       for (let i = 0; i < total; i++) {
-        // Grid position (always set)
+        // Random initial position
         positions[i * 3] = grid[i].x;
         positions[i * 3 + 1] = grid[i].y;
-        positions[i * 3 + 2] = 0;
+        positions[i * 3 + 2] = (Math.random() - 0.5) * 5;
+
+        // Random velocities
+        const angle = Math.random() * Math.PI * 2;
+        const speed = Math.random() * 0.5 + 0.25; // even slower paths
+        randomDirsArray[i * 3] = Math.cos(angle) * speed;
+        randomDirsArray[i * 3 + 1] = Math.sin(angle) * speed;
+        randomDirsArray[i * 3 + 2] = (Math.random() - 0.5) * speed;
 
         if (assignment[i] >= 0) {
           // Has a logo target → morph here
@@ -295,18 +400,20 @@ export default function LogoParticles() {
           logoPositions[i * 3] = lp.x;
           logoPositions[i * 3 + 1] = lp.y;
           logoPositions[i * 3 + 2] = 0;
+          edgeDists[i] = lp.normalizedEdge;
           hasTarget[i] = 1;
         } else {
           // No target → scatter outward along its angle from centre
           const a = Math.atan2(grid[i].y, grid[i].x);
-          logoPositions[i * 3] = Math.cos(a) * 14;
-          logoPositions[i * 3 + 1] = Math.sin(a) * 14;
-          logoPositions[i * 3 + 2] = 0;
+          logoPositions[i * 3] = Math.cos(a) * 20;
+          logoPositions[i * 3 + 1] = Math.sin(a) * 20;
+          logoPositions[i * 3 + 2] = (Math.random() - 0.5) * 10;
+          edgeDists[i] = 0.0;
           hasTarget[i] = 0;
         }
       }
 
-      setData({ gridPositions: positions, logoPositions, hasTarget });
+      setData({ gridPositions: positions, logoPositions, randomDirs: randomDirsArray, edgeDists, hasTarget });
     };
   }, []);
 
@@ -327,6 +434,8 @@ export default function LogoParticles() {
             <ParticleSystem
               gridPositions={data.gridPositions}
               logoPositions={data.logoPositions}
+              randomDirs={data.randomDirs}
+              edgeDists={data.edgeDists}
               hasTarget={data.hasTarget}
             />
           </Canvas>

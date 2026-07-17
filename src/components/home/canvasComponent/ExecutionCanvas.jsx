@@ -90,11 +90,11 @@ const Dots = () => {
 
     useFrame((state, delta) => {
         if (!fgMeshRef.current) return;
-        
+
         // Normal speed = 0.48 (1.2x of previous 0.4), Hover speed = 0.576 (1.2x of normal)
         const speedMultiplier = isHovered ? 2.5 : 1;
         timeAcc.current += delta * speedMultiplier;
-        
+
         let i = 0;
 
         const totalWidth = COLS * DOT_SPACING;
@@ -112,8 +112,8 @@ const Dots = () => {
 
                 if (isHorse) {
                     fgDummy.position.set(
-                        startX + c * DOT_SPACING, 
-                        startY - r * DOT_SPACING, 
+                        startX + c * DOT_SPACING,
+                        startY - r * DOT_SPACING,
                         0 // flat, no wave effect
                     );
                     fgDummy.scale.setScalar(1.0); // equal size to dummy dots

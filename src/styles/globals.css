@@ -4,6 +4,17 @@
   scroll-behavior: smooth;
   user-select: none;
 }
+.custom_scroller::-webkit-scrollbar {
+  width: 4px;
+}
+.custom_scroller::-webkit-scrollbar-thumb {
+  background-color: #883F27;
+  border-radius: 999px;
+}
+.custom_scroller::-webkit-scrollbar-track {
+  background-color: transparent;
+  border-radius: 999px;
+}
 body {
   overflow-x: hidden;
   width: 100%;

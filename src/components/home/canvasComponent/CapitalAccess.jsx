@@ -4,8 +4,8 @@ import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 
 // Exact dimensions from the image
-const ROWS = 16;
-const COLS = 33;
+const ROWS = 21;
+const COLS = 42;
 const PAD_X = 2; // 2 columns padding on left/right
 const PAD_Y = 2; // 2 rows padding on top/bottom
 
@@ -25,13 +25,13 @@ const Dots = () => {
     const dummy = useMemo(() => new THREE.Object3D(), []);
     const fgDummy = useMemo(() => new THREE.Object3D(), []);
 
-    const numBars = 10; // Exactly 10 bars in the image
+    const numBars = 16; // Exactly 10 bars in the image
     const maxBarHeight = ROWS - (PAD_Y * 2); // 14
 
     const bars = useMemo(() => {
         return Array.from({ length: numBars }, () => ({
             phase: Math.random() * Math.PI * 2,
-            speed: 0.8 + Math.random() * 0.4,
+            speed: 0.5 + Math.random() * 0.4,
             baseHeight: maxBarHeight * 0.4,
             amplitude: maxBarHeight * 0.3
         }));
@@ -56,10 +56,10 @@ const Dots = () => {
             for (let c = 0; c < COLS; c++) {
                 dummy.position.set(startX + c * DOT_SPACING, startY + r * DOT_SPACING, 0);
                 dummy.updateMatrix();
-                
+
                 if (borderMeshRef.current) borderMeshRef.current.setMatrixAt(i, dummy.matrix);
                 if (bgMeshRef.current) bgMeshRef.current.setMatrixAt(i, dummy.matrix);
-                
+
                 if (fgMeshRef.current) {
                     fgDummy.position.copy(dummy.position);
                     fgDummy.position.z = 0; // Exactly 0
@@ -115,16 +115,8 @@ const Dots = () => {
                 }
 
                 targetScales.current[i] = isActive ? 1 : 0;
-
-                // Spring wobble physics
-                const tension = 0.2;
-                const friction = 0.7;
-                scaleVelocities.current[i] += (targetScales.current[i] - currentScales.current[i]) * tension;
-                scaleVelocities.current[i] *= friction;
-                currentScales.current[i] += scaleVelocities.current[i];
-
-                // Prevent negative scale
-                const scale = Math.max(0, currentScales.current[i]);
+                currentScales.current[i] = targetScales.current[i];
+                const scale = currentScales.current[i];
 
                 // Set Z to 0 so there is zero perspective parallax. 
                 // Z-fighting is handled purely by depthTest={false} on the material!

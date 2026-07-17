@@ -220,7 +220,7 @@ export const VideoWebGLTransition = ({ targetRef, expanded, isAnimating, onAnima
     const videoUrl = "https://vz-f76b55f9-7b8.b-cdn.net/2b3c385c-35e7-406c-bb11-8c7d71d90001/playlist.m3u8";
 
     return (
-        <div className="fixed inset-0 w-screen h-screen z-[998] pointer-events-none">
+        <div className=" vid_cont  opacity-0 fixed inset-0 w-screen h-screen z-[998] pointer-events-none">
             <Canvas
                 style={{ pointerEvents: 'none' }}
                 gl={{ alpha: true, antialias: true }}

@@ -58,7 +58,7 @@ const About = () => {
             <div ref={containerRef} className="w-full relative h-[300vh] bg-[#0B1A2C]">
                 <div className=" sticky_bg sticky top-0 w-full h-screen center flex-col text-center leading-none">
                     <div className="text-white">
-                        <h2  className=''> <span className=' intro_txt_a'>Meet</span> <span className='intro_txt opacity-0'> Piran</span></h2>
+                        <h2  className=''> <span className=' intro_txt_a intro_txt'>Meet</span> <span className='intro_txt opacity-0'> Piran</span></h2>
                         <div className="intro_txt opacity-0">
                             <p className='text-lg  opacity-70'>Brand Architect & Strategic Catalyst</p>
                         </div>

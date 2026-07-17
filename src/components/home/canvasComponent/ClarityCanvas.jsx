@@ -1,81 +1,28 @@
 "use client";
-import React, { useRef, useMemo, useEffect, useState } from 'react';
+import React, { useRef, useMemo, useEffect } from 'react';
 import { Canvas, useThree, useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 
-// 33x16 pixel matrix forming a human brain with grooves
-const brainMask = [
-  ".................................", // 0
-  ".................................", // 1
-  "............OOOO.OOOO............", // 2
-  "..........OOOOOO.OOOOOO..........", // 3
-  "..........OO.OOO.OOO.OO..........", // 4
-  ".........OOOOOOO.OOOOOOO.........", // 5
-  ".........OO.OOOO.OOOO.OO.........", // 6
-  "........O.OO.OOO.OOO.OO.O........", // 7
-  "........O.OOOO.O.O.OOOO.O........", // 8
-  "........O.OOOO.O.O.OOOO.O........", // 9
-  ".........OO.OOOO.OOOO.OO.........", // 10
-  ".........OOOOOOO.OOOOOOO.........", // 11
-  "..........OOOOOO.OOOOOO..........", // 12
-  "............OOOO.OOOO............", // 13
-  ".................................", // 14
-  ".................................", // 15
-];
-
-const ROWS = 16;
-const COLS = 33;
+const ROWS = 20;
+const COLS = 42;
 const DOT_SIZE = 1;
 const DOT_SPACING = 1.2;
+const SCALE_IN_DURATION = 0.001;
+const WAIT_DURATION = 1.0;
+const SCALE_OUT_DURATION = 0.001;
+const TOTAL_DURATION = SCALE_IN_DURATION + WAIT_DURATION + SCALE_OUT_DURATION;
 
 const Dots = () => {
     const borderMeshRef = useRef();
     const bgMeshRef = useRef();
     const fgMeshRef = useRef();
+    const groupRef = useRef();
     const { viewport } = useThree();
 
     const dummy = useMemo(() => new THREE.Object3D(), []);
-    const [isHovered, setIsHovered] = useState(false);
-    
-    // Store stable random states so they don't change on every render
+
     const dotData = useMemo(() => {
         const data = [];
-        for (let r = 0; r < ROWS; r++) {
-            for (let c = 0; c < COLS; c++) {
-                const isBrain = brainMask[r][c] === 'O';
-                // Some dots on left will pulse, right is mostly solid
-                let isPulsing = false;
-                let baseScale = 0;
-                
-                if (isBrain) {
-                    // Both hemispheres will have randomly solid and missing dots
-                    baseScale = Math.random() > 0.4 ? 1 : 0;
-                    // For the missing dots, 70% of them will pulse rapidly
-                    if (baseScale === 0) {
-                        isPulsing = Math.random() > 0.3;
-                    }
-                }
-                
-                const distToCenter = Math.sqrt(Math.pow(c - 16, 2) + Math.pow(r - 7.5, 2));
-                data.push({
-                    isBrain,
-                    baseScale,
-                    isPulsing,
-                    phase: Math.random() * Math.PI * 2,
-                    distToCenter,
-                    r, c, // Added grid coordinates for corner distance calculations
-                    // Precompute positions
-                    x: (-COLS * DOT_SPACING) / 2 + DOT_SPACING / 2 + c * DOT_SPACING,
-                    y: (ROWS * DOT_SPACING) / 2 - DOT_SPACING / 2 - r * DOT_SPACING
-                });
-            }
-        }
-        return data;
-    }, []);
-
-    // Set up the static backgrounds once
-    useEffect(() => {
-        let i = 0;
         const totalWidth = COLS * DOT_SPACING;
         const totalHeight = ROWS * DOT_SPACING;
         const startX = -totalWidth / 2 + DOT_SPACING / 2;
@@ -83,135 +30,342 @@ const Dots = () => {
 
         for (let r = 0; r < ROWS; r++) {
             for (let c = 0; c < COLS; c++) {
-                const posX = startX + c * DOT_SPACING;
-                const posY = startY - r * DOT_SPACING;
+                data.push({
+                    x: startX + c * DOT_SPACING,
+                    y: startY - r * DOT_SPACING,
+                });
+            }
+        }
+        return data;
+    }, []);
 
-                // We only need to setup border and bg meshes once
+    useEffect(() => {
+        let i = 0;
+        for (let r = 0; r < ROWS; r++) {
+            for (let c = 0; c < COLS; c++) {
+                const data = dotData[i];
+
+                // Border at z = 0
+                dummy.position.set(data.x, data.y, 0);
+                dummy.scale.setScalar(1);
+                dummy.updateMatrix();
                 if (borderMeshRef.current) {
-                    dummy.position.set(posX, posY, 0); 
-                    dummy.scale.setScalar(1);
-                    dummy.updateMatrix();
                     borderMeshRef.current.setMatrixAt(i, dummy.matrix);
                 }
 
+                // Brown dot at z = 0.01
+                dummy.position.set(data.x, data.y, 0.01);
+                dummy.updateMatrix();
                 if (bgMeshRef.current) {
-                    dummy.position.set(posX, posY, 0);
-                    dummy.scale.setScalar(1);
-                    dummy.updateMatrix();
                     bgMeshRef.current.setMatrixAt(i, dummy.matrix);
+                }
+
+                // White dot at z = 0.02
+                dummy.position.set(data.x, data.y, 0.02);
+                dummy.scale.setScalar(0);
+                dummy.updateMatrix();
+                if (fgMeshRef.current) {
+                    fgMeshRef.current.setMatrixAt(i, dummy.matrix);
                 }
                 i++;
             }
         }
         if (borderMeshRef.current) borderMeshRef.current.instanceMatrix.needsUpdate = true;
         if (bgMeshRef.current) bgMeshRef.current.instanceMatrix.needsUpdate = true;
+        if (fgMeshRef.current) fgMeshRef.current.instanceMatrix.needsUpdate = true;
     }, [dummy, dotData]);
 
-    const waveTime = useRef(0);
-    
-    useFrame((state, delta) => {
+    const activeDots = useRef([]);
+    const headPositions = useRef([
+        { r: Math.floor(ROWS / 3), c: Math.floor(COLS / 5) },
+        { r: Math.floor(ROWS / 3), c: Math.floor(2 * COLS / 5) },
+        { r: Math.floor(ROWS / 3), c: Math.floor(3 * COLS / 5) },
+        { r: Math.floor(ROWS / 3), c: Math.floor(4 * COLS / 5) },
+        { r: Math.floor(2 * ROWS / 3), c: Math.floor(COLS / 5) },
+        { r: Math.floor(2 * ROWS / 3), c: Math.floor(2 * COLS / 5) },
+        { r: Math.floor(2 * ROWS / 3), c: Math.floor(3 * COLS / 5) },
+        { r: Math.floor(2 * ROWS / 3), c: Math.floor(4 * COLS / 5) }
+    ]);
+    const lastMoveTime = useRef(0);
+
+    // Mouse state
+    const mouseActive = useRef(false);
+    const mouseGridCoords = useRef({ r: -1, c: -1 });
+    const clockRef = useRef(0);
+
+    const handlePointerMove = (e) => {
+        mouseActive.current = true;
+        if (groupRef.current) {
+            const localPoint = groupRef.current.worldToLocal(e.point.clone());
+
+            const totalWidth = COLS * DOT_SPACING;
+            const totalHeight = ROWS * DOT_SPACING;
+            const startX = -totalWidth / 2 + DOT_SPACING / 2;
+            const startY = totalHeight / 2 - DOT_SPACING / 2;
+
+            const c = Math.round((localPoint.x - startX) / DOT_SPACING);
+            const r = Math.round((startY - localPoint.y) / DOT_SPACING);
+
+            const nr = Math.max(0, Math.min(ROWS - 1, r));
+            const nc = Math.max(0, Math.min(COLS - 1, c));
+
+            mouseGridCoords.current = { r: nr, c: nc };
+
+            // Instantly light up the dot under the mouse to show movement path
+            const time = clockRef.current;
+            const idx = nr * COLS + nc;
+            const existing = activeDots.current.find(d => d.idx === idx);
+            if (!existing) {
+                activeDots.current.push({ idx, startTime: time - SCALE_IN_DURATION });
+            } else {
+                existing.startTime = time - SCALE_IN_DURATION;
+            }
+        }
+    };
+
+    const handlePointerOut = () => {
+        mouseActive.current = false;
+    };
+
+    useFrame((state) => {
         if (!fgMeshRef.current) return;
-        
-        let isWaveActive = false;
-        
-        // Handle wave timing: run continuously while hovered, or finish current cycle if unhovered
-        if (isHovered) {
-            waveTime.current += delta;
-            isWaveActive = true;
-        } else if (waveTime.current > 0) {
-            const currentCycle = Math.floor(waveTime.current / 4.0);
-            waveTime.current += delta;
-            isWaveActive = true;
-            
-            // If the wave crossed the 4-second boundary, stop it cleanly
-            if (Math.floor(waveTime.current / 4.0) > currentCycle) {
-                waveTime.current = 0;
-                isWaveActive = false;
+
+        const time = state.clock.getElapsedTime();
+        clockRef.current = time;
+
+        const moveInterval = mouseActive.current ? 0.05 : 0.2;
+
+        if (time - lastMoveTime.current > moveInterval) {
+            lastMoveTime.current = time;
+
+            if (mouseActive.current) {
+                const targetR = mouseGridCoords.current.r;
+                const targetC = mouseGridCoords.current.c;
+
+                headPositions.current.forEach((head, index) => {
+                    // Create an oval shape around target mouse position
+                    // Heads distributed evenly: angle = index * 2pi / length
+                    const angle = (index / headPositions.current.length) * Math.PI * 2;
+                    // Oval radii: horizontal (columns) is 3.5, vertical (rows) is 2.2
+                    const targetOffsetR = Math.round(Math.sin(angle) * 4);
+                    const targetOffsetC = Math.round(Math.cos(angle) * 4);
+
+                    const destR = Math.max(0, Math.min(ROWS - 1, targetR + targetOffsetR));
+                    const destC = Math.max(0, Math.min(COLS - 1, targetC + targetOffsetC));
+
+                    const dr = destR - head.r;
+                    const dc = destC - head.c;
+
+                    // Move closer to their target slots on the oval
+                    if (dr !== 0 || dc !== 0) {
+                        let stepR = 0;
+                        let stepC = 0;
+                        if (dr !== 0) stepR = Math.sign(dr);
+                        if (dc !== 0) stepC = Math.sign(dc);
+
+                        head.r = Math.max(0, Math.min(ROWS - 1, head.r + stepR));
+                        head.c = Math.max(0, Math.min(COLS - 1, head.c + stepC));
+                    }
+
+                    const idx = head.r * COLS + head.c;
+                    const existing = activeDots.current.find(d => d.idx === idx);
+                    if (!existing) {
+                        activeDots.current.push({ idx, startTime: time - SCALE_IN_DURATION });
+                    } else {
+                        existing.startTime = time - SCALE_IN_DURATION;
+                    }
+                });
+            } else {
+                // Autonomous mode: snakes moving 4 steps straight, then 2 steps turn, and repeat
+                headPositions.current.forEach((head) => {
+                    // Initialize state properties if not present
+                    if (head.stepsLeft === undefined) {
+                        head.stepsLeft = 4;
+                        head.phase = 'forward'; // 'forward' (4 steps) or 'turn' (2 steps)
+
+                        // Pick an initial random direction
+                        const dirs = [
+                            { r: 1, c: 0 }, { r: -1, c: 0 },
+                            { r: 0, c: 1 }, { r: 0, c: -1 }
+                        ];
+                        const d = dirs[Math.floor(Math.random() * dirs.length)];
+                        head.dirR = d.r;
+                        head.dirC = d.c;
+                    }
+
+                    // Calculate next position
+                    let nr = head.r + head.dirR;
+                    let nc = head.c + head.dirC;
+
+                    // Boundary handling: if next step is out of bounds, trigger a phase change/turn early
+                    if (nr < 0 || nr >= ROWS || nc < 0 || nc >= COLS) {
+                        head.stepsLeft = 0;
+                    } else {
+                        head.r = nr;
+                        head.c = nc;
+                        head.stepsLeft--;
+                    }
+
+                    // If steps are completed (or hit border), change phase and direction
+                    if (head.stepsLeft === 0) {
+                        if (head.phase === 'forward') {
+                            head.phase = 'turn';
+                            head.stepsLeft = 2;
+                            // Turn to a perpendicular direction
+                            if (head.dirR !== 0) {
+                                head.dirR = 0;
+                                head.dirC = Math.random() > 0.5 ? 1 : -1;
+                            } else {
+                                head.dirR = Math.random() > 0.5 ? 1 : -1;
+                                head.dirC = 0;
+                            }
+                        } else {
+                            head.phase = 'forward';
+                            head.stepsLeft = 4;
+                            // Turn to a perpendicular direction
+                            if (head.dirR !== 0) {
+                                head.dirR = 0;
+                                head.dirC = Math.random() > 0.5 ? 1 : -1;
+                            } else {
+                                head.dirR = Math.random() > 0.5 ? 1 : -1;
+                                head.dirC = 0;
+                            }
+                        }
+                    }
+
+                    // Clip coordinates to ensure safety
+                    head.r = Math.max(0, Math.min(ROWS - 1, head.r));
+                    head.c = Math.max(0, Math.min(COLS - 1, head.c));
+
+                    const idx = head.r * COLS + head.c;
+
+                    const existing = activeDots.current.find(d => d.idx === idx);
+                    if (!existing) {
+                        activeDots.current.push({ idx, startTime: time - SCALE_IN_DURATION });
+                    } else {
+                        existing.startTime = time - SCALE_IN_DURATION;
+                    }
+                });
             }
         }
 
-        const time = state.clock.getElapsedTime();
-        
-        for (let i = 0; i < dotData.length; i++) {
-            const data = dotData[i];
-            
-            let currentScale = data.baseScale;
-            
-            // Pulsing logic for missing/random dots (only if they are part of the brain)
-            if (data.isBrain && data.isPulsing) {
-                // Sine wave from 0 to 1, fast speed
-                const pulse = (Math.sin(time * 4.5 + data.phase) + 1) / 2;
-                currentScale = pulse;
-            }
-            
-            // Hover wave logic (flows from the 4 corners to center, repeats every 2s)
-            if (isWaveActive) {
-                // Calculate distance to the nearest of the 4 corners
-                const distC1 = Math.sqrt(Math.pow(data.c - 0, 2) + Math.pow(data.r - 0, 2));
-                const distC2 = Math.sqrt(Math.pow(data.c - (COLS - 1), 2) + Math.pow(data.r - 0, 2));
-                const distC3 = Math.sqrt(Math.pow(data.c - 0, 2) + Math.pow(data.r - (ROWS - 1), 2));
-                const distC4 = Math.sqrt(Math.pow(data.c - (COLS - 1), 2) + Math.pow(data.r - (ROWS - 1), 2));
-                
-                const minDistToCorner = Math.min(distC1, distC2, distC3, distC4);
-                
-                // Repeats every 4 seconds
-                const waveCycleTime = waveTime.current % 4.0; 
-                
-                // Speed: travels across in ~1.5s, then rests for ~2.5s
-                const wavePos = waveCycleTime * 12.0; 
-                
-                const distFromWave = Math.abs(minDistToCorner - wavePos);
-                
-                // Creates a ripple effect
-                if (distFromWave < 4) {
-                    const waveBoost = Math.max(0, 1 - distFromWave / 4);
-                    // Boost scale to 1.2 during wave
-                    currentScale = Math.max(currentScale, waveBoost * 1.2);
+        // Keep dots at current head positions fully lit (scale 1) every frame if mouse is active
+        if (mouseActive.current) {
+            headPositions.current.forEach((head) => {
+                const idx = head.r * COLS + head.c;
+                const existing = activeDots.current.find(d => d.idx === idx);
+                if (!existing) {
+                    activeDots.current.push({ idx, startTime: time - SCALE_IN_DURATION });
+                } else {
+                    existing.startTime = time - SCALE_IN_DURATION;
+                }
+            });
+
+            // Also keep the entire filled oval shape around the cursor point fully lit (scale 1)
+            const targetR = mouseGridCoords.current.r;
+            const targetC = mouseGridCoords.current.c;
+            const radiusR = 3;
+            const radiusC = 3;
+
+            const startR = Math.max(0, Math.floor(targetR - radiusR - 1));
+            const endR = Math.min(ROWS - 1, Math.ceil(targetR + radiusR + 1));
+            const startC = Math.max(0, Math.floor(targetC - radiusC - 1));
+            const endC = Math.min(COLS - 1, Math.ceil(targetC + radiusC + 1));
+
+            for (let r = startR; r <= endR; r++) {
+                for (let c = startC; c <= endC; c++) {
+                    const angle = Math.atan2(r - targetR, c - targetC);
+                    // Add undulating noise to make the edge dots dynamically appear and disappear
+                    const noise = Math.sin(time * 6 + angle * 4) * 0.45;
+                    const dynamicRadiusR = radiusR + noise;
+                    const dynamicRadiusC = radiusC + noise * (radiusC / radiusR);
+
+                    const dr = (r - targetR) / dynamicRadiusR;
+                    const dc = (c - targetC) / dynamicRadiusC;
+                    if (dr * dr + dc * dc <= 1.0) {
+                        const idx = r * COLS + c;
+                        const existing = activeDots.current.find(d => d.idx === idx);
+                        if (!existing) {
+                            activeDots.current.push({ idx, startTime: time - SCALE_IN_DURATION });
+                        } else {
+                            existing.startTime = time - SCALE_IN_DURATION;
+                        }
+                    }
                 }
             }
-            
-            // If it's not a brain dot and no wave is touching it, it stays 0
-            if (!data.isBrain && !isWaveActive) {
-                currentScale = 0;
-            }
-            
-            // Clamp scale to not look too crazy
-            currentScale = Math.min(Math.max(currentScale, 0), 1.2);
-            
-            dummy.position.set(data.x, data.y, 0);
-            dummy.scale.setScalar(currentScale);
-            dummy.updateMatrix();
-            fgMeshRef.current.setMatrixAt(i, dummy.matrix);
         }
-        
-        fgMeshRef.current.instanceMatrix.needsUpdate = true;
+
+        let needsUpdate = false;
+
+        const currentWaitDuration = mouseActive.current ? 0.25 : 1.0;
+        const currentTotalDuration = SCALE_IN_DURATION + currentWaitDuration + SCALE_OUT_DURATION;
+
+        for (let i = activeDots.current.length - 1; i >= 0; i--) {
+            const dot = activeDots.current[i];
+            const age = time - dot.startTime;
+
+            let scale = 0;
+            if (age < SCALE_IN_DURATION) {
+                scale = age / SCALE_IN_DURATION;
+            } else if (age < SCALE_IN_DURATION + currentWaitDuration) {
+                scale = 1;
+            } else if (age < currentTotalDuration) {
+                const scaleOutAge = age - (SCALE_IN_DURATION + currentWaitDuration);
+                scale = 1 - (scaleOutAge / SCALE_OUT_DURATION);
+            } else {
+                // Explicitly reset scale to 0 in the mesh before splicing
+                const data = dotData[dot.idx];
+                dummy.position.set(data.x, data.y, 0.02);
+                dummy.scale.setScalar(0);
+                dummy.updateMatrix();
+                fgMeshRef.current.setMatrixAt(dot.idx, dummy.matrix);
+                needsUpdate = true;
+
+                activeDots.current.splice(i, 1);
+                continue;
+            }
+
+            const data = dotData[dot.idx];
+            dummy.position.set(data.x, data.y, 0.02);
+            dummy.scale.setScalar(scale);
+            dummy.updateMatrix();
+            fgMeshRef.current.setMatrixAt(dot.idx, dummy.matrix);
+            needsUpdate = true;
+        }
+
+        if (needsUpdate) {
+            fgMeshRef.current.instanceMatrix.needsUpdate = true;
+        }
     });
 
     const gridWidth = COLS * DOT_SPACING;
     const gridHeight = ROWS * DOT_SPACING;
-    
-    // Scale to fit dynamically without cropping
+
     const scale = Math.min(viewport.width / gridWidth, viewport.height / gridHeight) * 0.95;
 
     return (
-        <group 
-            scale={scale}
-            onPointerOver={() => setIsHovered(true)}
-            onPointerOut={() => setIsHovered(false)}
-        >
+        <group scale={scale} ref={groupRef}>
+            {/* Invisible plane to catch mouse interactions smoothly */}
+            <mesh
+                position={[0, 0, 0.05]}
+                onPointerMove={handlePointerMove}
+                onPointerOut={handlePointerOut}
+            >
+                <planeGeometry args={[gridWidth, gridHeight]} />
+                <meshBasicMaterial transparent opacity={0} depthWrite={false} />
+            </mesh>
+
             <instancedMesh ref={borderMeshRef} args={[null, null, ROWS * COLS]}>
-                <circleGeometry args={[(DOT_SIZE * 0.5) + 0.08, 32]} />
+                <circleGeometry args={[(DOT_SIZE / 2) + 0.08, 32]} />
                 <meshBasicMaterial color="#d1d5db" />
             </instancedMesh>
-
             <instancedMesh ref={bgMeshRef} args={[null, null, ROWS * COLS]}>
-                <circleGeometry args={[DOT_SIZE * 0.5, 32]} />
-                <meshBasicMaterial color="#883F27" depthTest={false} />
+                <circleGeometry args={[DOT_SIZE / 2, 32]} />
+                <meshBasicMaterial color="#883F27" />
             </instancedMesh>
-            
             <instancedMesh ref={fgMeshRef} args={[null, null, ROWS * COLS]}>
-                <circleGeometry args={[DOT_SIZE * 0.5, 32]} />
-                <meshBasicMaterial color="#ffffff" depthTest={false} />
+                <circleGeometry args={[DOT_SIZE / 2, 32]} />
+                <meshBasicMaterial color="#ffffff" />
             </instancedMesh>
         </group>
     );

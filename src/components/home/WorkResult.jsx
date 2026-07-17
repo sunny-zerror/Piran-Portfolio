@@ -26,7 +26,7 @@ const WorkResult = () => {
                 <p className='opacity-70 leading-tight'>I help founders define positioning, sharpen strategic direction, clarify market relevance, and establish a narrative that aligns teams, investors, customers, and partners around the same future.</p>
               </div>
             </div>
-            <div className=""></div>
+                       <div />
             <div className="  col-span-4 ">
               <ClarityCanvas />
             </div>

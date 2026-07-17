@@ -39,9 +39,9 @@ const FooterPhysicsBalls = () => {
 
     // Add balls
     const balls = [];
-    const physicsRadius = 15; // The physical collision radius
-    const renderRadius = 10; // The rendered radius (creates a gap!)
-    const numBalls = 500;
+    const physicsRadius = 10; // The physical collision radius
+    const renderRadius = 6; // The rendered radius (creates a gap!)
+    const numBalls = 1000;
 
     for (let i = 0; i < numBalls; i++) {
       const x = Math.random() * width;
@@ -89,7 +89,7 @@ const FooterPhysicsBalls = () => {
       const speedMultiplier = Math.min(Math.max(mouseVelocity * 3, 1), 5);
       
       // If moving very slowly, smaller radius (e.g., 120), if fast, larger radius
-      const interactionRadius = 100 + (speedMultiplier * 10); 
+      const interactionRadius = 40 + (speedMultiplier * 10); 
       
       balls.forEach(ball => {
         const dx = ball.position.x - mouseX;

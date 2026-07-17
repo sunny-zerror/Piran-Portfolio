@@ -1,5 +1,4 @@
 import About from "@/components/home/About";
-import Build3 from "@/components/home/Build3";
 import Hero from "@/components/home/Hero";
 import Partners from "@/components/home/Partners";
 import RecordNotResume from "@/components/home/RecordNotResume";
@@ -15,7 +14,6 @@ const HomePage = () => {
     <WorkResult/>
     <WorkBehindGrowth/>
     <Partners/>
-    <Build3/>
     <RecordNotResume/>
     </>
   );

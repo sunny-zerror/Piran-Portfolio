@@ -1,30 +1,119 @@
 "use client";
+import { growthPartnersData, venturesData } from '@/data/PartnersData';
 import Image from 'next/image';
-import React, { useState } from 'react';
-const venturesData = Array.from({ length: 5 }).map((_, i) => ({
-    id: `venture-${i}`,
-    name: "",
-    logo: "",
-    tags: [],
-    founder: "",
-    website: "",
-    description: ""
-}));
+import React, { useState, useRef } from 'react';
+import { useGSAP } from '@gsap/react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { Flip } from 'gsap/Flip';
+import { flushSync } from 'react-dom';
+import { RiArrowRightUpLine } from '@remixicon/react';
 
-const growthPartnersData = Array.from({ length: 18 }).map((_, i) => ({
-    id: `growth-${i}`,
-    name: "",
-    logo: "",
-    tags: [],
-    founder: "",
-    website: "",
-    description: ""
-}));
-
+gsap.registerPlugin(ScrollTrigger, Flip);
 
 const Partners = () => {
     const [selectedPartner, setSelectedPartner] = useState(null);
-    const [isDescOpen, setIsDescOpen] = useState(false);
+    const [isGrowth, setIsGrowth] = useState(false);
+    const [isMerged, setIsMerged] = useState(false);
+
+    const containerRef = useRef(null);
+    const stickyRef = useRef(null);
+
+    useGSAP(() => {
+
+        ScrollTrigger.create({
+            trigger: containerRef.current,
+            start: "top+=15% top",
+            onEnter: () => {
+                const state = Flip.getState(".partner-card, .grid-container");
+                flushSync(() => {
+                    setIsGrowth(true);
+                    setIsMerged(false);
+                });
+                Flip.from(state, {
+                    duration: 0.5,
+                    ease: "power2.out",
+                    absolute: true,
+                    stagger: 0.015,
+                    onEnter: elements => gsap.fromTo(elements, { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, stagger: 0.05, duration: 0.5, ease: "power2.out" }),
+                });
+            },
+            onLeaveBack: () => {
+                const state = Flip.getState(".partner-card, .grid-container");
+                flushSync(() => {
+                    setIsGrowth(false);
+                    setIsMerged(false);
+                });
+                Flip.from(state, {
+                    duration: 0.5,
+                    ease: "power2.out",
+                    absolute: true,
+                    stagger: 0.015,
+                    onLeave: elements => gsap.to(elements, { opacity: 0, scale: 0.8, duration: 0.4, stagger: { from: "end", each: 0.05 }, ease: "power2.in" }),
+                });
+            },
+        });
+
+        ScrollTrigger.create({
+            trigger: containerRef.current,
+            start: "top+=50% top",
+            onEnter: () => {
+                const state = Flip.getState(".partner-card");
+                flushSync(() => {
+                    setIsMerged(true);
+                });
+                Flip.from(state, {
+                    duration: 0.5,
+                    ease: "power3.inOut",
+                    absolute: true,
+                    stagger: {
+                        each: 0.03,
+                        from: "edges",
+                    },
+                    onComplete: () => {
+                        gsap.to(".merged-card-overlay", {
+                            opacity: 1,
+                            scale: 1,
+                            duration: 0.6,
+                            ease: "power2.out",
+                        });
+                        gsap.fromTo(".merged-side-left",
+                            { opacity: 0, x: -30 },
+                            { opacity: 1, x: 0, duration: 0.6, delay: 0.15, ease: "power2.out" }
+                        );
+                        gsap.fromTo(".merged-side-right",
+                            { opacity: 0, x: 30 },
+                            { opacity: 1, x: 0, duration: 0.6, delay: 0.15, ease: "power2.out" }
+                        );
+                    }
+                });
+            },
+            onLeaveBack: () => {
+                gsap.set(".merged-card-overlay", { opacity: 0 });
+                gsap.set(".merged-side-left", { opacity: 0 });
+                gsap.set(".merged-side-right", { opacity: 0 });
+                const state = Flip.getState(".partner-card");
+
+                flushSync(() => {
+                    setIsMerged(false);
+                });
+
+                Flip.from(state, {
+                    duration: 0.5,
+                    ease: "power2.out",
+                    absolute: true,
+                    stagger: {
+                        each: 0.025,
+                        from: "center",
+                    },
+                    onEnter: elements => gsap.fromTo(elements,
+                        { opacity: 0, scale: 0.5 },
+                        { opacity: 1, scale: 1, stagger: 0.02, duration: 0.1, ease: "power2.out" }
+                    ),
+                });
+            },
+        });
+    }, { scope: containerRef });
 
     const dummyDetails = {
         name: "UNP",
@@ -35,53 +124,113 @@ const Partners = () => {
         desc2: "More than a network, UNP is a catalyst for collaboration and transformation. We work alongside ambitious leaders to navigate complexity, uncover opportunities, and build stronger foundations for the future. Through strategic guidance, trusted partnerships, and a long-term perspective, we help businesses move forward with greater clarity."
     };
 
+    const getLogo = (item, i) => {
+        if (!isGrowth && !isMerged) {
+            return venturesData[i]?.logo || item.logo;
+        } else {
+            return `/images/homepage/partners/ventures/img${(i % 5) + 1}.svg`;
+        }
+    };
+
+    const handlePartnerClick = (item, i) => {
+        if (isMerged) return;
+        if (!isGrowth) {
+            setSelectedPartner(venturesData[i] || item);
+        } else {
+            setSelectedPartner(item);
+        }
+    };
+
     return (
-        <div className="container bg-[#0B1A2C]  text-white font-sans relative h-[200vh]!">
+        <div ref={containerRef} className="container bg-[#0B1A2C] text-white relative h-[400vh]! w-full">
+            <div ref={stickyRef} className="sticky top-0 w-full h-screen overflow-hidden ">
 
-            <div className=" sticky  pt-24 top-0 h-screen flex items-center w-full ">
-                <div className=" w-full grid gap-x-20 grid-cols-3">
-
-                    <div className="w-full flex flex-col justify-between col-span-1">
-                        <h2 data-para-effect className="leading-none">Ventures Founded</h2>
-                        <p data-para-effect className="opacity-60 leading-tight col-span-2 text-lg">Companies built from the <br /> ground up.</p>
-                    </div>
-                    <div className="w-full col-span-2 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2">
-                        {venturesData.map((item,i) => (
-                            <div
-                                key={item.id}
-                                onClick={() => setSelectedPartner(item)}
-                                className="aspect-square bg-white/5 rounded-lg flex items-center justify-center cursor-pointer hover:bg-[#253646] transition-colors"
-                            >
-                               <div className="w-20 h-10 center relative">
-                                   <Image fill src={`/images/homepage/partners/ventures/img${i+1}.svg`} alt="" />
-                                </div>
-                            </div>
-                        ))}
+                <div className={`absolute top-24 left-0 w-[33%] z-10 transition-all duration-600 ease-out
+                    ${isMerged ? 'opacity-0 -translate-x-10 pointer-events-none' : 'opacity-100 translate-x-0'}`}
+                >
+                    <div className="relative">
+                        <div className={`w-full transition-all duration-500 ease-out absolute inset-0 ${!isGrowth ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 -translate-y-4 scale-95 pointer-events-none'}`}>
+                            <h2 data-para-effect className="leading-none text-5xl">Ventures Founded</h2>
+                            <p data-para-effect className="opacity-60 leading-tight text-lg mt-6">Companies built from the <br /> ground up.</p>
+                        </div>
+                        <div className={`w-full transition-all duration-500 ease-out absolute inset-0 ${isGrowth && !isMerged ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-4 scale-95 pointer-events-none'}`}>
+                            <h2 data-para-effect className="leading-none text-5xl">Growth Partners</h2>
+                            <p data-para-effect className="opacity-60 leading-tight text-lg mt-6">Businesses supported  through investment  <br />and strategic growth.</p>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div className=" pt-24 bg-[#0B1A2C] z-10 relative h-screen flex items-center w-full">
-                <div className=" w-full grid gap-x-20 grid-cols-3">
+                <div className={`absolute ${isMerged
+                    ? 'inset-0 flex items-center justify-center'
+                    : 'top-24 right-0 w-[64%]'
+                    }`}
+                >
+                    <div className="relative" style={isMerged ? { width: '25rem', aspectRatio: '3/4' } : { width: '100%' }}>
 
-                    <div className="w-full col-span-1 flex  flex-col justify-between ">
-                        <h2 data-para-effect className="leading-none">Growth Partners</h2>
-                        <p data-para-effect className="opacity-60 leading-tight col-span-2 text-lg">Businesses supported <br /> through investment and <br /> strategic growth.</p>
-                    </div>
-                    <div className="w-full col-span-2  items-start content-start grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
-                        {growthPartnersData.map((item,i) => (
-                            <div
-                                key={item.id}
-                                onClick={() => setSelectedPartner(item)}
-                                className="aspect-4/3 bg-white/5 rounded-lg flex items-center justify-center cursor-pointer hover:bg-[#253646] transition-colors"
-                            >
-                               <div className="w-16 h-8 center relative">
-                                   <Image fill src={`/images/homepage/partners/ventures/img${(i % 5) + 1}.svg`} alt="" />
+                        <div className={`grid-container ${isMerged
+                            ? 'absolute inset-0'
+                            : `grid gap-2 w-full ${isGrowth ? 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-6' : 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-5'}`
+                            }`}
+                        >
+                            {growthPartnersData.map((item, i) => {
+                                const isHidden = !isGrowth && !isMerged && i >= 5;
+                                return (
+                                    <div
+                                        key={item.id}
+                                        data-flip-id={`partner-${item.id}`}
+                                        onClick={() => handlePartnerClick(item, i)}
+                                        className={`partner-card flex items-center justify-center
+                                            ${isMerged
+                                                ? 'absolute inset-0 rounded-xl bg-[#152535]'
+                                                : `bg-white/5 rounded-lg cursor-pointer hover:bg-[#253646] transition-colors duration-300 ${isGrowth ? 'aspect-4/3' : 'aspect-square'}`
+                                            }
+                                            ${isHidden ? 'hidden' : ''}`}
+                                    >
+                                        {!isMerged && (
+                                            <div className="w-20 h-10 center relative">
+                                                <Image fill src={getLogo(item, i)} alt="" />
+                                            </div>
+                                        )}
+                                    </div>
+                                );
+                            })}
+                        </div>
+
+                        <div
+                            className="merged-card-overlay absolute inset-0 rounded-xl overflow-hidden"
+                            style={{ opacity: 0, zIndex: 50, pointerEvents: isMerged ? 'auto' : 'none' }}
+                        >
+                            <div className="relative w-full h-full">
+                                <Image
+                                    src="/images/homepage/recent_project.png"
+                                    alt="Currently Building"
+                                    fill
+                                    className="object-cover"
+                                />
+                                <div className="merged-card-inner absolute bottom-0 left-0 right-0 p-6 pb-5 flex flex-col items-center text-center z-10">
+                                    <h3 className="leading-tight font-medium text-white mb-4" style={{ fontFamily: "'Inter', sans-serif" }}>
+                                        Currently Building<br />Fintech Infrastructure
+                                    </h3>
+                                    <button className="bg-white uppercase text-[#883F27] rounded-full px-6 hover:pl-2 leading-none h-12 text-sm group transition-all duration-300 pointer-events-auto flex items-center gap-2">
+                                        <span className="w-2 h-2 center text-white group-hover:h-8 group-hover:w-8 rounded-full bg-[#883F27] transition-all duration-300">
+                                            <RiArrowRightUpLine className="scale-0 group-hover:scale-100 transition-all duration-300" />
+                                        </span>
+                                        My Path
+                                    </button>
                                 </div>
                             </div>
-                        ))}
+                        </div>
                     </div>
                 </div>
+
+                <div className="merged-side-left absolute left-6 bottom-8 uppercase text-white/60 leading-relaxed font-light" style={{ opacity: 0 }}>
+                    <span>Into Build3,</span><br />
+                    <span>Building Again</span>
+                </div>
+                <div className="merged-side-right absolute right-6 bottom-8 uppercase text-white/60 font-light" style={{ opacity: 0 }}>
+                    2026
+                </div>
+
             </div>
 
             <div
@@ -89,8 +238,8 @@ const Partners = () => {
                 onClick={() => setSelectedPartner(null)}
             >
                 <div
-                    className={`bg-white text-black w-full max-w-2xl rounded-3xl overflow-hidden relative flex flex-col max-h-[85vh] shadow-2xl transition-all duration-300 ${selectedPartner ? "translate-y-0" :" translate-y-5"}  `}
-                    onClick={(e) => e.stopPropagation()} 
+                    className={`bg-white text-black w-full max-w-2xl rounded-3xl overflow-hidden relative flex flex-col max-h-[85vh] shadow-2xl transition-all duration-300 ${selectedPartner ? "translate-y-0" : " translate-y-5"}  `}
+                    onClick={(e) => e.stopPropagation()}
                 >
                     <div className="p-6 overflow-y-auto custom-scrollbar">
 
@@ -135,15 +284,12 @@ const Partners = () => {
                         <div>
                             <div
                                 className="flex justify-between items-center pt-5  cursor-pointer group"
-                                onClick={() => setIsDescOpen(!isDescOpen)}
+                              
                             >
                                 <h5 className="">Introducing {dummyDetails.name}</h5>
-                                <svg xmlns="http://www.w3.org/2000/svg" className={`h-5 w-5 text-gray-400 transform transition-transform duration-300 ${isDescOpen ? 'rotate-180' : 'rotate-0'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
-                                </svg>
                             </div>
-                            <div className={`grid transition-all duration-300 ease-in-out ${isDescOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}`}>
-                                <div className="overflow-hidden">
+                            <div className={`grid transition-all duration-300 ease-in-out `}>
+                                <div data-lenis-prevent className="custom_scroller overflow-y-scroll h-44">
                                     <div className=" text-[#0B1A2C] opacity-70 leading-tight space-y-4  pt-1">
                                         <p>{dummyDetails.desc1}</p>
                                         <p>{dummyDetails.desc2}</p>
