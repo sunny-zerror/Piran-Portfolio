@@ -77,14 +77,22 @@ const Dots = () => {
 
     const activeDots = useRef([]);
     const headPositions = useRef([
-        { r: Math.floor(ROWS / 3), c: Math.floor(COLS / 5) },
-        { r: Math.floor(ROWS / 3), c: Math.floor(2 * COLS / 5) },
-        { r: Math.floor(ROWS / 3), c: Math.floor(3 * COLS / 5) },
-        { r: Math.floor(ROWS / 3), c: Math.floor(4 * COLS / 5) },
-        { r: Math.floor(2 * ROWS / 3), c: Math.floor(COLS / 5) },
-        { r: Math.floor(2 * ROWS / 3), c: Math.floor(2 * COLS / 5) },
-        { r: Math.floor(2 * ROWS / 3), c: Math.floor(3 * COLS / 5) },
-        { r: Math.floor(2 * ROWS / 3), c: Math.floor(4 * COLS / 5) }
+        { r: Math.floor(ROWS / 5), c: Math.floor(COLS / 5) },
+        { r: Math.floor(ROWS / 5), c: Math.floor(2 * COLS / 5) },
+        { r: Math.floor(ROWS / 5), c: Math.floor(3 * COLS / 5) },
+        { r: Math.floor(ROWS / 5), c: Math.floor(4 * COLS / 5) },
+        { r: Math.floor(2 * ROWS / 5), c: Math.floor(COLS / 6) },
+        { r: Math.floor(2 * ROWS / 5), c: Math.floor(2 * COLS / 6) },
+        { r: Math.floor(2 * ROWS / 5), c: Math.floor(4 * COLS / 6) },
+        { r: Math.floor(2 * ROWS / 5), c: Math.floor(5 * COLS / 6) },
+        { r: Math.floor(3 * ROWS / 5), c: Math.floor(COLS / 6) },
+        { r: Math.floor(3 * ROWS / 5), c: Math.floor(2 * COLS / 6) },
+        { r: Math.floor(3 * ROWS / 5), c: Math.floor(4 * COLS / 6) },
+        { r: Math.floor(3 * ROWS / 5), c: Math.floor(5 * COLS / 6) },
+        { r: Math.floor(4 * ROWS / 5), c: Math.floor(COLS / 5) },
+        { r: Math.floor(4 * ROWS / 5), c: Math.floor(2 * COLS / 5) },
+        { r: Math.floor(4 * ROWS / 5), c: Math.floor(3 * COLS / 5) },
+        { r: Math.floor(4 * ROWS / 5), c: Math.floor(4 * COLS / 5) },
     ]);
     const lastMoveTime = useRef(0);
 

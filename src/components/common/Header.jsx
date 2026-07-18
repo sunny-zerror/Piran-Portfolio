@@ -16,13 +16,13 @@ const navLinks = [
 const Header = () => {
   return (
     <div>
-      <div className="w-full top-0 py-5 h-fit! z-100  text-white fixed">
+      <div className=" header opacity-0 w-full top-0 py-5 h-fit! z-100  text-white fixed">
         <div className="container w-full flex items-center justify-between">
 
-        <img src="/logo.svg" alt="logo" />
+        <img src="/logo.svg" alt="logo" className='max-sm:w-10' />
         <div className="flex gap-x-5 uppercase">
           {navLinks.map((item, i) => (
-            <Link href={item.href} key={i} className="">
+            <Link href={item.href} key={i} className="max-sm:text-sm">
               {item.label}
             </Link>
           ))}

@@ -65,13 +65,13 @@ const RotatingText = () => {
   return <p ref={textRef} className="uppercase">{TITLES[0]}</p>;
 };
 
-const Hero = () => {
+const MobileHero = () => {
   const videoThumbRef = useRef(null);
   const [expanded, setExpanded] = useState(false);
   const [videoBounds, setVideoBounds] = useState(null);
   const [isAnimating, setIsAnimating] = useState(false);
   const [showWebGL, setShowWebGL] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(true);
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 750);
@@ -79,6 +79,7 @@ const Hero = () => {
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
+
   const toggleVideo = () => {
     if (isAnimating) return;
 
@@ -190,77 +191,77 @@ const Hero = () => {
     },
   ];
 
-  if (isMobile) return null;
+  if (!isMobile) return null;
 
   return (
-    <div className="   w-full h-screen relative bg-[#0B1A2C] text-white overflow-hidden">
-      <LogoParticles />
 
-      <div className=" content_box opacity-0 container pb-5 relative z-10 w-full h-full flex flex-col justify-between pointer-events-none">
-        <div className="flex flex-1 items-center pointer-events-auto">
-          <h1 className=" heading_split leading-none">
-            Creating Growth <br />
-            Through Strong <br />
-            Foundations
-          </h1>
-        </div>
+    <div className='bg-[#0B1A2C]'>
+      <div className="   w-full h-svh relative  text-white overflow-hidden">
+        <LogoParticles />
 
-        <div>
-          <div className="flex flex-col pb-5 md:flex-row justify-between items-start md:items-end w-full gap-10 md:gap-8 pointer-events-auto">
-            <div className="max-w-lg w-full">
-              <p data-para-effect className=" paragraph_split opacity-60 leading-tight">
-                Our leadership solutions empower businesses <br className="hidden md:block" />
-                to grow with confidence, clarity, and purpose.
-              </p>
-            </div>
-
-            <div className="   flex flex-col md:flex-row items-start md:items-end gap-6">
-              <div className="text-left md:text-right">
-                <RotatingText />
-                <p className="opacity-60 paragraph_split">Currently in Amsterdam/NL.</p>
-              </div>
-
-              <div className=" relative w-72 aspect-video">
-                {/* Thumbnail Div */}
-                <div
-                  ref={videoThumbRef}
-                  onClick={!expanded ? toggleVideo : undefined}
-                  className={`overflow-hidden flex items-center justify-center transform-gpu absolute inset-0 w-full h-full rounded-xl  cursor-pointer`}
-                >
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="border-t border-white/10 pt-5">
-            <div className="flex gap-x-12 items-center pointer-events-auto">
-              {logoData.map((item, i) => (
-                <div key={item.id} className="group relative cursor-pointer">
-                  <img
-                    src={item.img}
-                    alt="logo img"
-                    className="h-14 opacity-50 group-hover:opacity-100 transition-opacity duration-300"
-                  />
-
-                  <div className="absolute bottom-full left-0 space-y-4 mb-2 w-80 bg-[#eaf4fa] text-black p-6 rounded-md shadow-2xl opacity-0 translate-y-5 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 pointer-events-none z-50">
-                    <div className="">
-                      <Image height={20} width={20} className='invert-100' src="/icons/quote.svg" alt="" />
-                    </div>
-                    <p className="text-lg  leading-tight font-medium text-black">
-                      {item.desc}
-                    </p>
-                    <p className="text-xs font-bold opacity-70 uppercase ">
-                      {item.author}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
+        <div className=" content_box opacity-0 flex items-end container pb-10 relative z-10 w-full h-full  pointer-events-none">
+          <div className="space-y-2 ">
+            <h1 className=" heading_split leading-none">
+              Creating Growth
+              Through Strong
+              Foundations
+            </h1>
+            <p className=" paragraph_split opacity-60 leading-tight">
+              Our leadership solutions empower businesses
+              to grow with confidence, clarity, and purpose.
+            </p>
           </div>
         </div>
       </div>
 
-      {/* WebGL Overlay - Always rendered now, acts as the thumbnail itself */}
+      <div className='container z-1 text-white'>
+        <div className="w-full space-y-5">
+
+          <div className="w-full space-y-5">
+            <div className="text-left md:text-right">
+              <RotatingText />
+              <p className="opacity-60 paragraph_split">Currently in Amsterdam/NL.</p>
+            </div>
+
+            <div className=" relative w-full aspect-video">
+              <div
+                ref={videoThumbRef}
+                onClick={!expanded ? toggleVideo : undefined}
+                className={`overflow-hidden z-10 flex items-center justify-center transform-gpu absolute inset-0 w-full h-full rounded-xl  cursor-pointer`}
+              >
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="border-t border-white/10 ">
+          <div className="flex justify-between pointer-events-auto">
+            {logoData.map((item, i) => (
+              <div key={item.id} className="group relative cursor-pointer">
+                <img
+                  src={item.img}
+                  alt="logo img"
+                  className="h-14 opacity-50 group-hover:opacity-100 transition-opacity duration-300"
+                />
+
+                <div className="absolute bottom-full left-0 space-y-4 mb-2 w-80 bg-[#eaf4fa] text-black p-6 rounded-md shadow-2xl opacity-0 translate-y-5 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 pointer-events-none z-50">
+                  <div className="">
+                    <Image height={20} width={20} className='invert-100' src="/icons/quote.svg" alt="" />
+                  </div>
+                  <p className="text-lg  leading-tight font-medium text-black">
+                    {item.desc}
+                  </p>
+                  <p className="text-xs font-bold opacity-70 uppercase ">
+                    {item.author}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+
       <VideoWebGLTransition
         targetRef={videoThumbRef}
         expanded={expanded}
@@ -268,13 +269,12 @@ const Hero = () => {
         onAnimationComplete={handleAnimationComplete}
       />
 
-      {/* Close Button UI (Fades in when expanded) */}
       <div
         className={`fixed inset-0 z-[1000] pointer-events-none transition-opacity duration-500 ${expanded && !isAnimating ? 'opacity-100' : 'opacity-0'}`}
       >
         <button
           onClick={toggleVideo}
-          className="absolute top-8 right-8 w-12 h-12 bg-white/10 hover:bg-white/20 text-white rounded-full flex items-center justify-center z-50 transition-colors backdrop-blur-sm pointer-events-auto"
+          className="absolute top-5 right-5 w-12 h-12 bg-white/10 hover:bg-white/20 text-white rounded-full flex items-center justify-center z-50 transition-colors backdrop-blur-sm pointer-events-auto"
         >
           <RiCloseLine size={24} />
         </button>
@@ -283,4 +283,4 @@ const Hero = () => {
   )
 }
 
-export default Hero;
+export default MobileHero;

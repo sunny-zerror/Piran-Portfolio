@@ -20,36 +20,60 @@ const Partners = () => {
     const stickyRef = useRef(null);
 
     useGSAP(() => {
+        // Initial scale/fade-in animation when section first enters viewport
+        gsap.fromTo(".partner-card",
+            { scale: 0, opacity: 0 },
+            {
+                scale: 1,
+                opacity: 1,
+                stagger: 0.04,
+                duration: 0.6,
+                ease: "back.out(1.2)",
+                scrollTrigger: {
+                    trigger: containerRef.current,
+                    start: "top 50%",
+                    toggleActions: "play none none reverse"
+                }
+            }
+        );
 
         ScrollTrigger.create({
             trigger: containerRef.current,
             start: "top+=15% top",
             onEnter: () => {
-                const state = Flip.getState(".partner-card, .grid-container");
+                const state = Flip.getState(".partner-card");
                 flushSync(() => {
                     setIsGrowth(true);
                     setIsMerged(false);
                 });
                 Flip.from(state, {
-                    duration: 0.5,
-                    ease: "power2.out",
-                    absolute: true,
-                    stagger: 0.015,
-                    onEnter: elements => gsap.fromTo(elements, { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, stagger: 0.05, duration: 0.5, ease: "power2.out" }),
+                    stagger: 0.04,
+                    duration: 0.6,
+                    ease: "back.out(1.2)",
+                    onEnter: elements => gsap.fromTo(elements,
+                        { scale: 0, opacity: 0, y: 0 },
+                        {
+                            scale: 1,
+                            opacity: 1,
+                            y: 0,
+                            stagger: 0.04,
+                            duration: 0.6,
+                            ease: "back.out(1.2)"
+                        }
+                    ),
                 });
             },
             onLeaveBack: () => {
-                const state = Flip.getState(".partner-card, .grid-container");
+                const state = Flip.getState(".partner-card");
                 flushSync(() => {
                     setIsGrowth(false);
                     setIsMerged(false);
                 });
                 Flip.from(state, {
-                    duration: 0.5,
-                    ease: "power2.out",
-                    absolute: true,
-                    stagger: 0.015,
-                    onLeave: elements => gsap.to(elements, { opacity: 0, scale: 0.8, duration: 0.4, stagger: { from: "end", each: 0.05 }, ease: "power2.in" }),
+                    stagger: 0.04,
+                    duration: 0.6,
+                    ease: "back.out(1.2)",
+                    onLeave: elements => gsap.to(elements, { opacity: 0, scale: 0.8, duration: 0.6, stagger: { from: "end", each: 0.04 }, ease: "back.out(1.2)" }),
                 });
             },
         });
@@ -58,58 +82,23 @@ const Partners = () => {
             trigger: containerRef.current,
             start: "top+=50% top",
             onEnter: () => {
-                const state = Flip.getState(".partner-card");
                 flushSync(() => {
                     setIsMerged(true);
                 });
-                Flip.from(state, {
-                    duration: 0.5,
-                    ease: "power3.inOut",
-                    absolute: true,
-                    stagger: {
-                        each: 0.03,
-                        from: "edges",
-                    },
-                    onComplete: () => {
-                        gsap.to(".merged-card-overlay", {
-                            opacity: 1,
-                            scale: 1,
-                            duration: 0.6,
-                            ease: "power2.out",
-                        });
-                        gsap.fromTo(".merged-side-left",
-                            { opacity: 0, x: -30 },
-                            { opacity: 1, x: 0, duration: 0.6, delay: 0.15, ease: "power2.out" }
-                        );
-                        gsap.fromTo(".merged-side-right",
-                            { opacity: 0, x: 30 },
-                            { opacity: 1, x: 0, duration: 0.6, delay: 0.15, ease: "power2.out" }
-                        );
+                gsap.fromTo(".merged-card-overlay", 
+                    { scale: 0.8, opacity: 0 },
+                    {
+                        opacity: 1,
+                        scale: 1,
+                        duration: 0.6,
+                        ease: "back.out(1.2)"
                     }
-                });
+                );
             },
             onLeaveBack: () => {
-                gsap.set(".merged-card-overlay", { opacity: 0 });
-                gsap.set(".merged-side-left", { opacity: 0 });
-                gsap.set(".merged-side-right", { opacity: 0 });
-                const state = Flip.getState(".partner-card");
-
+                gsap.to(".merged-card-overlay", { opacity: 0, duration: 0.4 });
                 flushSync(() => {
                     setIsMerged(false);
-                });
-
-                Flip.from(state, {
-                    duration: 0.5,
-                    ease: "power2.out",
-                    absolute: true,
-                    stagger: {
-                        each: 0.025,
-                        from: "center",
-                    },
-                    onEnter: elements => gsap.fromTo(elements,
-                        { opacity: 0, scale: 0.5 },
-                        { opacity: 1, scale: 1, stagger: 0.02, duration: 0.1, ease: "power2.out" }
-                    ),
                 });
             },
         });
@@ -143,50 +132,46 @@ const Partners = () => {
 
     return (
         <div ref={containerRef} className="container bg-[#0B1A2C] text-white relative h-[400vh]! w-full">
-            <div ref={stickyRef} className="sticky top-0 w-full h-screen overflow-hidden ">
+            <div ref={stickyRef} className="sticky top-0 w-full h-screen  overflow-hidden ">
 
-                <div className={`absolute top-24 left-0 w-[33%] z-10 transition-all duration-600 ease-out
-                    ${isMerged ? 'opacity-0 -translate-x-10 pointer-events-none' : 'opacity-100 translate-x-0'}`}
-                >
-                    <div className="relative">
-                        <div className={`w-full transition-all duration-500 ease-out absolute inset-0 ${!isGrowth ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 -translate-y-4 scale-95 pointer-events-none'}`}>
-                            <h2 data-para-effect className="leading-none text-5xl">Ventures Founded</h2>
-                            <p data-para-effect className="opacity-60 leading-tight text-lg mt-6">Companies built from the <br /> ground up.</p>
+                <div className="absolute top-1/2 -translate-y-1/2 left-0 w-[33%] z-10 transition-all duration-600 ease-out flex flex-col justify-center">
+                    <div className="relative w-full h-40">
+                        <div className={`w-full transition-all duration-500 ease-out absolute inset-0 flex flex-col justify-center  ${!isGrowth && !isMerged ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 -translate-y-4 scale-95 pointer-events-none'}`}>
+                            <h2 data-para-effect className="leading-none text-5xl ">Ventures Founded</h2>
+                            <p data-para-effect className="opacity-60 leading-tight text-lg mt-6 ">Companies built from the <br /> ground up.</p>
                         </div>
-                        <div className={`w-full transition-all duration-500 ease-out absolute inset-0 ${isGrowth && !isMerged ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-4 scale-95 pointer-events-none'}`}>
-                            <h2 data-para-effect className="leading-none text-5xl">Growth Partners</h2>
-                            <p data-para-effect className="opacity-60 leading-tight text-lg mt-6">Businesses supported  through investment  <br />and strategic growth.</p>
+                        <div className={`w-full transition-all duration-500 ease-out absolute inset-0 flex flex-col justify-center  ${isGrowth && !isMerged ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-4 scale-95 pointer-events-none'}`}>
+                            <h2 data-para-effect className="leading-none text-5xl ">Growth Partners</h2>
+                            <p data-para-effect className="opacity-60 leading-tight text-lg mt-6 ">Businesses supported  through investment  <br />and strategic growth.</p>
+                        </div>
+                        <div className={`w-full transition-all duration-500 ease-out absolute inset-0 flex flex-col justify-center  ${isMerged ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-4 scale-95 pointer-events-none'}`}>
+                            <h2 data-para-effect className="leading-none text-5xl ">Currently Building<br />Fintech Infrastructure</h2>
                         </div>
                     </div>
                 </div>
 
-                <div className={`absolute ${isMerged
-                    ? 'inset-0 flex items-center justify-center'
-                    : 'top-24 right-0 w-[64%]'
-                    }`}
-                >
-                    <div className="relative" style={isMerged ? { width: '25rem', aspectRatio: '3/4' } : { width: '100%' }}>
-
-                        <div className={`grid-container ${isMerged
-                            ? 'absolute inset-0'
-                            : `grid gap-2 w-full ${isGrowth ? 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-6' : 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-5'}`
-                            }`}
+                <div className="absolute top-1/2 -translate-y-1/2 right-0 w-[64%] h-[50vh] flex items-center">
+                    <div className={`relative w-full transition-all duration-500 ease-in-out ${isMerged ? 'aspect-video h-auto' : ''}`}>
+                        <div className={`grid-container w-full grid
+                            ${isMerged ? 'gap-0 h-full' : 'gap-2'}
+                            ${isGrowth ? 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-6' : 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-5'}
+                            `}
                         >
-                            {growthPartnersData.map((item, i) => {
-                                const isHidden = !isGrowth && !isMerged && i >= 5;
+                            {Array.from({ length: isMerged ? 18 : (isGrowth ? growthPartnersData.length : 5) }).map((_, i) => {
+                                const item = growthPartnersData[i] || { id: `dummy-${i}` };
+                                const isDummy = i >= growthPartnersData.length;
                                 return (
                                     <div
                                         key={item.id}
-                                        data-flip-id={`partner-${item.id}`}
-                                        onClick={() => handlePartnerClick(item, i)}
+                                        data-flip-id={isDummy ? `dummy-${i}` : `partner-${item.id}`}
+                                        onClick={() => !isDummy && handlePartnerClick(item, i)}
                                         className={`partner-card flex items-center justify-center
                                             ${isMerged
-                                                ? 'absolute inset-0 rounded-xl bg-[#152535]'
+                                                ? 'bg-[#152535]/80 rounded-none border-[0.5px] border-[#0B1A2C]/50 aspect-auto h-full w-full'
                                                 : `bg-white/5 rounded-lg cursor-pointer hover:bg-[#253646] transition-colors duration-300 ${isGrowth ? 'aspect-4/3' : 'aspect-square'}`
-                                            }
-                                            ${isHidden ? 'hidden' : ''}`}
+                                            }`}
                                     >
-                                        {!isMerged && (
+                                        {!isMerged && !isDummy && (
                                             <div className="w-20 h-10 center relative">
                                                 <Image fill src={getLogo(item, i)} alt="" />
                                             </div>
@@ -207,28 +192,9 @@ const Partners = () => {
                                     fill
                                     className="object-cover"
                                 />
-                                <div className="merged-card-inner absolute bottom-0 left-0 right-0 p-6 pb-5 flex flex-col items-center text-center z-10">
-                                    <h3 className="leading-tight font-medium text-white mb-4" style={{ fontFamily: "'Inter', sans-serif" }}>
-                                        Currently Building<br />Fintech Infrastructure
-                                    </h3>
-                                    <button className="bg-white uppercase text-[#883F27] rounded-full px-6 hover:pl-2 leading-none h-12 text-sm group transition-all duration-300 pointer-events-auto flex items-center gap-2">
-                                        <span className="w-2 h-2 center text-white group-hover:h-8 group-hover:w-8 rounded-full bg-[#883F27] transition-all duration-300">
-                                            <RiArrowRightUpLine className="scale-0 group-hover:scale-100 transition-all duration-300" />
-                                        </span>
-                                        My Path
-                                    </button>
-                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-
-                <div className="merged-side-left absolute left-6 bottom-8 uppercase text-white/60 leading-relaxed font-light" style={{ opacity: 0 }}>
-                    <span>Into Build3,</span><br />
-                    <span>Building Again</span>
-                </div>
-                <div className="merged-side-right absolute right-6 bottom-8 uppercase text-white/60 font-light" style={{ opacity: 0 }}>
-                    2026
                 </div>
 
             </div>
@@ -284,7 +250,7 @@ const Partners = () => {
                         <div>
                             <div
                                 className="flex justify-between items-center pt-5  cursor-pointer group"
-                              
+
                             >
                                 <h5 className="">Introducing {dummyDetails.name}</h5>
                             </div>

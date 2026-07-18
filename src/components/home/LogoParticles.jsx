@@ -4,7 +4,7 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 
 /* ═══════════════════════ Particle System ═══════════════════════ */
-const ParticleSystem = ({ gridPositions, logoPositions, randomDirs, edgeDists, hasTarget }) => {
+const ParticleSystem = ({ gridPositions, logoPositions, randomDirs, orbitData, edgeDists, hasTarget }) => {
   const pointsRef = useRef();
   const mouseWorld = useRef(new THREE.Vector3(9999, 9999, 0));
   const hoverStrength = useRef(0.0);
@@ -23,10 +23,10 @@ const ParticleSystem = ({ gridPositions, logoPositions, randomDirs, edgeDists, h
     window.addEventListener('mousemove', onMove);
     window.addEventListener('mouseleave', onLeave);
 
-    // Intro animation: form logo after 1 second
+    // Intro animation: form logo after dots fill the screen (~2.5s)
     const timeoutId = setTimeout(() => {
       inCenter.current = true;
-    }, 1000);
+    }, 1200);
 
     return () => {
       window.removeEventListener('mousemove', onMove);
@@ -55,6 +55,7 @@ const ParticleSystem = ({ gridPositions, logoPositions, randomDirs, edgeDists, h
 
           attribute vec3  aLogoPos;
           attribute vec3  aRandomDir;
+          attribute vec3  aOrbit;    // x=fallSpeed, y=fallDelay, z=startYOffset
           attribute float aHasTarget;
           attribute float aEdgeDist;
 
@@ -63,10 +64,26 @@ const ParticleSystem = ({ gridPositions, logoPositions, randomDirs, edgeDists, h
           varying float vShadow;
 
           void main() {
-            // Fast sweeping parabolic paths during wander phase
-            vec3 wanderPos = position + aRandomDir * uTime * 0.5;
-            wanderPos.x += sin(uTime * 0.4 + position.y) * 10.0;
-            wanderPos.y += cos(uTime * 0.4 + position.x) * 10.0;
+            // Fall from above → land at position → then morph to logo
+            float fallSpeed    = aOrbit.x;
+            float fallDelay    = aOrbit.y;
+            float startYOffset = aOrbit.z;  // how far above landing position
+
+            // Staggered fall timing
+            float t = max(uTime - fallDelay, 0.0);
+
+            // Fall progress: 0 (above) → 1 (landed)
+            float fallProgress = clamp(t * fallSpeed, 0.0, 1.0);
+            // Ease-out for natural deceleration on landing
+            float easedFall = 1.0 - (1.0 - fallProgress) * (1.0 - fallProgress);
+
+            // Landing position = position attribute (spread across screen)
+            vec3 wanderPos = position;
+            // Offset upward by startYOffset, reduced by eased fall
+            wanderPos.y += startYOffset * (1.0 - easedFall);
+            // Gentle horizontal sway while falling
+            wanderPos.x += sin(t * 1.5 + position.x * 4.0) * 0.08 * (1.0 - easedFall);
+
             vec3 pos = mix(wanderPos, aLogoPos, uMorph);
             
             // 3D Shadow & Depth logic for logo
@@ -159,10 +176,10 @@ const ParticleSystem = ({ gridPositions, logoPositions, randomDirs, edgeDists, h
 
     // Smooth hover fade in/out
     const isHovering = mouseWorld.current.x !== 9999;
-    hoverStrength.current += ((isHovering ? 1.0 : 0.0) - hoverStrength.current) * 0.03; // Ultra smooth fade
+    hoverStrength.current += ((isHovering ? 1.0 : 0.0) - hoverStrength.current) * 0.12; // Faster fade
     pointsRef.current.material.uniforms.uHover.value = hoverStrength.current;
 
-    // Smooth easing for mouse tracking
+    // Responsive mouse tracking
     if (isHovering) {
       const mx = (mouseWorld.current.x * vp.width) / 2;
       const my = (mouseWorld.current.y * vp.height) / 2;
@@ -171,10 +188,10 @@ const ParticleSystem = ({ gridPositions, logoPositions, randomDirs, edgeDists, h
         // Snap immediately if it was out of bounds
         pointsRef.current.material.uniforms.uMouse.value.set(mx, my, 0);
       } else {
-        // Extremely smooth tracking
+        // Fast tracking with slight smoothing
         pointsRef.current.material.uniforms.uMouse.value.lerp(
           new THREE.Vector3(mx, my, 0),
-          0.02 // Slower and smoother than before
+          0.2 // Snappy response
         );
       }
     }
@@ -197,10 +214,11 @@ const ParticleSystem = ({ gridPositions, logoPositions, randomDirs, edgeDists, h
     g.setAttribute('position', new THREE.BufferAttribute(gridPositions, 3));
     g.setAttribute('aLogoPos', new THREE.BufferAttribute(logoPositions, 3));
     g.setAttribute('aRandomDir', new THREE.BufferAttribute(randomDirs, 3));
+    g.setAttribute('aOrbit', new THREE.BufferAttribute(orbitData, 3));
     g.setAttribute('aEdgeDist', new THREE.BufferAttribute(edgeDists, 1));
     g.setAttribute('aHasTarget', new THREE.BufferAttribute(hasTarget, 1));
     return g;
-  }, [gridPositions, logoPositions, randomDirs, edgeDists, hasTarget]);
+  }, [gridPositions, logoPositions, randomDirs, orbitData, edgeDists, hasTarget]);
 
   return <points ref={pointsRef} geometry={geometry} material={material} />;
 };
@@ -217,7 +235,7 @@ export default function LogoParticles() {
       const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d');
       // Sub-pixel anti-aliasing logic to remove grid zig-zags on the edges
-      const sw = 500; // Render at much higher resolution
+      const sw = 800; // Render at much higher resolution
       const aspect = img.height / img.width;
       const sh = Math.round(sw * aspect);
       canvas.width = sw;
@@ -337,16 +355,15 @@ export default function LogoParticles() {
         (a, b) => a.x * a.x + a.y * a.y - (b.x * b.x + b.y * b.y),
       );
 
-      /* ── 2. Create random points ── */
-      const viewW = 60; // much wider area to allow starting outside
-      const viewH = 40; // much taller area
-      // Ensure we have enough total points to perfectly render every logo point, plus a few extras
+      /* ── 2. Landing positions: fill the entire viewport ── */
       const total = logoPoints.length + 400;
+      const spreadX = 20;   // full viewport width coverage
+      const spreadY = 12;   // full viewport height coverage
       const grid = [];
       for (let i = 0; i < total; i++) {
         grid.push({
-          x: (Math.random() - 0.5) * viewW,
-          y: (Math.random() - 0.5) * viewH,
+          x: (Math.random() - 0.5) * spreadX,
+          y: (Math.random() - 0.5) * spreadY,  // spread across full screen
         });
       }
 
@@ -378,21 +395,28 @@ export default function LogoParticles() {
       const positions = new Float32Array(total * 3);
       const logoPositions = new Float32Array(total * 3);
       const randomDirsArray = new Float32Array(total * 3);
+      const orbitArray = new Float32Array(total * 3);
       const edgeDists = new Float32Array(total);
       const hasTarget = new Float32Array(total);
 
       for (let i = 0; i < total; i++) {
-        // Random initial position
+        // Landing position: scattered across the full viewport
         positions[i * 3] = grid[i].x;
         positions[i * 3 + 1] = grid[i].y;
-        positions[i * 3 + 2] = (Math.random() - 0.5) * 5;
+        positions[i * 3 + 2] = 0;
 
-        // Random velocities
-        const angle = Math.random() * Math.PI * 2;
-        const speed = Math.random() * 0.5 + 0.25; // even slower paths
-        randomDirsArray[i * 3] = Math.cos(angle) * speed;
-        randomDirsArray[i * 3 + 1] = Math.sin(angle) * speed;
-        randomDirsArray[i * 3 + 2] = (Math.random() - 0.5) * speed;
+        // Legacy attribute (kept for compatibility)
+        randomDirsArray[i * 3] = 0;
+        randomDirsArray[i * 3 + 1] = 0;
+        randomDirsArray[i * 3 + 2] = 0;
+
+        // Fall parameters: fallSpeed, fallDelay, startYOffset
+        const fallSpeed    = 0.8 + Math.random() * 0.7;       // 0.8–1.5 (progress/sec)
+        const fallDelay    = Math.random() * 0.8;              // stagger: 0–0.8s
+        const startYOffset = 10 + Math.random() * 8;           // 10–18 units above landing
+        orbitArray[i * 3]     = fallSpeed;
+        orbitArray[i * 3 + 1] = fallDelay;
+        orbitArray[i * 3 + 2] = startYOffset;
 
         if (assignment[i] >= 0) {
           // Has a logo target → morph here
@@ -413,7 +437,7 @@ export default function LogoParticles() {
         }
       }
 
-      setData({ gridPositions: positions, logoPositions, randomDirs: randomDirsArray, edgeDists, hasTarget });
+      setData({ gridPositions: positions, logoPositions, randomDirs: randomDirsArray, orbitData: orbitArray, edgeDists, hasTarget });
     };
   }, []);
 
@@ -435,6 +459,7 @@ export default function LogoParticles() {
               gridPositions={data.gridPositions}
               logoPositions={data.logoPositions}
               randomDirs={data.randomDirs}
+              orbitData={data.orbitData}
               edgeDists={data.edgeDists}
               hasTarget={data.hasTarget}
             />
