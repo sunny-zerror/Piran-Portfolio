@@ -26,7 +26,7 @@ const ParticleSystem = ({ gridPositions, logoPositions, randomDirs, orbitData, e
     // Intro animation: form logo after dots fill the screen (~2.5s)
     const timeoutId = setTimeout(() => {
       inCenter.current = true;
-    }, 1200);
+    }, 1000);
 
     return () => {
       window.removeEventListener('mousemove', onMove);
@@ -94,7 +94,7 @@ const ParticleSystem = ({ gridPositions, logoPositions, randomDirs, orbitData, e
             pos.z += zOffset;
 
             // Shadow varying for fragment (center is darker)
-            vShadow = mix(1.0, mix(0.3, 1.0, normalizedDist), uMorph);
+            vShadow = 1.0;
 
             float d = distance(pos.xy, uMouse.xy);
             
@@ -123,7 +123,7 @@ const ParticleSystem = ({ gridPositions, logoPositions, randomDirs, orbitData, e
             }
 
             // Alpha: wander → 0.4 uniform │ logo → target depends on dist, non-target 0
-            float logoAlpha = mix(0.2, 0.95, normalizedDist);
+            float logoAlpha = 0.95;
             vAlpha = mix(0.4, aHasTarget > 0.5 ? logoAlpha : 0.0, uMorph);
 
             // Size curve
@@ -235,7 +235,7 @@ export default function LogoParticles() {
       const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d');
       // Sub-pixel anti-aliasing logic to remove grid zig-zags on the edges
-      const sw = 800; // Render at much higher resolution
+      const sw = 1200; // Render at much higher resolution
       const aspect = img.height / img.width;
       const sh = Math.round(sw * aspect);
       canvas.width = sw;
@@ -411,10 +411,10 @@ export default function LogoParticles() {
         randomDirsArray[i * 3 + 2] = 0;
 
         // Fall parameters: fallSpeed, fallDelay, startYOffset
-        const fallSpeed    = 0.8 + Math.random() * 0.7;       // 0.8–1.5 (progress/sec)
-        const fallDelay    = Math.random() * 0.8;              // stagger: 0–0.8s
+        const fallSpeed = 0.8 + Math.random() * 0.7;       // 0.8–1.5 (progress/sec)
+        const fallDelay = Math.random() * 0.8;              // stagger: 0–0.8s
         const startYOffset = 10 + Math.random() * 8;           // 10–18 units above landing
-        orbitArray[i * 3]     = fallSpeed;
+        orbitArray[i * 3] = fallSpeed;
         orbitArray[i * 3 + 1] = fallDelay;
         orbitArray[i * 3 + 2] = startYOffset;
 

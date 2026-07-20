@@ -16,13 +16,17 @@ const About = () => {
                 scrub: true,
             }
         })
-         tl.to(".intro_txt", {
+        tl.to(".intro_txt", {
             opacity: 1,
             stagger: 0.2
         })
+        tl.to(".int_hd", {
+            y: -50,
+            opacity: 0
+        })
         tl.to(".piran_img", {
             opacity: 1
-        }, "+=0.1")
+        }, "<")
         tl.to(".intro_txt", {
             opacity: 0
         }, "<")
@@ -34,31 +38,31 @@ const About = () => {
         })
         tl.to(".piran_img", {
             top: "-100%",
-            duration:1.5,
-            ease:"none"
+            duration: 1.5,
+            ease: "none"
         }, "<")
         tl.to([".about_bg"], {
-            transform:"translateY(0)",
-            duration:1.5,
-            ease:"none"
+            transform: "translateY(0)",
+            duration: 1.5,
+            ease: "none"
         }, "<")
         tl.to(".abt_txt_1", {
             opacity: 1
         }, "<+=0.4")
         tl.to(".abt_txt_2", {
             opacity: 1
-          }, "<+=0.4")
+        }, "<+=0.4")
         tl.to(".abt_txt_3", {
             opacity: 1
-          }, "<+=0.4")
+        }, "<+=0.4")
     })
 
     return (
         <>
             <div ref={containerRef} className="w-full relative h-[300vh] bg-[#0B1A2C]">
                 <div className=" sticky_bg sticky top-0 w-full h-screen center flex-col text-center leading-none">
-                    <div className="text-white">
-                        <h2  className=''> <span className=' intro_txt_a intro_txt'>Meet</span> <span className='intro_txt opacity-0'> Piran</span></h2>
+                    <div className="text-white int_hd">
+                        <h2 className=''> <span className=' intro_txt_a intro_txt'>Meet</span> <span className='intro_txt opacity-0'> Piran</span></h2>
                         <div className="intro_txt opacity-0">
                             <p className='text-lg  opacity-70'>Brand Architect & Strategic Catalyst</p>
                         </div>

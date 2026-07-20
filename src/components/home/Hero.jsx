@@ -158,7 +158,7 @@ const Hero = () => {
       ease: "expo.out",
       stagger: 0.05,
     }, "<+0.2");
-    tl.to([".vid_cont", "hero_logos",".header"], {
+    tl.to([".vid_cont", ".hero_logos"], {
       opacity: 1,
       stagger: 0.15
     });
@@ -220,7 +220,7 @@ const Hero = () => {
                 <p className="opacity-60 paragraph_split">Currently in Amsterdam/NL.</p>
               </div>
 
-              <div className=" relative w-72 aspect-video">
+              <div className=" vid_cont opacity-0  relative w-72 aspect-video">
                 {/* Thumbnail Div */}
                 <div
                   ref={videoThumbRef}
@@ -235,7 +235,7 @@ const Hero = () => {
           <div className="border-t border-white/10 pt-5">
             <div className="flex gap-x-12 items-center pointer-events-auto">
               {logoData.map((item, i) => (
-                <div key={item.id} className="group relative cursor-pointer">
+                <div key={item.id} className=" hero_logos opacity-0 group relative cursor-pointer">
                   <img
                     src={item.img}
                     alt="logo img"
@@ -274,7 +274,7 @@ const Hero = () => {
       >
         <button
           onClick={toggleVideo}
-          className="absolute top-8 right-8 w-12 h-12 bg-white/10 hover:bg-white/20 text-white rounded-full flex items-center justify-center z-50 transition-colors backdrop-blur-sm pointer-events-auto"
+          className={`absolute top-8 right-8 w-12 h-12 bg-white/10 hover:bg-[#0B1A2C] text-white rounded-full flex items-center justify-center z-50 transition-colors backdrop-blur-sm pointer-events-none ${expanded && "pointer-events-auto!"}`}
         >
           <RiCloseLine size={24} />
         </button>

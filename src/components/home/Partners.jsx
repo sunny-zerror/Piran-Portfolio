@@ -7,7 +7,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Flip } from 'gsap/Flip';
 import { flushSync } from 'react-dom';
-import { RiArrowRightUpLine } from '@remixicon/react';
+import { RiArrowRightUpLine, RiLinkedinBoxFill, RiLinkedinBoxLine, RiTwitterXLine } from '@remixicon/react';
 
 gsap.registerPlugin(ScrollTrigger, Flip);
 
@@ -85,18 +85,30 @@ const Partners = () => {
                 flushSync(() => {
                     setIsMerged(true);
                 });
-                gsap.fromTo(".merged-card-overlay", 
-                    { scale: 0.8, opacity: 0 },
+                
+                const tl = gsap.timeline();
+                tl.to(".grid-container", 
+                    { gap: "0px", duration: 0.4, ease: "power2.inOut" }
+                )
+                .to(".partner-card",
+                    { borderWidth: "0px", duration: 0.4, ease: "power2.inOut" },
+                    "-=0.1"
+                )
+                .to(".merged-card-overlay", 
                     {
                         opacity: 1,
-                        scale: 1,
                         duration: 0.6,
                         ease: "back.out(1.2)"
-                    }
-                );
+                    },
+                    "-=0.2"
+                )
             },
             onLeaveBack: () => {
-                gsap.to(".merged-card-overlay", { opacity: 0, duration: 0.4 });
+                gsap.killTweensOf(".grid-container, .partner-card, .merged-card-overlay");
+                gsap.to(".merged-card-overlay", { opacity: 0, duration: 0.3 });
+                gsap.set(".grid-container", { clearProps: "gap" });
+                gsap.set(".partner-card", { clearProps: "borderWidth" });
+                
                 flushSync(() => {
                     setIsMerged(false);
                 });
@@ -106,7 +118,7 @@ const Partners = () => {
 
     const dummyDetails = {
         name: "UNP",
-        tags: ["TECHNOLOGY", "INDAI", "USA"],
+        tags: ["TECHNOLOGY", "INDIA", "USA"],
         founder: "Robin Charles",
         website: "#",
         desc1: "At its core, UNP is a platform built around people. We believe the strongest businesses are created through trusted relationships, clear thinking, and a shared commitment to long-term success. By bringing together exceptional founders, strategic partners, and growth opportunities, we help create the conditions for meaningful progress.",
@@ -151,7 +163,7 @@ const Partners = () => {
                 </div>
 
                 <div className="absolute top-1/2 -translate-y-1/2 right-0 w-[64%] h-[50vh] flex items-center">
-                    <div className={`relative w-full transition-all duration-500 ease-in-out ${isMerged ? 'aspect-video h-auto' : ''}`}>
+                    <div className="relative w-full transition-all duration-500 ease-in-out">
                         <div className={`grid-container w-full grid
                             ${isMerged ? 'gap-0 h-full' : 'gap-2'}
                             ${isGrowth ? 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-6' : 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-5'}
@@ -165,10 +177,10 @@ const Partners = () => {
                                         key={item.id}
                                         data-flip-id={isDummy ? `dummy-${i}` : `partner-${item.id}`}
                                         onClick={() => !isDummy && handlePartnerClick(item, i)}
-                                        className={`partner-card flex items-center justify-center
+                                        className={`partner-card flex items-center justify-center w-full ${isGrowth ? 'aspect-6/5' : 'aspect-square'}
                                             ${isMerged
-                                                ? 'bg-[#152535]/80 rounded-none border-[0.5px] border-[#0B1A2C]/50 aspect-auto h-full w-full'
-                                                : `bg-white/5 rounded-lg cursor-pointer hover:bg-[#253646] transition-colors duration-300 ${isGrowth ? 'aspect-4/3' : 'aspect-square'}`
+                                                ? 'bg-[#152535]/80 rounded-none border-[0.5px] border-[#0B1A2C]/50'
+                                                : 'bg-white/5 rounded-lg cursor-pointer hover:bg-[#253646] transition-colors duration-300'
                                             }`}
                                     >
                                         {!isMerged && !isDummy && (
@@ -182,16 +194,64 @@ const Partners = () => {
                         </div>
 
                         <div
-                            className="merged-card-overlay absolute inset-0 rounded-xl overflow-hidden"
+                            className="merged-card-overlay absolute inset-0 bg-[#152535]/90  overflow-hidden  p-4 md:p-8"
                             style={{ opacity: 0, zIndex: 50, pointerEvents: isMerged ? 'auto' : 'none' }}
                         >
-                            <div className="relative w-full h-full">
-                                <Image
-                                    src="/images/homepage/recent_project.png"
-                                    alt="Currently Building"
-                                    fill
-                                    className="object-cover"
-                                />
+                            <div className="w-full h-full">
+                                    <div className="grid grid-cols-5 w-full h-full gap-x-16 text-white">
+                                        
+                                        <div className="  col-span-2 h-full flex flex-col justify-between w-full">
+                                            <div className="">
+
+                                            <div className="flex items-center gap-3 mb-8">
+                                                <div className="w-8 h-8 bg-white rounded-sm transform rotate-45 flex-shrink-0 mt-1"></div>
+                                                <h3 className="text-4xl font-bold text-white tracking-tight">{dummyDetails.name}</h3>
+                                            </div>
+
+                                            <div className="flex flex-wrap items-center justify-between mb-8 gap-4">
+                                                <div className="flex flex-wrap gap-2 text-xs ">
+                                                    <span className="px-4 py-2 border border-white/20  text-white rounded-full flex items-center gap-2">
+                                                        <div className="w-2 h-2 rounded-full bg-white"></div> {dummyDetails.tags[0]}
+                                                    </span>
+                                                    <span className="px-4 py-2 border border-white/20  text-white rounded-full">{dummyDetails.tags[1]}</span>
+                                                    <span className="px-4 py-2 border border-white/20  text-white rounded-full">{dummyDetails.tags[2]}</span>
+                                                </div>
+                                                <a href={dummyDetails.website} className="px-4 py-2 pl-3 border border-white/20 rounded-full text-xs  flex items-center gap-2 text-white hover:bg-white hover:text-[#152535] transition-colors duration-300">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                                                    </svg>
+                                                    WEBSITE
+                                                </a>
+                                            </div>
+                                            </div>
+
+                                            <div className="flex flex-wrap text-white items-center justify-between border-t border-white/10 pt-4 gap-4">
+                                                <div>
+                                                    <p className="text-sm mb-1 opacity-70">Founder</p>
+                                                    <p className="font-medium text-lg">{dummyDetails.founder}</p>
+                                                </div>
+                                                <div className="flex gap-2 opacity-80">
+                                                    <RiTwitterXLine/>
+                                                    <RiLinkedinBoxFill/>
+                                                   
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div className=" col-span-3   w-full">
+                                            <div className="flex justify-between items-center ">
+                                                <h5 className="text-xl font-medium">Introducing {dummyDetails.name}</h5>
+                                            </div>
+                                            <div data-lenis-prevent className="mt-4 overflow-y-scroll scroller_none h-70">
+                                                <div className="text-white opacity-70 leading-relaxed space-y-4">
+                                                    <p>{dummyDetails.desc1}</p>
+                                                    <p>{dummyDetails.desc2}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                         
                             </div>
                         </div>
                     </div>
@@ -216,14 +276,14 @@ const Partners = () => {
                             </div>
 
                             <div className="flex flex-wrap items-center justify-between mb-8 gap-4">
-                                <div className="flex flex-wrap gap-2 text-xs font-semibold text-black">
+                                <div className="flex flex-wrap gap-2 text-xs  text-black">
                                     <span className="px-4 py-1.5 border border-black/10 rounded-full flex items-center gap-2">
                                         <div className="w-1.5 h-1.5 rounded-full bg-[#883F27]"></div> {dummyDetails.tags[0]}
                                     </span>
                                     <span className="px-4 py-1.5 border border-black/10 rounded-full">{dummyDetails.tags[1]}</span>
                                     <span className="px-4 py-1.5 border border-black/10 rounded-full">{dummyDetails.tags[2]}</span>
                                 </div>
-                                <a href={dummyDetails.website} className="px-4 py-1.5 pl-3 border-black/10 border rounded-full text-xs font-semibold flex items-center gap-2 hover:bg-[#883F27] hover:text-white transition-colors duration-300 ">
+                                <a href={dummyDetails.website} className="px-4 py-1.5 pl-3 border-black/10 border rounded-full text-xs  flex items-center gap-2 hover:bg-[#883F27] hover:text-white transition-colors duration-300 ">
                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
                                     </svg>

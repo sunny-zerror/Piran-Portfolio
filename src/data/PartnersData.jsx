@@ -201,4 +201,13 @@ export const growthPartnersData = [
         website: "",
         description: ""
     },
+      {
+        id: 18,
+        logo: "/images/homepage/partners/ventures/img2.svg",
+        name: "",
+        tags: [],
+        founder: "",
+        website: "",
+        description: ""
+    },
 ]

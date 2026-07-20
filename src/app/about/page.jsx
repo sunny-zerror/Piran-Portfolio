@@ -1,10 +1,13 @@
+import AboutHero from "@/components/about/AboutHero";
+import ParallaxSection from "@/components/about/ParallaxSection";
 import { createPageMetadata } from "@/lib/seo";
 
 const AboutPage = () => {
   return (
-    <div>
-      About
-    </div>
+    <>
+      <AboutHero/>
+      <ParallaxSection/>
+    </>
   );
 };
 
