@@ -93,6 +93,25 @@ const ParticleSystem = ({ gridPositions, logoPositions, randomDirs, orbitData, e
             float zOffset = mix(0.0, -2.5 * (1.0 - normalizedDist), uMorph);
             pos.z += zOffset;
 
+            // ── Continuous wave / bulge ripple ──
+            // Three sine waves traveling in different directions create
+            // an organic, ocean-like undulation across the logo surface
+            if (uMorph > 0.05 && aHasTarget > 0.5) {
+              float waveStrength = smoothstep(0.05, 0.7, uMorph); // fade in with morph
+
+              // Wave 1: diagonal sweep (bottom-left → top-right)
+              float w1 = sin(pos.x * 3.0 + pos.y * 2.0 + uTime * 1.2) * 0.18;
+
+              // Wave 2: opposite diagonal, slower & wider
+              float w2 = sin(-pos.x * 2.0 + pos.y * 3.5 + uTime * 0.8 + 1.0) * 0.12;
+
+              // Wave 3: radial pulse outward from center
+              float r = length(pos.xy);
+              float w3 = sin(r * 4.0 - uTime * 1.5) * 0.10;
+
+              pos.z += (w1 + w2 + w3) * waveStrength;
+            }
+
             // Shadow varying for fragment (center is darker)
             vShadow = 1.0;
 
@@ -122,8 +141,26 @@ const ParticleSystem = ({ gridPositions, logoPositions, randomDirs, orbitData, e
               vGlow = proximity * morphFactor;
             }
 
-            // Alpha: wander → 0.4 uniform │ logo → target depends on dist, non-target 0
-            float logoAlpha = 0.95;
+            // ── Continuous Opacity Wave / Border Movement ──
+            float opacityWave = 0.0;
+            if (uMorph > 0.1 && aHasTarget > 0.5) {
+              // Calculate angle around logo center for a rotating border sweep
+              float angle = atan(aLogoPos.y, aLogoPos.x);
+              
+              // Traveling sweep wave along the border/shape perimeter
+              float sweep = sin(angle * 3.0 - uTime * 2.5) * 0.5 + 0.5;
+              
+              // Radial traveling wave moving outward
+              float distFromCenter = length(aLogoPos.xy);
+              float radialWave = sin(distFromCenter * 5.0 - uTime * 3.0) * 0.5 + 0.5;
+
+              // Combine border sweep and radial wave (enhance edge dots more for border emphasis)
+              float borderWeight = mix(0.5, 1.2, aEdgeDist);
+              opacityWave = (sweep * 0.6 + radialWave * 0.4) * borderWeight;
+            }
+
+            // Alpha: wander → 0.4 uniform │ logo → modulated by continuous opacity wave
+            float logoAlpha = 0.4 + opacityWave * 0.55; 
             vAlpha = mix(0.4, aHasTarget > 0.5 ? logoAlpha : 0.0, uMorph);
 
             // Size curve
@@ -235,7 +272,7 @@ export default function LogoParticles() {
       const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d');
       // Sub-pixel anti-aliasing logic to remove grid zig-zags on the edges
-      const sw = 1200; // Render at much higher resolution
+      const sw = 500; // Render at much higher resolution
       const aspect = img.height / img.width;
       const sh = Math.round(sw * aspect);
       canvas.width = sw;

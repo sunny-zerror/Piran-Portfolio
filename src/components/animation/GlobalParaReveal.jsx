@@ -54,7 +54,7 @@ const GlobalParaReveal = () => {
         })
 
         gsap.to(split.lines, {
-          yPercent: 0,
+          yPercent: -6,
           rotateX: 0,
           duration: 1,
           stagger: 0.1,

@@ -14,63 +14,111 @@ const AboutHero = () => {
     const maskContainerRef = useRef(null);
 
     useGSAP(() => {
+        const preventDefault = (e) => e.preventDefault();
+
+        // Block keys that trigger scroll (Space, PageUp, PageDown, End, Home, Up, Down)
+        const keys = { Space: 1, PageUp: 1, PageDown: 1, End: 1, Home: 1, ArrowUp: 1, ArrowDown: 1 };
+        const preventDefaultForScrollKeys = (e) => {
+            if (keys[e.code]) {
+                e.preventDefault();
+                return false;
+            }
+        };
+
+        let isLocked = true;
+
+        const lockScroll = () => {
+            document.body.style.overflow = "hidden";
+            document.documentElement.style.overflow = "hidden";
+
+            window.addEventListener("wheel", preventDefault, { passive: false });
+            window.addEventListener("touchmove", preventDefault, { passive: false });
+            window.addEventListener("keydown", preventDefaultForScrollKeys, { passive: false });
+
+            // Continuously enforce Lenis stop while locked
+            const interval = setInterval(() => {
+                if (window.lenis && isLocked) {
+                    window.lenis.stop();
+                }
+                if (!isLocked) {
+                    clearInterval(interval);
+                }
+            }, 50);
+        };
+
+        const unlockScroll = () => {
+            isLocked = false;
+            document.body.style.overflow = "";
+            document.documentElement.style.overflow = "";
+
+            window.removeEventListener("wheel", preventDefault);
+            window.removeEventListener("touchmove", preventDefault);
+            window.removeEventListener("keydown", preventDefaultForScrollKeys);
+
+            if (window.lenis) {
+                window.lenis.start();
+            }
+            ScrollTrigger.refresh();
+        };
+
+        lockScroll();
+
         // Initial entry animation (runs on mount)
         gsap.from(".initial-para", {
             opacity: 0,
             duration: 0.25,
             stagger: 1,
-            ease: "power2.out"
-        });
+            ease: "power2.out",
+            onComplete: () => {
+                unlockScroll();
 
-        // Initialize timeline with ScrollTrigger
-        const tl = gsap.timeline({
-            scrollTrigger: {
-                trigger: containerRef.current,
-                start: "top top",
-                end: "bottom bottom",
-                scrub: 1,
+                // Initialize timeline with ScrollTrigger ONLY after intro animation finishes
+                const tl = gsap.timeline({
+                    scrollTrigger: {
+                        trigger: containerRef.current,
+                        start: "top top",
+                        end: "bottom bottom",
+                        scrub: 1,
+                    }
+                });
+
+                // Phase 1: Fade out non-target text and change background
+                tl.to(".fade-text", { opacity: 0, duration: 0.5 })
+                    .to(stickyRef.current, { backgroundColor: "#ECE3DB", duration: 0.5 }, "<")
+                    .to(".target-text", { color: "#0B1A2C", duration: 0.5 }, "<");
+
+                // Phase 2: Move targets to final destinations using Flip.fit & Reveal Mask
+                const targets = gsap.utils.toArray(".target-text");
+                const destinations = gsap.utils.toArray(".final-dest");
+
+                targets.forEach((target, i) => {
+                    const fitTween = Flip.fit(target, destinations[i], {
+                        duration: 1,
+                        scale: true,
+                    });
+                    tl.add(fitTween, "move");
+                });
+
+                // Phase 3: Mask expands to fill the screen AND text splits open horizontally
+                tl.to(maskContainerRef.current, {
+                    "--mask-size": "5000px",
+                    duration: 2,
+                    ease: "power2.in"
+                }, "expand")
+                    .to([targets[0], targets[1]], {
+                        x: "-=50vw",
+                        opacity: 0,
+                        duration: 2.5,
+                        ease: "power1.inOut"
+                    }, "expand")
+                    .to([targets[2], targets[3]], {
+                        x: "+=50vw",
+                        opacity: 0,
+                        duration: 2.5,
+                        ease: "power1.inOut"
+                    }, "expand");
             }
         });
-
-        // Phase 1: Fade out non-target text and change background
-        tl.to(".fade-text", { opacity: 0, duration: 0.5 })
-            .to(stickyRef.current, { backgroundColor: "#ECE3DB", duration: 0.5 }, "<")
-            .to(".target-text", { color: "#0B1A2C", duration: 0.5 }, "<");
-
-        // Phase 2: Move targets to final destinations using Flip.fit & Reveal Mask
-        const targets = gsap.utils.toArray(".target-text");
-        const destinations = gsap.utils.toArray(".final-dest");
-
-        targets.forEach((target, i) => {
-            // Flip.fit returns a tween that animates the target exactly over the destination
-            const fitTween = Flip.fit(target, destinations[i], {
-                duration: 1,
-                scale: true,
-            });
-            tl.add(fitTween, "move"); // Add them at a label "move" so they happen together
-        });
-
-
-        // Phase 3: Mask expands to fill the screen AND text splits open horizontally
-        tl.to(maskContainerRef.current, {
-            "--mask-size": "5000px", // Expand mask massively to reveal full image
-            duration: 2,
-            ease: "power2.in"
-        }, "expand")
-            // Move the left two target texts to the left
-            .to([targets[0], targets[1]], {
-                x: "-=50vw",
-                opacity: 0,
-                duration: 1,
-                ease: "power1.inOut"
-            }, "expand")
-            // Move the right two target texts to the right
-            .to([targets[2], targets[3]], {
-                x: "+=50vw",
-                opacity: 0,
-                duration: 1,
-                ease: "power1.inOut"
-            }, "expand");
 
     }, { scope: containerRef });
 
@@ -84,7 +132,7 @@ const AboutHero = () => {
                 {/* The Masked Image Container */}
                 <div
                     ref={maskContainerRef}
-                    className="absolute inset-0 w-full h-full z-0 pointer-events-none"
+                    className="absolute inset-0 w-full h-full z-20 pointer-events-none"
                     style={{
                         "--mask-size": "0px",
                         maskImage: "url('/logo_blue.svg')",
