@@ -11,7 +11,9 @@ const ParticleSystem = ({ gridPositions, logoPositions, randomDirs, orbitData, e
   const morphProgress = useRef(0);
   const inCenter = useRef(false);
 
-  // Global mouse tracking and intro animation
+  const scrollProgress = useRef(0);
+
+  // Global mouse tracking, scroll tracking and intro animation
   useEffect(() => {
     const onMove = (e) => {
       mouseWorld.current.x = (e.clientX / window.innerWidth) * 2 - 1;
@@ -20,10 +22,17 @@ const ParticleSystem = ({ gridPositions, logoPositions, randomDirs, orbitData, e
     const onLeave = () => {
       mouseWorld.current.set(9999, 9999, 0);
     };
+    const onScroll = () => {
+      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+      if (maxScroll > 0) {
+        scrollProgress.current = Math.min(window.scrollY / (window.innerHeight * 0.8), 1.0);
+      }
+    };
+
     window.addEventListener('mousemove', onMove);
     window.addEventListener('mouseleave', onLeave);
+    window.addEventListener('scroll', onScroll);
 
-    // Intro animation: form logo after dots fill the screen (~2.5s)
     const timeoutId = setTimeout(() => {
       inCenter.current = true;
     }, 1000);
@@ -31,6 +40,7 @@ const ParticleSystem = ({ gridPositions, logoPositions, randomDirs, orbitData, e
     return () => {
       window.removeEventListener('mousemove', onMove);
       window.removeEventListener('mouseleave', onLeave);
+      window.removeEventListener('scroll', onScroll);
       clearTimeout(timeoutId);
     };
   }, []);
@@ -41,6 +51,7 @@ const ParticleSystem = ({ gridPositions, logoPositions, randomDirs, orbitData, e
         uniforms: {
           uTime: { value: 0 },
           uMorph: { value: 0 },
+          uScroll: { value: 0.0 },
           uMouse: { value: new THREE.Vector3(9999, 9999, 0) },
           uHover: { value: 0.0 },
           uResolution: { value: new THREE.Vector2() },
@@ -49,13 +60,14 @@ const ParticleSystem = ({ gridPositions, logoPositions, randomDirs, orbitData, e
         vertexShader: `
           uniform float uTime;
           uniform float uMorph;
+          uniform float uScroll;
           uniform vec3  uMouse;
           uniform float uHover;
           uniform vec2  uResolution;
 
           attribute vec3  aLogoPos;
           attribute vec3  aRandomDir;
-          attribute vec3  aOrbit;    // x=fallSpeed, y=fallDelay, z=startYOffset
+          attribute vec3  aOrbit;    // x=flySpeed, y=flyDelay, z=startDepth
           attribute float aHasTarget;
           attribute float aEdgeDist;
 
@@ -64,122 +76,152 @@ const ParticleSystem = ({ gridPositions, logoPositions, randomDirs, orbitData, e
           varying float vShadow;
 
           void main() {
-            // Fall from above → land at position → then morph to logo
-            float fallSpeed    = aOrbit.x;
-            float fallDelay    = aOrbit.y;
-            float startYOffset = aOrbit.z;  // how far above landing position
+            float flySpeed   = aOrbit.x;
+            float flyDelay   = aOrbit.y;
+            float startDepth = aOrbit.z;
 
-            // Staggered fall timing
-            float t = max(uTime - fallDelay, 0.0);
-
-            // Fall progress: 0 (above) → 1 (landed)
-            float fallProgress = clamp(t * fallSpeed, 0.0, 1.0);
-            // Ease-out for natural deceleration on landing
-            float easedFall = 1.0 - (1.0 - fallProgress) * (1.0 - fallProgress);
-
-            // Landing position = position attribute (spread across screen)
-            vec3 wanderPos = position;
-            // Offset upward by startYOffset, reduced by eased fall
-            wanderPos.y += startYOffset * (1.0 - easedFall);
-            // Gentle horizontal sway while falling
-            wanderPos.x += sin(t * 1.5 + position.x * 4.0) * 0.08 * (1.0 - easedFall);
-
-            vec3 pos = mix(wanderPos, aLogoPos, uMorph);
+            // ── Animation 1: Permanent continuous particle stream (Inwards -> Outside towards user) ──
+            float forwardTime = uTime + flyDelay * 0.5;
+            // Extra-slow speed factor (0.18 multiplier for ultra slow motion)
+            float depthZ = mod(-startDepth * 1.5 + forwardTime * 2.0 * flySpeed, 35.0) - 20.0;
             
-            // 3D Shadow & Depth logic for logo
+            vec3 streamPos = vec3(
+              aRandomDir.xy * (4.0 + (depthZ + 10.0) * 0.45),
+              depthZ
+            );
+
+            // ── Animation 2: Logo formation particles (Flying from OUTSIDE screen into logo position after 1 sec) ──
+            vec3 outsidePos = vec3(
+              normalize(aRandomDir.xy + vec2(0.001)) * (20.0 + startDepth * 1.5),
+              (aRandomDir.z - 0.5) * 10.0
+            );
+
+            float morphEased = smoothstep(0.0, 1.0, uMorph);
+            vec3 logoFormationPos = mix(outsidePos, aLogoPos, morphEased);
+
+            // ── Scroll Random Dispersion Outwards ──
+            // Each dot spreads out randomly off-screen along its individual random direction (aRandomDir) on scroll
+            vec3 scrollRandomOffset = aRandomDir * (uScroll * 30.0);
+            logoFormationPos += scrollRandomOffset;
+
+            vec3 pos = (aHasTarget > 0.5) ? logoFormationPos : streamPos;
+            
+            // 3D Depth & Bowl curve for logo once formed
             float normalizedDist = aEdgeDist;
-            
-            // Push center back to create a 3D bowl shape
-            float zOffset = mix(0.0, -2.5 * (1.0 - normalizedDist), uMorph);
-            pos.z += zOffset;
+            if (aHasTarget > 0.5) {
+              float zOffset = mix(0.0, -1.8 * (1.0 - normalizedDist), morphEased);
+              pos.z += zOffset;
+            }
 
-            // ── Continuous wave / bulge ripple ──
-            // Three sine waves traveling in different directions create
-            // an organic, ocean-like undulation across the logo surface
-            if (uMorph > 0.05 && aHasTarget > 0.5) {
-              float waveStrength = smoothstep(0.05, 0.7, uMorph); // fade in with morph
+            // Continuous surface ripple wave across logo body
+            if (morphEased > 0.05 && aHasTarget > 0.5) {
+              float waveStrength = smoothstep(0.05, 0.7, morphEased);
 
-              // Wave 1: diagonal sweep (bottom-left → top-right)
-              float w1 = sin(pos.x * 3.0 + pos.y * 2.0 + uTime * 1.2) * 0.18;
-
-              // Wave 2: opposite diagonal, slower & wider
-              float w2 = sin(-pos.x * 2.0 + pos.y * 3.5 + uTime * 0.8 + 1.0) * 0.12;
-
-              // Wave 3: radial pulse outward from center
+              float w1 = sin(pos.x * 3.0 + pos.y * 2.0 + uTime * 1.2) * 0.16;
+              float w2 = sin(-pos.x * 2.0 + pos.y * 3.5 + uTime * 0.8 + 1.0) * 0.11;
               float r = length(pos.xy);
-              float w3 = sin(r * 4.0 - uTime * 1.5) * 0.10;
+              float w3 = sin(r * 4.0 - uTime * 1.5) * 0.09;
 
               pos.z += (w1 + w2 + w3) * waveStrength;
             }
 
-            // Shadow varying for fragment (center is darker)
             vShadow = 1.0;
-
             float d = distance(pos.xy, uMouse.xy);
             
-            // ── Gradual Dome Bulge (no hard circle edge) ──
-            // Large soft radius — effect fades smoothly, no visible boundary
-            float bulgeRadius = 1.0;
-            float falloff = exp(-d * d / (bulgeRadius * bulgeRadius)); // Gaussian bell curve
+            // Interactive mouse dome displacement & dispersion
+            float bulgeRadius = 1.1;
+            float falloff = exp(-d * d / (bulgeRadius * bulgeRadius));
             
-            if (falloff > 0.01 && uMorph > 0.1) {
-              // Smooth dome height using gaussian — gradually builds toward center
-              pos.z += falloff * 0.5 * uHover;
-              
-              // Gradually spread dots outward in XY — creates visible gaps near center
+            if (falloff > 0.01 && morphEased > 0.1) {
+              pos.z += falloff * 0.55 * uHover;
               vec2 dir = normalize(pos.xy - uMouse.xy + 0.0001);
-              pos.xy += dir * falloff * 0.5 * uHover;
+              pos.xy += dir * falloff * 0.55 * uHover;
             }
 
-            // ── Spotlight glow ──
-            float glowRadius = 1.2;
+            // Spotlight glow effect
+            float glowRadius = 1.3;
             vGlow = 0.0;
 
-            if (uMorph > 0.1 && d < glowRadius && aHasTarget > 0.5) {
+            if (morphEased > 0.1 && d < glowRadius && aHasTarget > 0.5) {
               float proximity = smoothstep(glowRadius, 0.0, d) * uHover;
-              float morphFactor = smoothstep(0.1, 0.6, uMorph);
+              float morphFactor = smoothstep(0.1, 0.6, morphEased);
               vGlow = proximity * morphFactor;
             }
 
-            // ── Continuous Opacity Wave / Border Movement ──
+            // Continuous pulse / luminous border dynamics
             float opacityWave = 0.0;
-            if (uMorph > 0.1 && aHasTarget > 0.5) {
-              // Calculate angle around logo center for a rotating border sweep
+            if (morphEased > 0.1 && aHasTarget > 0.5) {
               float angle = atan(aLogoPos.y, aLogoPos.x);
-              
-              // Traveling sweep wave along the border/shape perimeter
               float sweep = sin(angle * 3.0 - uTime * 2.5) * 0.5 + 0.5;
-              
-              // Radial traveling wave moving outward
               float distFromCenter = length(aLogoPos.xy);
               float radialWave = sin(distFromCenter * 5.0 - uTime * 3.0) * 0.5 + 0.5;
 
-              // Combine border sweep and radial wave (enhance edge dots more for border emphasis)
-              float borderWeight = mix(0.5, 1.2, aEdgeDist);
+              float borderWeight = mix(0.5, 1.25, aEdgeDist);
               opacityWave = (sweep * 0.6 + radialWave * 0.4) * borderWeight;
             }
 
-            // Alpha: wander → 0.4 uniform │ logo → modulated by continuous opacity wave
-            float logoAlpha = 0.4 + opacityWave * 0.55; 
-            vAlpha = mix(0.4, aHasTarget > 0.5 ? logoAlpha : 0.0, uMorph);
-
-            // Size curve
-            float sizeCurve = pow(normalizedDist, 3.0);
-            float logoTargetSize = mix(2.2, 10.0, sizeCurve); 
-            float sz = mix(6.0, aHasTarget > 0.5 ? logoTargetSize : 0.0, uMorph);
-
-            // Spotlight: dots near cursor scale up in logo mode
-            sz += vGlow * 4.0;
-
-            // Kill invisible particles early
-            if (sz < 0.1 || vAlpha < 0.01) {
-              gl_Position = vec4(9999.0);
-              return;
+            // Luminance & particle sizing logic
+            float logoAlpha = 0.45 + opacityWave * 0.55; 
+            
+            if (aHasTarget > 0.5) {
+              // ── Full Vibrant Logo Sparkle / Twinkle Animation (Extra-slow time scale) ──
+              float logoSparkleFreq = 2.5 + sin(aLogoPos.x * 35.0 + aLogoPos.y * 45.0) * 1.5;
+              float logoSparklePhase = aLogoPos.x * 25.0 + aLogoPos.y * 35.0 + uTime * 0.4;
+              float logoSparkle = sin(uTime * logoSparkleFreq + logoSparklePhase) * 0.5 + 0.5;
+              
+              // Vibrant sparkle pulse exponent
+              float logoTwinkle = pow(logoSparkle, 3.0) * 1.6 * morphEased; 
+              
+              vGlow += logoTwinkle * 1.2;
+              
+              // Scale size to 0 and fade opacity to 0 on scroll smoothly
+              float scrollFade = clamp(1.0 - uScroll * 1.5, 0.0, 1.0);
+              vAlpha = mix(0.0, clamp(logoAlpha + logoTwinkle * 0.5, 0.0, 1.0), morphEased) * scrollFade;
+              
+              float sizeCurve = pow(normalizedDist, 2.5);
+              float logoTargetSize = mix(1.2, 4.5, sizeCurve); 
+              float sz = (mix(1.0, logoTargetSize, morphEased) + vGlow * 2.0 + logoTwinkle * 1.2) * scrollFade;
+              
+              if (sz < 0.1 || vAlpha < 0.01) {
+                gl_Position = vec4(9999.0);
+                return;
+              }
+              
+              vec4 mv = modelViewMatrix * vec4(pos, 1.0);
+              gl_PointSize = sz * (uResolution.y / 800.0);
+              gl_Position  = projectionMatrix * mv;
+            } else {
+              // Smooth opacity gradient: 0.0 at deep origin (-20.0) ramping smoothly to 1.0 at user end (+10.0)
+              float streamProgress = clamp((pos.z - (-20.0)) / 30.0, 0.0, 1.0);
+              // Starts at exact 0.0 opacity at origin, ramping smoothly up to 1.0
+              float alphaRamp = smoothstep(0.0, 1.0, streamProgress); 
+              
+              // Fade out gently at the very edge end
+              float endFade = smoothstep(15.0, 8.0, pos.z);
+              
+              // ── Dynamic Star Sparkle / Twinkle effect ──
+              float sparkleFreq = 6.0 + sin(aRandomDir.z * 100.0) * 4.0;
+              float sparklePhase = aOrbit.y * 12.0 + aRandomDir.x * 50.0;
+              float sparkle = sin(uTime * sparkleFreq + sparklePhase) * 0.5 + 0.5;
+              
+              float twinkle = pow(sparkle, 4.0) * 1.5; 
+              
+              // Opacity starts strictly at 0.0 at origin (-20.0) and reaches 1.0
+              vAlpha = alphaRamp * endFade * mix(0.7, 1.0, sparkle * 0.3);
+              vGlow = twinkle * 0.6;
+              
+              // Particle size also scales smoothly from 0.0 at origin up to full size
+              float sz = (1.75 + twinkle * 1.25) * alphaRamp;
+              
+              if (sz < 0.1 || vAlpha < 0.01) {
+                gl_Position = vec4(9999.0);
+                return;
+              }
+              
+              vec4 mv = modelViewMatrix * vec4(pos, 1.0);
+              gl_PointSize = sz * (uResolution.y / 800.0);
+              gl_Position  = projectionMatrix * mv;
             }
-
-            vec4 mv = modelViewMatrix * vec4(pos, 1.0);
-            gl_PointSize = sz * (uResolution.y / 800.0);
-            gl_Position  = projectionMatrix * mv;
           }
         `,
         fragmentShader: `
@@ -233,10 +275,14 @@ const ParticleSystem = ({ gridPositions, logoPositions, randomDirs, orbitData, e
       }
     }
 
-    // Smooth morph easing
+    // Smooth morph easing (slowed down for smooth intro build)
     const target = inCenter.current ? 1.0 : 0.0;
-    morphProgress.current += (target - morphProgress.current) * 0.084; // Slower by ~30%
+    morphProgress.current += (target - morphProgress.current) * 0.035; // Slower transition
     pointsRef.current.material.uniforms.uMorph.value = morphProgress.current;
+
+    // Update scroll progress uniform smoothly
+    pointsRef.current.material.uniforms.uScroll.value +=
+      (scrollProgress.current - pointsRef.current.material.uniforms.uScroll.value) * 0.1;
 
     pointsRef.current.material.uniforms.uTime.value = state.clock.elapsedTime;
 
@@ -393,9 +439,10 @@ export default function LogoParticles() {
       );
 
       /* ── 2. Landing positions: fill the entire viewport ── */
-      const total = logoPoints.length + 400;
-      const spreadX = 20;   // full viewport width coverage
-      const spreadY = 12;   // full viewport height coverage
+      // Balanced ambient particle volume
+      const total = logoPoints.length + 1200;
+      const spreadX = 30;
+      const spreadY = 18;
       const grid = [];
       for (let i = 0; i < total; i++) {
         grid.push({
@@ -442,18 +489,24 @@ export default function LogoParticles() {
         positions[i * 3 + 1] = grid[i].y;
         positions[i * 3 + 2] = 0;
 
-        // Legacy attribute (kept for compatibility)
-        randomDirsArray[i * 3] = 0;
-        randomDirsArray[i * 3 + 1] = 0;
-        randomDirsArray[i * 3 + 2] = 0;
+        // Direction vector for central burst expansion (3D sphere direction)
+        const theta = Math.random() * Math.PI * 2;
+        const phi = Math.acos(2 * Math.random() - 1);
+        const rx = Math.sin(phi) * Math.cos(theta);
+        const ry = Math.sin(phi) * Math.sin(theta);
+        const rz = Math.cos(phi);
 
-        // Fall parameters: fallSpeed, fallDelay, startYOffset
-        const fallSpeed = 0.8 + Math.random() * 0.7;       // 0.8–1.5 (progress/sec)
-        const fallDelay = Math.random() * 0.8;              // stagger: 0–0.8s
-        const startYOffset = 10 + Math.random() * 8;           // 10–18 units above landing
-        orbitArray[i * 3] = fallSpeed;
-        orbitArray[i * 3 + 1] = fallDelay;
-        orbitArray[i * 3 + 2] = startYOffset;
+        randomDirsArray[i * 3] = rx;
+        randomDirsArray[i * 3 + 1] = ry;
+        randomDirsArray[i * 3 + 2] = rz;
+
+        // Fall/Burst parameters: speed, delay, start distance factor
+        const burstSpeed = 0.9 + Math.random() * 0.8;      // speed multiplier
+        const burstDelay = Math.random() * 0.4;             // stagger delay (0s - 0.4s)
+        const startRadius = 6 + Math.random() * 12;           // explosion radius multiplier
+        orbitArray[i * 3] = burstSpeed;
+        orbitArray[i * 3 + 1] = burstDelay;
+        orbitArray[i * 3 + 2] = startRadius;
 
         if (assignment[i] >= 0) {
           // Has a logo target → morph here

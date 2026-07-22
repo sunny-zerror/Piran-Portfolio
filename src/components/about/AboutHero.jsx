@@ -84,8 +84,6 @@ const AboutHero = () => {
 
                 // Phase 1: Fade out non-target text and change background
                 tl.to(".fade-text", { opacity: 0, duration: 0.5 })
-                    .to(stickyRef.current, { backgroundColor: "#ECE3DB", duration: 0.5 }, "<")
-                    .to(".target-text", { color: "#0B1A2C", duration: 0.5 }, "<");
 
                 // Phase 2: Move targets to final destinations using Flip.fit & Reveal Mask
                 const targets = gsap.utils.toArray(".target-text");

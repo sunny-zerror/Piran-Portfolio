@@ -70,11 +70,3 @@
   height: fit-content;
   position: relative;
 }
-
-.not_active{
-  filter: blur(.25rem) !important;
-}
-.normal_glry_img{
-  filter: blur(0px);
-  transition: all 0.3s ease;
-}

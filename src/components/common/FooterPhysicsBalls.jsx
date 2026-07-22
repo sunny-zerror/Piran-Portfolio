@@ -145,7 +145,7 @@ const FooterPhysicsBalls = () => {
       // Create ScrollTrigger to wait for scroll
       const trigger = ScrollTrigger.create({
         trigger: container,
-        start: 'top bottom',
+        start: 'top center',
         onEnter: dropBalls,
         onLeaveBack: resetBalls,
         onLeave: resetBalls,

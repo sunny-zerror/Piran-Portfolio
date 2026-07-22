@@ -21,10 +21,10 @@ const ParallaxSection = () => {
         parallaxRef.current = new Parallax(sceneRef.current, {
             relativeInput: true,
             hoverOnly: true,
-            frictionX: 0.08,
-            frictionY: 0.1,
-            scalarX: 400,
-            scalarY: 450,
+            frictionX: 0.03, // Ultra-smooth lerp easing on X axis
+            frictionY: 0.03, // Ultra-smooth lerp easing on Y axis
+            scalarX: 350,
+            scalarY: 400,
         });
 
         return () => {
@@ -86,7 +86,7 @@ const ParallaxSection = () => {
             <InfiniteCarousel openGallerySwiper={openGallerySwiper} setOpenGallerySwiper={setOpenGallerySwiper} />
 
             <div ref={containerRef} className="gallery_container overflow-hidden relative z-[100] -mt-1 bg-[#ECE3DB]">
-               
+
                 <div ref={sceneRef} className="gallery_scene scene" >
                     <div
                         className="gallery_group center w-full h-full"
@@ -99,7 +99,7 @@ const ParallaxSection = () => {
 
                             {galleryData.map((item, i) => {
                                 const isCenterImg = item.img.includes('piran_pic');
-                                
+
                                 return (
                                     <a
                                         key={i}
@@ -115,7 +115,7 @@ const ParallaxSection = () => {
                                         onMouseLeave={() => setActiveIndex(null)}
                                     >
                                         <div
-                                            className={`transition-all duration-300 ${isCenterImg ? 'w-44 md:w-60 lg:w-72 pointer-events-none!' : 'w-24 md:w-32 lg:w-40'} flex items-center justify-center`}
+                                            className={`transition-all duration-300 ${isCenterImg ? 'w-44 md:w-60 lg:w-64 pointer-events-none!' : 'w-24 md:w-32 lg:w-36'} flex items-center justify-center`}
                                         >
                                             <Image
                                                 width={300}

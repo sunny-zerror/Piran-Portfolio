@@ -221,37 +221,41 @@ const Dots = () => {
 
                 const lastDir = lastDirection.current;
 
-                // Candidates for next direction: straight ahead, perpendicular turns (NO U-TURNS / Reverses allowed)
-                const candidates = [];
+                // Candidate directions filtered strictly to stay within canvas grid boundaries [0..ROWS-1, 0..COLS-1]
+                const allPossibleDirs = [
+                    { r: lastDir.r, c: lastDir.c },
+                    { r: Math.sign(dr), c: 0 },
+                    { r: 0, c: Math.sign(dc) },
+                    { r: -lastDir.c, c: lastDir.r },
+                    { r: lastDir.c, c: -lastDir.r }
+                ];
 
-                // Primary candidate: keep going straight in current direction if aligned/moving towards target along that axis
-                if (lastDir.r !== 0) {
-                    if ((lastDir.r > 0 && dr > 0) || (lastDir.r < 0 && dr < 0)) {
-                        candidates.push({ r: lastDir.r, c: 0 }); // keep going straight
+                const validCandidates = [];
+                for (const d of allPossibleDirs) {
+                    if (d.r === 0 && d.c === 0) continue;
+                    // Prevent 180-degree reverse U-turns into snake body
+                    if (d.r === -lastDir.r && d.c === -lastDir.c && (lastDir.r !== 0 || lastDir.c !== 0)) continue;
+                    
+                    const testR = head.r + d.r;
+                    const testC = head.c + d.c;
+
+                    // Strictly constrain within Canvas Grid Boundaries
+                    if (testR >= 0 && testR < ROWS && testC >= 0 && testC < COLS) {
+                        // Priority score: moving closer to target
+                        const currentDist = Math.abs(target.r - head.r) + Math.abs(target.c - head.c);
+                        const newDist = Math.abs(target.r - testR) + Math.abs(target.c - testC);
+                        const score = currentDist - newDist;
+                        
+                        validCandidates.push({ dir: d, score });
                     }
-                } else if (lastDir.c !== 0) {
-                    if ((lastDir.c > 0 && dc > 0) || (lastDir.c < 0 && dc < 0)) {
-                        candidates.push({ r: 0, c: lastDir.c }); // keep going straight
-                    }
                 }
 
-                // If going straight doesn't bring us closer along that axis (e.g. reached target row/col), try orthogonal turns
-                if (dc !== 0 && lastDir.c === 0) {
-                    candidates.push({ r: 0, c: Math.sign(dc) });
-                }
-                if (dr !== 0 && lastDir.r === 0) {
-                    candidates.push({ r: Math.sign(dr), c: 0 });
-                }
+                // Sort candidates to pick the best move towards target that is within screen canvas grid bounds
+                validCandidates.sort((a, b) => b.score - a.score);
 
-                // Fallback 1: if no progress toward target without U-turn, keep going straight until wall/boundary
-                if (candidates.length === 0 && (lastDir.r !== 0 || lastDir.c !== 0)) {
-                    candidates.push({ r: lastDir.r, c: lastDir.c });
-                }
-
-                // Pick the first valid non-reversing candidate
-                const chosenDir = candidates[0] || { r: 0, c: 0 };
-                nextR += chosenDir.r;
-                nextC += chosenDir.c;
+                const chosenDir = validCandidates.length > 0 ? validCandidates[0].dir : { r: 0, c: 0 };
+                nextR = Math.max(0, Math.min(ROWS - 1, head.r + chosenDir.r));
+                nextC = Math.max(0, Math.min(COLS - 1, head.c + chosenDir.c));
 
                 if (nextR !== head.r || nextC !== head.c) {
                     lastDirection.current = {

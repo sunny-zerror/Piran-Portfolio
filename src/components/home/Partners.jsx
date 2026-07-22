@@ -267,7 +267,7 @@ const Partners = () => {
                     className={`bg-white text-black w-full max-w-2xl rounded-3xl overflow-hidden relative flex flex-col max-h-[85vh] shadow-2xl transition-all duration-300 ${selectedPartner ? "translate-y-0" : " translate-y-5"}  `}
                     onClick={(e) => e.stopPropagation()}
                 >
-                    <div className="p-6 overflow-y-auto custom-scrollbar">
+                    <div className="p-6 overflow-y-auto">
 
                         <div className="bg-[#0B1A2C10] rounded-2xl p-6">
                             <div className="flex items-center gap-3 mb-8">
@@ -315,7 +315,7 @@ const Partners = () => {
                                 <h5 className="">Introducing {dummyDetails.name}</h5>
                             </div>
                             <div className={`grid transition-all duration-300 ease-in-out `}>
-                                <div data-lenis-prevent className="custom_scroller overflow-y-scroll h-44">
+                                <div data-lenis-prevent className=" overflow-y-scroll scroller_none h-44">
                                     <div className=" text-[#0B1A2C] opacity-70 leading-tight space-y-4  pt-1">
                                         <p>{dummyDetails.desc1}</p>
                                         <p>{dummyDetails.desc2}</p>
