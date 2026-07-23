@@ -70,16 +70,16 @@ const About = () => {
 
                     <div className="w-full h-full absolute top-0 inset-0">
                         <div className=" above_img_txt absolute! container  top-[16%] opacity-0 text-white z-10 ">
-                            <h4 className='w-[70%] mx-auto'>I help founders, operators, and investors build businesses with stronger foundations, clearer positioning, and the strategic alignment required for long-term growth.</h4>
+                            <h4 className='md:w-[70%] mx-auto'>I help founders, operators, and investors build businesses with stronger foundations, clearer positioning, and the strategic alignment required for long-term growth.</h4>
                         </div>
                         <Image fill src={"/images/homepage/piran_pic.png"} className='cover piran_img opacity-0' alt='piran pic' />
                     </div>
 
                     <div className="w-full container absolute! space-y-16 text-white inset-0 h-full center flex-col">
                         <Image fill src={"/images/homepage/about_bg_img.png"} className='cover about_bg translate-y-full ' alt='piran pic' />
-                        <h4 className=' w-[70%] mx-auto z-10 opacity-0 abt_txt_1'>The Shift Usually Starts Here, Most founders don't come looking for strategy. They come because something feels misaligned. Growth becomes harder. Teams move in different directions. Opportunities appear but don't compound. The business evolves, but the underlying foundations don't evolve with it. The challenge is rarely effort. It's clarity.</h4>
-                        <h4 className=' w-[70%] mx-auto z-10 opacity-0 abt_txt_2'>For more than two decades, I've worked alongside founders, leadership teams, and investors helping them navigate the moments that determine what a business becomes. Not by adding complexity.</h4>
-                        <h4 className=' w-[70%] mx-auto z-10 opacity-0 abt_txt_3'>By creating alignment between strategy, execution, capital, and narrative.</h4>
+                        <h4 className=' md:w-[70%] mx-auto z-10 opacity-0 abt_txt_1'>The Shift Usually Starts Here, Most founders don't come looking for strategy. They come because something feels misaligned. Growth becomes harder. Teams move in different directions. Opportunities appear but don't compound. The business evolves, but the underlying foundations don't evolve with it. The challenge is rarely effort. It's clarity.</h4>
+                        <h4 className=' md:w-[70%] mx-auto z-10 opacity-0 abt_txt_2'>For more than two decades, I've worked alongside founders, leadership teams, and investors helping them navigate the moments that determine what a business becomes. Not by adding complexity.</h4>
+                        <h4 className=' md:w-[70%] mx-auto z-10 opacity-0 abt_txt_3'>By creating alignment between strategy, execution, capital, and narrative.</h4>
                     </div>
 
                 </div>

@@ -56,6 +56,7 @@ const ParticleSystem = ({ gridPositions, logoPositions, randomDirs, orbitData, e
           uHover: { value: 0.0 },
           uResolution: { value: new THREE.Vector2() },
           uColor: { value: new THREE.Color('#ffffff') },
+          uSizeScale: { value: 1.0 },
         },
         vertexShader: `
           uniform float uTime;
@@ -64,6 +65,7 @@ const ParticleSystem = ({ gridPositions, logoPositions, randomDirs, orbitData, e
           uniform vec3  uMouse;
           uniform float uHover;
           uniform vec2  uResolution;
+          uniform float uSizeScale;
 
           attribute vec3  aLogoPos;
           attribute vec3  aRandomDir;
@@ -188,7 +190,7 @@ const ParticleSystem = ({ gridPositions, logoPositions, randomDirs, orbitData, e
               }
               
               vec4 mv = modelViewMatrix * vec4(pos, 1.0);
-              gl_PointSize = sz * (uResolution.y / 800.0);
+              gl_PointSize = sz * (uResolution.y / 800.0) * uSizeScale;
               gl_Position  = projectionMatrix * mv;
             } else {
               // Smooth opacity gradient: 0.0 at deep origin (-20.0) ramping smoothly to 1.0 at user end (+10.0)
@@ -219,7 +221,7 @@ const ParticleSystem = ({ gridPositions, logoPositions, randomDirs, orbitData, e
               }
               
               vec4 mv = modelViewMatrix * vec4(pos, 1.0);
-              gl_PointSize = sz * (uResolution.y / 800.0);
+              gl_PointSize = sz * (uResolution.y / 800.0) * uSizeScale;
               gl_Position  = projectionMatrix * mv;
             }
           }
@@ -290,6 +292,9 @@ const ParticleSystem = ({ gridPositions, logoPositions, randomDirs, orbitData, e
       state.size.width,
       state.size.height,
     );
+
+    const isMobileSize = state.size.width < 768;
+    pointsRef.current.material.uniforms.uSizeScale.value = isMobileSize ? 0.65 : 1.0;
   });
 
   const geometry = useMemo(() => {
@@ -309,6 +314,20 @@ const ParticleSystem = ({ gridPositions, logoPositions, randomDirs, orbitData, e
 /* ═══════════════════════ Main wrapper ═══════════════════════ */
 export default function LogoParticles() {
   const [data, setData] = useState(null);
+  const [zoom, setZoom] = useState(100);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 768) {
+        setZoom(60); // Scale down zoom to fit on mobile screens
+      } else {
+        setZoom(100);
+      }
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     const img = new Image();
@@ -328,11 +347,12 @@ export default function LogoParticles() {
       ctx.drawImage(img, 0, 0, sw, sh);
       const imgData = ctx.getImageData(0, 0, sw, sh).data;
 
+      const isMobile = window.innerWidth < 768;
       const logoW = 5;
       const logoH = logoW * aspect;
       const logoPoints = [];
       const boundaryPoints = [];
-      const logoStep = 5; // 1000/12 matches the density of 250/3
+      const logoStep = isMobile ? 9 : 5; // 1000/12 matches the density of 250/3
 
       const colsCount = Math.ceil(sw / logoStep);
       const rowsCount = Math.ceil(sh / logoStep);
@@ -440,7 +460,8 @@ export default function LogoParticles() {
 
       /* ── 2. Landing positions: fill the entire viewport ── */
       // Balanced ambient particle volume
-      const total = logoPoints.length + 1200;
+      const ambientCount = isMobile ? 350 : 1200;
+      const total = logoPoints.length + ambientCount;
       const spreadX = 30;
       const spreadY = 18;
       const grid = [];
@@ -538,7 +559,7 @@ export default function LogoParticles() {
           <Canvas
             orthographic
             camera={{
-              zoom: 100,
+              zoom: zoom,
               position: [0, 0, 10],
               near: 0.1,
               far: 100,

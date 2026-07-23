@@ -9,6 +9,7 @@ import ScrollTrigger from 'gsap/dist/ScrollTrigger'
 import SplitText from 'gsap/dist/SplitText'
 import { useGSAP } from '@gsap/react';
 import Image from 'next/image';
+import { Autoplay } from 'swiper/modules';
 gsap.registerPlugin(ScrollTrigger, SplitText)
 
 
@@ -223,19 +224,14 @@ const MobileHero = () => {
               <p className="opacity-60 paragraph_split">Currently in Amsterdam/NL.</p>
             </div>
 
-            <div className=" relative w-full aspect-video">
-              <div
-                ref={videoThumbRef}
-                onClick={!expanded ? toggleVideo : undefined}
-                className={`overflow-hidden z-10 flex items-center justify-center transform-gpu absolute inset-0 w-full h-full rounded-xl  cursor-pointer`}
-              >
-              </div>
+            <div className=" relative w-full aspect-video mb-10">
+              <video loop autoPlay muted playsInline src="https://vz-f76b55f9-7b8.b-cdn.net/2b3c385c-35e7-406c-bb11-8c7d71d90001/playlist.m3u8"></video>
             </div>
           </div>
         </div>
 
-        <div className="border-t border-white/10 ">
-          <div className="flex justify-between pointer-events-auto">
+        <div className="border-t border-white/10 py-5 ">
+          <div className="grid grid-cols-2 gap-y-5  justify-between pointer-events-auto">
             {logoData.map((item, i) => (
               <div key={item.id} className="group relative cursor-pointer">
                 <img
@@ -261,24 +257,6 @@ const MobileHero = () => {
         </div>
       </div>
 
-
-      <VideoWebGLTransition
-        targetRef={videoThumbRef}
-        expanded={expanded}
-        isAnimating={isAnimating}
-        onAnimationComplete={handleAnimationComplete}
-      />
-
-      <div
-        className={`fixed inset-0 z-[1000] pointer-events-none transition-opacity duration-500 ${expanded && !isAnimating ? 'opacity-100' : 'opacity-0'}`}
-      >
-        <button
-          onClick={toggleVideo}
-          className="absolute top-5 right-5 w-12 h-12 bg-white/10 hover:bg-white/20 text-white rounded-full flex items-center justify-center z-50 transition-colors backdrop-blur-sm pointer-events-auto"
-        >
-          <RiCloseLine size={24} />
-        </button>
-      </div>
     </div>
   )
 }

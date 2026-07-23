@@ -25,13 +25,12 @@
 
   background: #b7c19a;
 
-  transition: background .35s;
+  transition: background 0.35s;
 }
 
 .dot.active {
   background: #000;
 }
-
 
 .gallery_container {
   width: 100%;
@@ -69,4 +68,14 @@
   width: fit-content;
   height: fit-content;
   position: relative;
+}
+
+@keyframes moveDash {
+  to {
+    stroke-dashoffset: -20;
+  }
+}
+.animate-dash-line {
+  stroke-dasharray: 6 4;
+  animation: moveDash 1s linear infinite;
 }
