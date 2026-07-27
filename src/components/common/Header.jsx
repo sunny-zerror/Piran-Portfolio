@@ -23,7 +23,7 @@ const Header = () => {
   useGSAP(() => {
     gsap.to(".header", {
       opacity: 1,
-      delay: pathname === "/" ? 3 : 0.5,
+      delay: pathname === "/" ? 4.5 : 0.5,
       stagger: 0.15
     });
   })
@@ -34,7 +34,7 @@ const Header = () => {
           <Link href={"/"}>
             <img src="/logo.svg" alt="logo" className='max-sm:w-10' />
           </Link>
-          <nav className="flex gap-x-5 uppercase">
+          <nav className="flex gap-x-2 md:gap-x-5 uppercase">
             {navLinks.map((item, i) => (
               <Link href={item.href} key={i} className="max-sm:text-sm flex items-center gap-x-1 group">
                 <div className='size-2 bg-white rounded-full scale-0 group-hover:scale-100 transition-all duration-300'></div>

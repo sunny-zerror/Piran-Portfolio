@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 
 const AboutStrength = () => {
-  const [openItem, setOpenItem] = useState("strengths");
+  const [openItem, setOpenItem] = useState(null);
 
   const toggleItem = (item) => {
     setOpenItem(openItem === item ? null : item);
@@ -24,12 +24,12 @@ const AboutStrength = () => {
   ];
 
   return (
-    <section className="w-full bg-[#0B1A2C] py-24  text-white">
+    <section className="w-full bg-[#0B1A2C] py-12 md:py-24  text-white">
       <div className="container ">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20">
           
           {/* Left Column: Strengths & Accordion */}
-          <div className="flex flex-col space-y-44 md:max-w-xl">
+          <div className="flex flex-col  md:space-y-44 md:max-w-xl">
             <div className="space-y-4">
               <h2 data-para-effect className="leading-none">
                 Strengths & Still <br /> Working On
@@ -40,11 +40,11 @@ const AboutStrength = () => {
             </div>
 
             {/* Accordion / Toggles */}
-            <div className="mt-8 flex flex-col">
+            <div className=" mt-4 md:mt-8 flex flex-col">
               {items.map((item) => {
                 const isOpen = openItem === item.id;
                 return (
-                  <div key={item.id} className="border-b border-dashed border-white/20 py-5">
+                  <div key={item.id} className="border-b border-dashed border-white/20 py-2 md:py-5">
                     <button
                       onClick={() => toggleItem(item.id)}
                       className="w-full flex justify-between items-center text-left py-2 focus:outline-none group cursor-pointer"
@@ -73,7 +73,7 @@ const AboutStrength = () => {
 
           {/* Right Column: Portrait Image */}
           <div className="flex justify-center md:justify-end">
-            <div className="relative w-[80%] overflow-hidden rounded-xl  border border-white/10 bg-[#162534]">
+            <div className="relative w-full max-sm:aspect-square md:w-[80%] overflow-hidden rounded-xl bg-[#162534]">
               <Image
                 src="/images/aboutpage/piran_pic.png"
                 alt="Piran Portrait"

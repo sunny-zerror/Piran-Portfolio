@@ -136,7 +136,7 @@ const Hero = () => {
     gsap.set([heading_split.lines, paragraph_split.lines], { yPercent: 100 });
 
     const tl = gsap.timeline({
-      delay: 2.5
+      delay: 4
     })
     tl.to(".content_box", {
       opacity: 1,

@@ -9,8 +9,8 @@ const Footer = () => {
 
   return (
     <div className="w-full h-screen flex flex-col justify-between bg-[#883F27] text-white relative">
-      <div className="w-full  relative  flex-1  flex flex-col items-center py-24 text-center overflow-hidden">
-        <div className="relative pointer-events-none z-10 flex flex-col items-center gap-y-5">
+      <div className="w-full  relative  flex-1  flex flex-col items-center  py-12 md:py-24 text-center overflow-hidden">
+        <div className="relative pointer-events-none z-10 flex flex-col items-center gap-y-4 md:gap-y-5">
           <p data-para-effect className="text-sm font-medium opacity-90">Get Started Now</p>
           <h2 data-para-effect className="leading-none">Building Something<br />Worth Lasting?</h2>
           <button className="bg-white text-[#883F27] rounded-full  px-6 hover:pl-2 leading-none h-12 text-sm group   transition-all duration-300 pointer-events-auto flex items-center gap-2">
@@ -23,23 +23,22 @@ const Footer = () => {
         <FooterPhysicsBalls />
       </div>
 
-      <div className="container h-fit! py-12 pb-5 relative z-10">
-
-        <div className="grid grid-cols-8">
-
-          <div className="col-span-6 space-y-10 ">
+      <div className="container h-fit! py-6 md:py-12 pb-2 md:pb-5 relative z-10 space-y-6 md:space-y-10">
+        <div className="flex flex-col md:grid md:grid-cols-8 gap-y-6 md:gap-y-0">
+          <div className="col-span-8 md:col-span-6 md:space-y-10">
             <div className="flex items-center gap-3">
               <Link href={"/"}>
-                <Image width={60} height={60} src="/logo.svg" alt="" />
+                <Image className="w-14 h-14 shrink-0 md:w-15 md:h-15" width={60} height={60} src="/logo.svg" alt="" />
               </Link>
-              <p className="text-7xl">Piran Tarapore</p>
+              <p className="text-[12vw] whitespace-nowrap md:text-7xl">Piran Tarapore</p>
             </div>
-            <p data-para-effect className="text-lg leading-tight">
+            
+            <p data-para-effect className="text-lg leading-tight opacity-90 max-w-xs md:max-w-none">
               Start Compounding Your Brand Equity<br /> for Long-Term Business Growth.
             </p>
           </div>
 
-          <div className="col-span-2  grid grid-cols-2">
+          <div className="col-span-8 md:col-span-2 grid grid-cols-2 gap-4 text-sm md:text-base mt-2 md:mt-0">
             <div className="flex flex-col gap-2 font-medium">
               <Link href="/" className="hover:opacity-70 transition-opacity">Home</Link>
               <Link href="/about" className="hover:opacity-70 transition-opacity">About</Link>
@@ -56,9 +55,9 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="w-full h-[1px] bg-white/20 my-5"></div>
+        <div className="w-full h-[1px] bg-white/20 my-2 md:my-5"></div>
 
-        <div className="flex flex-col md:flex-row justify-between items-center text-sm opacity-70">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center text-sm opacity-70">
           <p>© Copy Right 2026 - Piran Tarapore. All Rights Reserved.</p>
           <Link href={"https://www.wearepointof.com"} target='_blank' className='group'>
             <p>Designed & Developed by <span className='group-hover:underline'> Point Of.</span></p>

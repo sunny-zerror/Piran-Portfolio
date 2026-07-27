@@ -33,7 +33,7 @@ const WorkResult = () => {
           </div>
 
 
-          <div className=" md:h-100 md:grid grid-cols-8 p-5 md:p-8 text-white bg-[#0B1A2C]">
+          <div className="flex flex-col-reverse md:grid md:h-100 grid-cols-8 p-5 md:p-8 text-white bg-[#0B1A2C]">
             <div className="col-span-4 h-50  md:h-full w-full">
               <ExecutionCanvas />
             </div>

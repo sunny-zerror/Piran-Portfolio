@@ -52,7 +52,7 @@ const AboutWork = () => {
     ];
 
     return (
-        <section ref={sectionRef} className="relative w-full min-h-screen py-24 flex flex-col justify-center overflow-hidden bg-cover bg-center">
+        <section ref={sectionRef} className="relative w-full min-h-screen py-12 md:py-24 flex flex-col justify-center overflow-hidden bg-cover bg-center">
             {/* Background Image with Dark & Dusk Overlay */}
             <div className="absolute inset-0 z-0 overflow-hidden">
                 <div ref={bgRef} className="absolute inset-0 w-full h-[124%] -top-[12%]">
@@ -67,11 +67,11 @@ const AboutWork = () => {
             </div>
 
             <div className="container relative z-10 flex flex-col gap-y-16 justify-between h-full">
-                <div className="w-full grid grid-cols-6 items-end text-white">
+                <div className="w-full md:grid grid-cols-6 items-end text-white">
                     <h2 data-para-effect className=' col-span-4 leading-none'> What I'm <br className="hidden md:block" /> Working On Now</h2>
-                    <p data-para-effect className='opacity-70 leading-tight col-span-2 text-lg'>Exploring new ideas, building innovative solutions, and turning ambitious visions into lasting impact.</p>
+                    <p data-para-effect className='opacity-70 max-sm:mt-2 leading-tight col-span-2 text-lg'>Exploring new ideas, building innovative solutions, and turning ambitious visions into lasting impact.</p>
                 </div>
-                <div className="relative flex flex-col space-y-5 w-full">
+                <div className="relative flex flex-col space-y-0 md:space-y-5 w-full">
 
 
                     {cards.map((card, index) => {
@@ -90,23 +90,23 @@ const AboutWork = () => {
                                 )}
                                 {/* Card Container */}
                                 <div
-                                    className={`${colStartClass} col-span-12 md:col-span-6 rounded-2xl w-full p-6 md:p-8 items-end grid grid-cols-2 ${card.isGlass
+                                    className={`${colStartClass} col-span-12 md:col-span-6 rounded-2xl max-sm:space-y-5 w-full p-6 md:p-8 items-end md:grid grid-cols-2 ${card.isGlass
                                         ? "bg-white/20 backdrop-blur-2xl  "
                                         : "bg-[#883F27] border border-[#883F27] "
                                         }`}
                                 >
                                     {/* Left Column: Number & Title */}
-                                    <div className="w-full  text-white flex gap-y-12 flex-col">
-                                        <span className="">
+                                    <div className="w-full  text-white flex gap-y-12 md:flex-col max-sm:justify-start max-sm:gap-x-5">
+                                        <h4 className="leading-none">
                                             {card.id}
-                                        </span>
-                                        <h4 data-para-effect className=" leading-none w-[90%]">
+                                        </h4>
+                                        <h4 data-para-effect className=" leading-none md:w-[90%]">
                                             {card.title}
                                         </h4>
                                     </div>
 
 
-                                    <div className="w-full border-l border-dashed border-white/30 pl-6">
+                                    <div className="w-full md:border-l border-dashed border-white/30 pl-12 md:pl-6">
                                         <p data-para-effect className="text-white/80 leading-tight">
                                             {card.desc}
                                         </p>

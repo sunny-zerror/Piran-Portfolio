@@ -73,6 +73,7 @@ const MobileHero = () => {
   const [isAnimating, setIsAnimating] = useState(false);
   const [showWebGL, setShowWebGL] = useState(false);
   const [isMobile, setIsMobile] = useState(true);
+  const [activeLogoIndex, setActiveLogoIndex] = useState(null);
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 750);
@@ -138,7 +139,7 @@ const MobileHero = () => {
     gsap.set([heading_split.lines, paragraph_split.lines], { yPercent: 100 });
 
     const tl = gsap.timeline({
-      delay: 2.5
+      delay: 4
     })
     tl.to(".content_box", {
       opacity: 1,
@@ -196,7 +197,7 @@ const MobileHero = () => {
 
   return (
 
-    <div className='bg-[#0B1A2C]'>
+    <div className='bg-[#0B1A2C] overflow-hidden'>
       <div className="   w-full h-svh relative  text-white overflow-hidden">
         <LogoParticles />
 
@@ -218,39 +219,54 @@ const MobileHero = () => {
       <div className='container z-1 text-white'>
         <div className="w-full space-y-5">
 
-          <div className="w-full space-y-5">
+          <div className="w-full space-y-2">
             <div className="text-left md:text-right">
               <RotatingText />
               <p className="opacity-60 paragraph_split">Currently in Amsterdam/NL.</p>
             </div>
 
-            <div className=" relative w-full aspect-video mb-10">
+            <div className=" relative w-full aspect-video mb-2">
               <video loop autoPlay muted playsInline src="https://vz-f76b55f9-7b8.b-cdn.net/2b3c385c-35e7-406c-bb11-8c7d71d90001/playlist.m3u8"></video>
             </div>
           </div>
         </div>
 
-        <div className="border-t border-white/10 py-5 ">
-          <div className="grid grid-cols-2 gap-y-5  justify-between pointer-events-auto">
+        <div className="border-t border-white/10 py-2 relative ">
+          <div className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-80 bg-[#eaf4fa] text-black p-6 rounded-md shadow-2xl transition-all duration-500 ease-out z-50 
+            ${activeLogoIndex !== null 
+              ? 'opacity-100 translate-y-0 pointer-events-auto' 
+              : 'opacity-0 translate-y-4 pointer-events-none'
+            }`}
+          >
+            <div className="flex justify-between items-start">
+              <Image height={20} width={20} className='invert-100' src="/icons/quote.svg" alt="" />
+              <button 
+                onClick={() => setActiveLogoIndex(null)}
+                className="text-black/50 hover:text-black text-xs font-bold"
+              >
+                ✕
+              </button>
+            </div>
+            <p className="leading-tight font-medium text-black mt-2">
+              {activeLogoIndex !== null ? logoData[activeLogoIndex]?.desc : ""}
+            </p>
+            <p className="text-xs font-bold opacity-70 uppercase mt-4">
+              {activeLogoIndex !== null ? logoData[activeLogoIndex]?.author : ""}
+            </p>
+          </div>
+
+          <div className="flex justify-between pointer-events-auto">
             {logoData.map((item, i) => (
-              <div key={item.id} className="group relative cursor-pointer">
+              <div 
+                key={item.id} 
+                className="group relative cursor-pointer"
+                onClick={() => setActiveLogoIndex(i)}
+              >
                 <img
                   src={item.img}
                   alt="logo img"
-                  className="h-14 opacity-50 group-hover:opacity-100 transition-opacity duration-300"
+                  className={`h-10 transition-opacity duration-300 ${activeLogoIndex === i ? 'opacity-100' : 'opacity-50'}`}
                 />
-
-                <div className="absolute bottom-full left-0 space-y-4 mb-2 w-80 bg-[#eaf4fa] text-black p-6 rounded-md shadow-2xl opacity-0 translate-y-5 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 pointer-events-none z-50">
-                  <div className="">
-                    <Image height={20} width={20} className='invert-100' src="/icons/quote.svg" alt="" />
-                  </div>
-                  <p className="text-lg  leading-tight font-medium text-black">
-                    {item.desc}
-                  </p>
-                  <p className="text-xs font-bold opacity-70 uppercase ">
-                    {item.author}
-                  </p>
-                </div>
               </div>
             ))}
           </div>

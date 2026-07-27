@@ -83,11 +83,11 @@ const FooterPhysicsBalls = () => {
     Composite.add(engine.world, [ground, leftWall, rightWall]);
     updateObstacles();
 
-    // Create balls positioned ABOVE the canvas (off-screen top)
     const balls = [];
-    const physicsRadius = 10;
-    const renderRadius = 6;
-    const numBalls = 1000;
+    const isMobile = width < 1020;
+    const physicsRadius = isMobile ? 8 : 10;
+    const renderRadius = isMobile ? 4.8 : 6;
+    const numBalls = isMobile ? 300 : 1000;
 
     for (let i = 0; i < numBalls; i++) {
       const x = Math.random() * width;
@@ -214,7 +214,52 @@ const FooterPhysicsBalls = () => {
       });
     };
 
+    const handleTouchMove = (e) => {
+      if (e.touches.length === 0) return;
+      const touch = e.touches[0];
+      const rect = canvas.getBoundingClientRect();
+      const mouseX = touch.clientX - rect.left;
+      const mouseY = touch.clientY - rect.top;
+      const currentTime = performance.now();
+
+      let mouseVelocity = 0.1;
+      if (lastMouseX !== null && lastMouseTime !== null) {
+        const dt = currentTime - lastMouseTime;
+        if (dt > 0) {
+          const dx = mouseX - lastMouseX;
+          const dy = mouseY - lastMouseY;
+          mouseVelocity = Math.sqrt(dx * dx + dy * dy) / dt;
+        }
+      }
+
+      lastMouseX = mouseX;
+      lastMouseY = mouseY;
+      lastMouseTime = currentTime;
+      
+      const speedMultiplier = Math.min(Math.max(mouseVelocity * 4, 1.5), 8);
+      const interactionRadius = 60 + (speedMultiplier * 15); 
+      
+      balls.forEach(ball => {
+        const dx = ball.position.x - mouseX;
+        const dy = ball.position.y - mouseY;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        
+        if (distance < interactionRadius) {
+          Matter.Sleeping.set(ball, false);
+          
+          const baseForce = 0.0005; 
+          const forceMagnitude = (interactionRadius - distance) * baseForce * speedMultiplier;
+          
+          Matter.Body.applyForce(ball, ball.position, {
+            x: (dx / distance) * forceMagnitude,
+            y: (dy / distance) * forceMagnitude
+          });
+        }
+      });
+    };
+
     window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('touchmove', handleTouchMove, { passive: true });
 
     // Run physics
     const runner = Runner.create();
@@ -265,6 +310,7 @@ const FooterPhysicsBalls = () => {
       if (triggerRef.current) triggerRef.current.kill();
       window.removeEventListener('resize', handleResize);
       window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('touchmove', handleTouchMove);
       cancelAnimationFrame(animationFrameId);
       Runner.stop(runner);
       World.clear(engine.world);

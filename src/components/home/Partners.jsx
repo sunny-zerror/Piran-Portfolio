@@ -7,7 +7,10 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Flip } from 'gsap/Flip';
 import { flushSync } from 'react-dom';
-import { RiArrowRightUpLine, RiLinkedinBoxFill, RiLinkedinBoxLine, RiTwitterXLine } from '@remixicon/react';
+import { RiArrowRightUpLine, RiCloseLine, RiLinkedinBoxFill, RiLinkedinBoxLine, RiTwitterXLine } from '@remixicon/react';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Autoplay, FreeMode } from 'swiper/modules';
+import 'swiper/css';
 
 gsap.registerPlugin(ScrollTrigger, Flip);
 
@@ -20,100 +23,106 @@ const Partners = () => {
     const stickyRef = useRef(null);
 
     useGSAP(() => {
-        // Initial scale/fade-in animation when section first enters viewport
-        gsap.fromTo(".partner-card",
-            { scale: 0, opacity: 0 },
-            {
-                scale: 1,
-                opacity: 1,
-                stagger: 0.04,
-                duration: 0.6,
-                ease: "back.out(1.2)",
-                scrollTrigger: {
-                    trigger: containerRef.current,
-                    start: "top 50%",
-                    toggleActions: "play none none reverse"
+        let mm = gsap.matchMedia();
+
+        mm.add("(min-width: 768px)", () => {
+            // Initial scale/fade-in animation when section first enters viewport
+            gsap.fromTo(".partner-card",
+                { scale: 0, opacity: 0 },
+                {
+                    scale: 1,
+                    opacity: 1,
+                    stagger: 0.04,
+                    duration: 0.6,
+                    ease: "back.out(1.2)",
+                    scrollTrigger: {
+                        trigger: containerRef.current,
+                        start: "top 50%",
+                        toggleActions: "play none none reverse"
+                    }
                 }
-            }
-        );
+            );
 
-        ScrollTrigger.create({
-            trigger: containerRef.current,
-            start: "top+=15% top",
-            onEnter: () => {
-                const state = Flip.getState(".partner-card");
-                flushSync(() => {
-                    setIsGrowth(true);
-                    setIsMerged(false);
-                });
-                Flip.from(state, {
-                    stagger: 0.04,
-                    duration: 0.6,
-                    ease: "back.out(1.2)",
-                    onEnter: elements => gsap.fromTo(elements,
-                        { scale: 0, opacity: 0, y: 0 },
-                        {
-                            scale: 1,
-                            opacity: 1,
-                            y: 0,
-                            stagger: 0.04,
-                            duration: 0.6,
-                            ease: "back.out(1.2)"
-                        }
-                    ),
-                });
-            },
-            onLeaveBack: () => {
-                const state = Flip.getState(".partner-card");
-                flushSync(() => {
-                    setIsGrowth(false);
-                    setIsMerged(false);
-                });
-                Flip.from(state, {
-                    stagger: 0.04,
-                    duration: 0.6,
-                    ease: "back.out(1.2)",
-                    onLeave: elements => gsap.to(elements, { opacity: 0, scale: 0.8, duration: 0.6, stagger: { from: "end", each: 0.04 }, ease: "back.out(1.2)" }),
-                });
-            },
-        });
-
-        ScrollTrigger.create({
-            trigger: containerRef.current,
-            start: "top+=50% top",
-            onEnter: () => {
-                flushSync(() => {
-                    setIsMerged(true);
-                });
-                
-                const tl = gsap.timeline();
-                tl.to(".grid-container", 
-                    { gap: "0px", duration: 0.4, ease: "power2.inOut" }
-                )
-                .to(".partner-card",
-                    { borderWidth: "0px", duration: 0.4, ease: "power2.inOut" },
-                    "-=0.1"
-                )
-                .to(".merged-card-overlay", 
-                    {
-                        opacity: 1,
+            ScrollTrigger.create({
+                trigger: containerRef.current,
+                start: "top+=15% top",
+                onEnter: () => {
+                    const state = Flip.getState(".partner-card");
+                    flushSync(() => {
+                        setIsGrowth(true);
+                        setIsMerged(false);
+                    });
+                    Flip.from(state, {
+                        stagger: 0.04,
                         duration: 0.6,
-                        ease: "back.out(1.2)"
-                    },
-                    "-=0.2"
-                )
-            },
-            onLeaveBack: () => {
-                gsap.killTweensOf(".grid-container, .partner-card, .merged-card-overlay");
-                gsap.to(".merged-card-overlay", { opacity: 0, duration: 0.3 });
-                gsap.set(".grid-container", { clearProps: "gap" });
-                gsap.set(".partner-card", { clearProps: "borderWidth" });
-                
-                flushSync(() => {
-                    setIsMerged(false);
-                });
-            },
+                        ease: "back.out(1.2)",
+                        onEnter: elements => gsap.fromTo(elements,
+                            { scale: 0, opacity: 0, y: 0 },
+                            {
+                                scale: 1,
+                                opacity: 1,
+                                y: 0,
+                                stagger: 0.04,
+                                duration: 0.6,
+                                ease: "back.out(1.2)"
+                            }
+                        ),
+                    });
+                },
+                onLeaveBack: () => {
+                    const state = Flip.getState(".partner-card");
+                    flushSync(() => {
+                        setIsGrowth(false);
+                        setIsMerged(false);
+                    });
+                    Flip.from(state, {
+                        stagger: 0.04,
+                        duration: 0.6,
+                        ease: "back.out(1.2)",
+                        onLeave: elements => gsap.to(elements, { opacity: 0, scale: 0.8, duration: 0.6, stagger: { from: "end", each: 0.04 }, ease: "back.out(1.2)" }),
+                    });
+                },
+            });
+
+            ScrollTrigger.create({
+                trigger: containerRef.current,
+                start: "top+=50% top",
+                onEnter: () => {
+                    flushSync(() => {
+                        setIsMerged(true);
+                    });
+
+                    const tl = gsap.timeline();
+                    tl.to(".grid-container",
+                        { gap: "0px", duration: 0.4, ease: "power2.inOut" }
+                    )
+                        .to(".partner-card",
+                            { borderWidth: "0px", duration: 0.4, ease: "power2.inOut" },
+                            "-=0.1"
+                        )
+                        .to(".merged-card-overlay",
+                            {
+                                opacity: 1,
+                                duration: 0.6,
+                                ease: "back.out(1.2)"
+                            },
+                            "-=0.2"
+                        )
+                },
+                onLeaveBack: () => {
+                    gsap.killTweensOf(".grid-container, .partner-card, .merged-card-overlay");
+                    gsap.to(".merged-card-overlay", { opacity: 0, duration: 0.3 });
+                    gsap.set(".grid-container", { clearProps: "gap" });
+                    gsap.set(".partner-card", { clearProps: "borderWidth" });
+
+                    flushSync(() => {
+                        setIsMerged(false);
+                    });
+                },
+            });
         });
+
+        return () => mm.revert();
     }, { scope: containerRef });
 
     const dummyDetails = {
@@ -143,8 +152,8 @@ const Partners = () => {
     };
 
     return (
-        <div ref={containerRef} className="container bg-[#0B1A2C] text-white relative h-[400vh]! w-full">
-            <div ref={stickyRef} className="sticky top-0 w-full h-screen  overflow-hidden ">
+        <div ref={containerRef} className="container bg-[#0B1A2C] text-white relative h-auto md:h-[400vh]! w-full">
+            <div ref={stickyRef} className="hidden md:block sticky! top-0 w-full h-screen!  overflow-hidden ">
 
                 <div className="absolute top-1/2 -translate-y-1/2 left-0 w-[33%] z-10 transition-all duration-600 ease-out flex flex-col justify-center">
                     <div className="relative w-full h-40">
@@ -166,7 +175,7 @@ const Partners = () => {
                     <div className="relative w-full transition-all duration-500 ease-in-out">
                         <div className={`grid-container w-full grid
                             ${isMerged ? 'gap-0 h-full' : 'gap-2'}
-                            ${isGrowth ? 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-6' : 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-5'}
+                            ${isGrowth ? 'grid-cols-6' : 'grid-cols-5'}
                             `}
                         >
                             {Array.from({ length: isMerged ? 18 : (isGrowth ? growthPartnersData.length : 5) }).map((_, i) => {
@@ -198,14 +207,14 @@ const Partners = () => {
                             style={{ opacity: 0, zIndex: 50, pointerEvents: isMerged ? 'auto' : 'none' }}
                         >
                             <div className="w-full h-full">
-                                    <div className="grid grid-cols-5 w-full h-full gap-x-16 text-white">
-                                        
-                                        <div className="  col-span-2 h-full flex flex-col justify-between w-full">
-                                            <div className="">
+                                <div className="grid grid-cols-5 w-full h-full gap-x-16 text-white">
+
+                                    <div className="  col-span-2 h-full flex flex-col justify-between w-full">
+                                        <div className="">
 
                                             <div className="flex items-center gap-3 mb-8">
                                                 <div className="w-8 h-8 bg-white rounded-sm transform rotate-45 flex-shrink-0 mt-1"></div>
-                                                <h3 className="text-4xl font-bold text-white tracking-tight">{dummyDetails.name}</h3>
+                                                <h3 className=" text-white tracking-tight">{dummyDetails.name}</h3>
                                             </div>
 
                                             <div className="flex flex-wrap items-center justify-between mb-8 gap-4">
@@ -223,35 +232,35 @@ const Partners = () => {
                                                     WEBSITE
                                                 </a>
                                             </div>
-                                            </div>
-
-                                            <div className="flex flex-wrap text-white items-center justify-between border-t border-white/10 pt-4 gap-4">
-                                                <div>
-                                                    <p className="text-sm mb-1 opacity-70">Founder</p>
-                                                    <p className="font-medium text-lg">{dummyDetails.founder}</p>
-                                                </div>
-                                                <div className="flex gap-2 opacity-80">
-                                                    <RiTwitterXLine/>
-                                                    <RiLinkedinBoxFill/>
-                                                   
-                                                </div>
-                                            </div>
                                         </div>
 
-                                        <div className=" col-span-3   w-full">
-                                            <div className="flex justify-between items-center ">
-                                                <h5 className="text-xl font-medium">Introducing {dummyDetails.name}</h5>
+                                        <div className="flex flex-wrap text-white items-center justify-between border-t border-white/10 pt-4 gap-4">
+                                            <div>
+                                                <p className="text-sm mb-1 opacity-70">Founder</p>
+                                                <p className="font-medium text-lg">{dummyDetails.founder}</p>
                                             </div>
-                                            <div data-lenis-prevent className="mt-4 overflow-y-scroll scroller_none h-70">
-                                                <div className="text-white opacity-70 leading-relaxed space-y-4">
-                                                    <p>{dummyDetails.desc1}</p>
-                                                    <p>{dummyDetails.desc2}</p>
-                                                </div>
+                                            <div className="flex gap-2 opacity-80">
+                                                <RiTwitterXLine />
+                                                <RiLinkedinBoxFill />
+
                                             </div>
                                         </div>
-
                                     </div>
-                         
+
+                                    <div className=" col-span-3   w-full">
+                                        <div className="flex justify-between items-center ">
+                                            <h5 className="text-xl font-medium">Introducing {dummyDetails.name}</h5>
+                                        </div>
+                                        <div data-lenis-prevent className="mt-4 overflow-y-scroll scroller_none h-70">
+                                            <div className="text-white opacity-70 leading-relaxed space-y-4">
+                                                <p>{dummyDetails.desc1}</p>
+                                                <p>{dummyDetails.desc2}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
                             </div>
                         </div>
                     </div>
@@ -259,20 +268,200 @@ const Partners = () => {
 
             </div>
 
+            {/* Mobile Layout */}
+            <div className="  block md:hidden py-12  space-y-16">
+                {/* Ventures Section */}
+                <div className="space-y-6">
+                    <div>
+                        <h2 data-para-effect className="leading-none">Ventures Founded</h2>
+                        <p data-para-effect className="opacity-60 leading-tight  mt-2">Companies built from the ground up.</p>
+                    </div>
+                    <div className="relative w-full overflow-hidden py-1">
+                        <style>{`
+                            .marquee-swiper .swiper-wrapper {
+                                transition-timing-function: linear !important;
+                            }
+                        `}</style>
+                        <div className="absolute top-0 bottom-0 left-0 w-12 bg-gradient-to-r from-[#0B1A2C] to-transparent z-10 pointer-events-none"></div>
+                        <div className="absolute top-0 bottom-0 right-0 w-12 bg-gradient-to-l from-[#0B1A2C] to-transparent z-10 pointer-events-none"></div>
+                        
+                        <Swiper
+                            modules={[Autoplay, FreeMode]}
+                            loop={true}
+                            freeMode={{ enabled: true, momentum: true }}
+                            autoplay={{
+                                delay: 0,
+                                disableOnInteraction: false,
+                            }}
+                            speed={5000}
+                            slidesPerView="auto"
+                            spaceBetween={4}
+                            className="w-full marquee-swiper"
+                            onTouchEnd={(swiper) => {
+                                setTimeout(() => {
+                                    if (swiper && !swiper.destroyed && swiper.autoplay) {
+                                        swiper.autoplay.start();
+                                    }
+                                }, 150);
+                            }}
+                        >
+                            {venturesData.map((item, i) => (
+                                <SwiperSlide key={item.id || i} className="!w-auto">
+                                    <div
+                                        onClick={() => setSelectedPartner(item)}
+                                        className="flex items-center justify-center w-28 aspect-4/3 bg-white/5 rounded-md cursor-pointer active:bg-[#253646] transition-colors duration-300 border border-white/10 shrink-0"
+                                    >
+                                        <div className="w-16 h-10 center relative">
+                                            <Image fill src={item.logo} alt="" className="object-contain" />
+                                        </div>
+                                    </div>
+                                </SwiperSlide>
+                            ))}
+                        </Swiper>
+                    </div>
+                </div>
+
+                {/* Growth Partners Section */}
+                <div className="space-y-6">
+                    <div>
+                        <h2 data-para-effect className="leading-none">Growth Partners</h2>
+                        <p data-para-effect className="opacity-60 leading-tight  mt-2">Businesses supported through investment and strategic growth.</p>
+                    </div>
+                    <div className="relative w-full overflow-hidden space-y-1">
+                        <div className="absolute top-0 bottom-0 left-0 w-12 bg-gradient-to-r from-[#0B1A2C] to-transparent z-10 pointer-events-none"></div>
+                        <div className="absolute top-0 bottom-0 right-0 w-12 bg-gradient-to-l from-[#0B1A2C] to-transparent z-10 pointer-events-none"></div>
+                        
+                        <Swiper
+                            modules={[Autoplay, FreeMode]}
+                            loop={true}
+                            freeMode={{ enabled: true, momentum: true }}
+                            autoplay={{
+                                delay: 0,
+                                disableOnInteraction: false,
+                            }}
+                            speed={5000}
+                            slidesPerView="auto"
+                            spaceBetween={4}
+                            className="w-full marquee-swiper"
+                            onTouchEnd={(swiper) => {
+                                setTimeout(() => {
+                                    if (swiper && !swiper.destroyed && swiper.autoplay) {
+                                        swiper.autoplay.start();
+                                    }
+                                }, 150);
+                            }}
+                        >
+                            {growthPartnersData.slice(0, Math.ceil(growthPartnersData.length / 2)).map((item, i) => (
+                                <SwiperSlide key={item.id || i} className="!w-auto">
+                                    <div
+                                        onClick={() => setSelectedPartner(item)}
+                                        className="flex items-center justify-center w-28 aspect-4/3 bg-white/5 rounded-md cursor-pointer active:bg-[#253646] transition-colors duration-300 border border-white/10 shrink-0"
+                                    >
+                                        <div className="w-16 h-10 center relative">
+                                            <Image fill src={item.logo} alt="" className="object-contain" />
+                                        </div>
+                                    </div>
+                                </SwiperSlide>
+                            ))}
+                        </Swiper>
+
+                        <Swiper
+                            modules={[Autoplay, FreeMode]}
+                            loop={true}
+                            freeMode={{ enabled: true, momentum: true }}
+                            autoplay={{
+                                delay: 0,
+                                disableOnInteraction: false,
+                                reverseDirection: true,
+                            }}
+                            speed={5000}
+                            slidesPerView="auto"
+                            spaceBetween={4}
+                            className="w-full marquee-swiper"
+                            onTouchEnd={(swiper) => {
+                                setTimeout(() => {
+                                    if (swiper && !swiper.destroyed && swiper.autoplay) {
+                                        swiper.autoplay.start();
+                                    }
+                                }, 150);
+                            }}
+                        >
+                            {growthPartnersData.slice(Math.ceil(growthPartnersData.length / 2)).map((item, i) => (
+                                <SwiperSlide key={item.id || i} className="!w-auto">
+                                    <div
+                                        onClick={() => setSelectedPartner(item)}
+                                        className="flex items-center justify-center w-28 aspect-4/3 bg-white/5 rounded-lg cursor-pointer active:bg-[#253646] transition-colors duration-300 border border-white/10 shrink-0"
+                                    >
+                                        <div className="w-16 h-10 center relative">
+                                            <Image fill src={item.logo} alt="" className="object-contain" />
+                                        </div>
+                                    </div>
+                                </SwiperSlide>
+                            ))}
+                        </Swiper>
+                    </div>
+                </div>
+
+                {/* Fintech Infrastructure Section */}
+                <div className="space-y-6">
+                    <div>
+                        <h2 data-para-effect className="leading-none">Currently Building Fintech Infrastructure</h2>
+                    </div>
+
+                    <div className="bg-[#152535]/90 rounded-lg p-6 border border-white/10 space-y-6">
+                        <div className="flex items-center gap-3">
+                            <div className="w-6 h-6 bg-white rounded-sm transform rotate-45 flex-shrink-0"></div>
+                            <h3 className="text-white tracking-tight">{dummyDetails.name}</h3>
+                        </div>
+
+                        <div className="flex flex-wrap gap-2 text-[10px]">
+                            <span className="px-3 py-1.5 border border-white/20 text-white rounded-full flex items-center gap-1.5">
+                                <div className="w-1.5 h-1.5 rounded-full bg-white"></div> {dummyDetails.tags[0]}
+                            </span>
+                            <span className="px-3 py-1.5 border border-white/20 text-white rounded-full">{dummyDetails.tags[1]}</span>
+                            <span className="px-3 py-1.5 border border-white/20 text-white rounded-full">{dummyDetails.tags[2]}</span>
+                        </div>
+
+                        <div className="text-white opacity-80 leading-tight  space-y-3">
+                            <p>{dummyDetails.desc1}</p>
+                            <p>{dummyDetails.desc2}</p>
+                        </div>
+
+                        <div className="flex items-center justify-between border-t border-white/10 pt-4 gap-4 text-xs">
+                            <div>
+                                <p className="opacity-70 mb-0.5">Founder</p>
+                                <p className="text-xl">{dummyDetails.founder}</p>
+                            </div>
+                            <div className="flex gap-3 opacity-80 text-white">
+                                <a href={dummyDetails.website} className="px-3 py-1.5 border border-white/20 rounded-full flex items-center gap-1.5 hover:bg-white hover:text-[#152535] transition-colors duration-300">
+                                    <RiArrowRightUpLine size={14} /> WEBSITE
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
             <div
                 className={` ${selectedPartner ? "opacity-100 pointer-events-auto" : " opacity-0 pointer-events-none"} transition-all duration-300 fixed inset-0 z-50 flex items-center justify-center bg-[#0a1118]/80 backdrop-blur-sm p-4 `}
                 onClick={() => setSelectedPartner(null)}
             >
+                <div 
+                onClick={() => setSelectedPartner(null)}
+                 className=" text-black bg-white absolute rounded-full p-2 right-3 top-3 md:hidden">
+                    <RiCloseLine/>
+                </div>
                 <div
-                    className={`bg-white text-black w-full max-w-2xl rounded-3xl overflow-hidden relative flex flex-col max-h-[85vh] shadow-2xl transition-all duration-300 ${selectedPartner ? "translate-y-0" : " translate-y-5"}  `}
+                    className={`bg-white text-black w-full max-w-2xl  rounded-xl md:rounded-3xl overflow-hidden relative flex flex-col max-h-[85vh] shadow-2xl transition-all duration-300 ${selectedPartner ? "translate-y-0" : " translate-y-5"}  `}
                     onClick={(e) => e.stopPropagation()}
                 >
-                    <div className="p-6 overflow-y-auto">
+                    <div className=" p-4 md:p-6 overflow-y-auto">
 
-                        <div className="bg-[#0B1A2C10] rounded-2xl p-6">
+                        <div className="bg-[#0B1A2C10] rounded-2xl p-4 md:p-6">
                             <div className="flex items-center gap-3 mb-8">
                                 <div className="w-8 h-8 bg-[#883F27] rounded-sm transform rotate-45 flex-shrink-0 mt-1"></div>
-                                <h3 data-para-effect className="text-4xl font-bold text-[#883F27] tracking-tight">{dummyDetails.name}</h3>
+                                <h3 data-para-effect className=" text-[#883F27] tracking-tight">{dummyDetails.name}</h3>
                             </div>
 
                             <div className="flex flex-wrap items-center justify-between mb-8 gap-4">

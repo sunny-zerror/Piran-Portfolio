@@ -219,11 +219,13 @@ const StoryWaterDropCanvas = ({ activeIndex }) => {
 };
 
 const StorySection = () => {
-    const [activeIndex, setActiveIndex] = useState(-1); // Start unrevealed until triggered
+    const [activeIndex, setActiveIndex] = useState(0); // Start at 0 so first step is pre-selected
     const triggerRef = useRef(null);
 
     useEffect(() => {
-        const ctx = gsap.context(() => {
+        let mm = gsap.matchMedia();
+
+        mm.add("(min-width: 768px)", () => {
             ScrollTrigger.create({
                 trigger: triggerRef.current,
                 start: "top center", // Trigger initial animation when section reaches top center
@@ -245,19 +247,19 @@ const StorySection = () => {
                     }
                 },
             });
-        }, triggerRef);
+        });
 
-        return () => ctx.revert();
+        return () => mm.revert();
     }, []);
 
     const activeStory = storySteps[Math.max(0, activeIndex)];
 
     return (
-        <div ref={triggerRef} className="w-full h-[500vh] relative bg-[#ECE3DB]">
-            <div className="sticky top-0 h-screen w-full overflow-hidden text-[#0B1A2C] flex flex-col justify-between py-12">
+        <div ref={triggerRef} className="w-full h-auto md:h-[500vh] relative bg-[#ECE3DB]">
+            <div className=" relative md:sticky top-0 h-auto md:h-screen w-full overflow-hidden text-[#0B1A2C] flex flex-col justify-between py-12 ">
 
                 {/* Main Content Layout Container */}
-                <div className="container h-full flex flex-col justify-center space-y-40 relative z-10">
+                <div className="container h-full flex flex-col justify-center space-y-8 md:space-y-40 relative z-10">
 
                     {/* Main Title Header */}
                     <div className="max-w-md pt-4">
@@ -267,14 +269,14 @@ const StorySection = () => {
                     </div>
 
                     {/* Icon Timeline / Stepper Buttons */}
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center justify-between md:justify-start md:gap-x-2 scroller_none pb-2 w-full">
                         {storySteps.map((step, idx) => {
                             const isActive = idx === activeIndex;
                             return (
                                 <button
                                     key={step.id}
                                     onClick={() => setActiveIndex(idx)}
-                                    className={`relative group p-3 md:p-4 rounded-full transition-all duration-300 flex items-center justify-center cursor-pointer ${isActive
+                                    className={`relative group p-3 md:p-4 rounded-full transition-all duration-300 flex items-center justify-center cursor-pointer shrink-0 ${isActive
                                             ? 'bg-[#0B1A2C] border border-dashed border-[#0B1A2C]'
                                             : 'bg-transparent border border-dashed border-gray-400 hover:border-[#0B1A2C]'
                                         }`}
@@ -294,8 +296,13 @@ const StorySection = () => {
                         })}
                     </div>
 
+                    {/* Mobile Canvas Illustration */}
+                    <div className="w-full aspect-video md:hidden pointer-events-none z-0">
+                        <StoryWaterDropCanvas activeIndex={activeIndex} />
+                    </div>
+
                     {/* Active Story Description (Bottom Left) */}
-                    <div className="max-w-xl pb-6 transition-all duration-500">
+                    <div className="max-w-xl pb-6 transition-all duration-500 space-y-2">
                         <h4 data-para-effect className=" font-medium  text-[#0B1A2C]">
                             {activeStory.title}
                         </h4>
@@ -306,7 +313,7 @@ const StorySection = () => {
                 </div>
 
                 {/* Right Side Illustration Canvas Container */}
-                <div className="absolute right-0 top-0 bottom-0 w-full md:w-3/5 lg:w-1/2 h-full pointer-events-none overflow-hidden z-0 flex items-center justify-end p-4">
+                <div className="hidden md:flex absolute right-0 top-0 bottom-0 w-full md:w-3/5 lg:w-1/2 h-full pointer-events-none overflow-hidden z-0 items-center justify-end p-4">
                     <StoryWaterDropCanvas activeIndex={activeIndex} />
                 </div>
 

@@ -121,7 +121,7 @@ const AboutHero = () => {
     }, { scope: containerRef });
 
     return (
-        <div ref={containerRef} className="h-[500vh] w-full bg-[#0B1A2C]">
+        <div ref={containerRef} className="h-[400vh] w-full bg-[#0B1A2C]">
             <div
                 ref={stickyRef}
                 className="sticky top-0 h-screen w-full bg-[#0B1A2C] overflow-hidden flex items-center justify-center"
@@ -155,39 +155,39 @@ const AboutHero = () => {
                 </div>
 
                 {/* Initial scattered texts (z-10 to stay above mask initially) */}
-                <div className="absolute inset-0 w-full h-full p-8 md:p-16  pointer-events-none z-10">
+                <div className="absolute flex flex-col justify-center gap-y-10 inset-0 w-full h-full p-6 md:p-16  pointer-events-none z-10">
 
-                    <h5 className="initial-para absolute top-[20%] left-[10%] md:left-[20%] max-w-md text-[#EAE9E4]">
+                    <p className=" text-2xl initial-para leading-tight md:absolute top-[20%] left-[10%] md:left-[20%] max-w-md text-[#EAE9E4]">
                         <span className="fade-text">The strongest brands are rarely built overnight. They begin with </span>
                         <span className="target-text inline-block origin-top-left">a clear</span>
                         <span className="fade-text"> conviction</span>
-                    </h5>
+                    </p>
 
-                    <h5 className="initial-para absolute top-[45%] right-[5%] md:right-[15%] max-w-md text-[#EAE9E4]">
+                    <p className=" text-2xl initial-para leading-tight md:absolute top-[45%] right-[5%] md:right-[15%] max-w-md text-[#EAE9E4]">
                         <span className="fade-text">Good strategy isn't about adding more. It's about </span>
                         <span className="target-text inline-block origin-top-left">point of view</span>
                         <span className="fade-text"> that guides every choice.</span>
-                    </h5>
+                    </p>
 
-                    <h5 className="initial-para absolute bottom-[35%] left-[5%] md:left-[15%] max-w-md text-[#EAE9E4]">
+                    <p className=" text-2xl initial-para leading-tight md:absolute bottom-[35%] left-[5%] md:left-[15%] max-w-md text-[#EAE9E4]">
                         <span className="fade-text">Design is simply the visible result of better thinking. It gives </span>
                         <span className="target-text inline-block origin-top-left">that shapes</span>
                         <span className="fade-text"> every interaction.</span>
-                    </h5>
+                    </p>
 
-                    <h5 className="initial-para absolute bottom-[10%] right-[10%] md:right-[20%] max-w-md text-[#EAE9E4]">
+                    <p className=" text-2xl initial-para leading-tight md:absolute bottom-[10%] right-[10%] md:right-[20%] max-w-md text-[#EAE9E4]">
                         <span className="fade-text">When every piece moves together, growth feels natural. The outcome is </span>
                         <span className="target-text inline-block origin-top-left">everything else.</span>
-                    </h5>
+                    </p>
 
                 </div>
 
                 {/* Final Destination (invisible placeholders used for Flip calculations) */}
-                <div className="w-full  max-w-[1200px] flex items-center justify-center opacity-0 pointer-events-none z-10">
+                <div className="w-full whitespace-nowrap  flex items-center justify-center opacity-0 pointer-events-none z-10">
                     {/* Left Text */}
                     <div className="flex-1 flex justify-end gap-2 pr-1.5 ">
-                        <h3 className="final-dest ">a clear</h3>
-                        <h3 className="final-dest ">point of view</h3>
+                        <p className="final-dest  text-sm md:text-4xl ">a clear</p>
+                        <p className="final-dest  text-sm md:text-4xl ">point of view</p>
                     </div>
 
                     {/* Gap exactly in the center for the mask logo to align perfectly */}
@@ -195,8 +195,8 @@ const AboutHero = () => {
 
                     {/* Right Text */}
                     <div className="flex-1 flex justify-start gap-2 pl-1.5">
-                        <h3 className="final-dest ">that shapes</h3>
-                        <h3 className="final-dest ">everything else.</h3>
+                        <p className="final-dest  text-sm md:text-4xl ">that shapes</p>
+                        <p className="final-dest  text-sm md:text-4xl ">everything else.</p>
                     </div>
                 </div>
 

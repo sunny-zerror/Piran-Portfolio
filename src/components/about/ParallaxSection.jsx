@@ -23,8 +23,8 @@ const ParallaxSection = () => {
             hoverOnly: true,
             frictionX: 0.03, // Ultra-smooth lerp easing on X axis
             frictionY: 0.03, // Ultra-smooth lerp easing on Y axis
-            scalarX: 350,
-            scalarY: 400,
+            scalarX: 200,
+            scalarY: 300,
         });
 
         return () => {
