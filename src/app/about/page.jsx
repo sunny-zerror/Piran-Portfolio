@@ -10,9 +10,8 @@ const AboutPage = () => {
     <>
       <AboutHero/>
       <StorySection/>
-      <AboutWork/>
-      <AboutStrength/>
       <ParallaxSection/>
+      <AboutWork/>
     </>
   );
 };

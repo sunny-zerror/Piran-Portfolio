@@ -13,9 +13,9 @@ const Footer = () => {
         <div className="relative pointer-events-none z-10 flex flex-col items-center gap-y-4 md:gap-y-5">
           <p data-para-effect className="text-sm font-medium opacity-90">Get Started Now</p>
           <h2 data-para-effect className="leading-none">Building Something<br />Worth Lasting?</h2>
-          <button className="bg-white text-[#883F27] rounded-full  px-6 hover:pl-2 leading-none h-12 text-sm group   transition-all duration-300 pointer-events-auto flex items-center gap-2">
+          <button className="bg-white text-[#883F27] rounded-full  px-6 hover:pl-1 leading-none h-10 text-sm group   transition-all duration-300 pointer-events-auto flex items-center gap-2">
             <span className="w-2 h-2 center text-white group-hover:h-8 group-hover:w-8 rounded-full bg-[#883F27] transition-all duration-300">
-              <RiArrowRightUpLine className={` scale-0 group-hover:scale-100 transition-all duration-300`} />
+              <RiArrowRightUpLine size={18} className={` scale-0 group-hover:scale-100 transition-all duration-300`} />
             </span>
             START A CONVERSATION
           </button>
@@ -32,34 +32,38 @@ const Footer = () => {
               </Link>
               <p className="text-[12vw] whitespace-nowrap md:text-7xl">Piran Tarapore</p>
             </div>
-            
-            <p data-para-effect className="text-lg leading-tight opacity-90 max-w-xs md:max-w-none">
+
+            <p className="text-lg leading-tight opacity-90 max-w-xs md:max-w-none">
               Start Compounding Your Brand Equity<br /> for Long-Term Business Growth.
             </p>
           </div>
 
           <div className="col-span-8 md:col-span-2 grid grid-cols-2 gap-4 text-sm md:text-base mt-2 md:mt-0">
-            <div className="flex flex-col gap-2 font-medium">
-              <Link href="/" className="hover:opacity-70 transition-opacity">Home</Link>
-              <Link href="/about" className="hover:opacity-70 transition-opacity">About</Link>
-              <Link href="/contact" className="hover:opacity-70 transition-opacity">Contact</Link>
+            <div className=" flex md:justify-end">
+              <div className="flex flex-col gap-2 font-medium">
+                <Link href="/" className="group flex items-center gap-1"> <div className="size-2 opacity-0 group-hover:opacity-100 transition-all duration-300 bg-white rounded-full"></div> Home</Link>
+                <Link href="/about" className="group flex items-center gap-1"> <div className="size-2 opacity-0 group-hover:opacity-100 transition-all duration-300 bg-white rounded-full"></div> About</Link>
+                <Link href="/contact" className="group flex items-center gap-1"> <div className="size-2 opacity-0 group-hover:opacity-100 transition-all duration-300 bg-white rounded-full"></div> Contact</Link>
+              </div>
             </div>
-            <div className="flex flex-col gap-2 font-medium">
-              <a href="#" className="flex items-center gap-2 hover:opacity-70 transition-opacity">
-                Instagram
-              </a>
-              <a href="#" className="flex items-center gap-2 hover:opacity-70 transition-opacity">
-                Linkedin
-              </a>
+            <div className=" flex md:justify-end">
+              <div className="flex flex-col gap-2 font-medium">
+                <a href="#" className="flex items-center gap-1 group"> <div className="size-2 opacity-0 group-hover:opacity-100 transition-all duration-300 bg-white rounded-full"></div> 
+                  Instagram
+                </a>
+                <a href="#" className="flex items-center gap-1 group "> <div className="size-2 opacity-0 group-hover:opacity-100 transition-all duration-300 bg-white rounded-full"></div> 
+                  Linkedin
+                </a>
+              </div>
             </div>
           </div>
         </div>
 
         <div className="w-full h-[1px] bg-white/20 my-2 md:my-5"></div>
 
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center text-sm opacity-70">
-          <p>© Copy Right 2026 - Piran Tarapore. All Rights Reserved.</p>
-          <Link href={"https://www.wearepointof.com"} target='_blank' className='group'>
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center text-sm">
+          <p className='opacity-70'>© Copy Right 2026 - Piran Tarapore. All Rights Reserved.</p>
+          <Link href={"https://www.wearepointof.com"} target='_blank' className='group opacity-70 hover:opacity-100 transition-opacity duration-150'>
             <p>Designed & Developed by <span className='group-hover:underline'> Point Of.</span></p>
           </Link>
         </div>

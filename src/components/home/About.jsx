@@ -18,36 +18,34 @@ const About = () => {
         })
         tl.to(".intro_txt", {
             opacity: 1,
-            stagger: 0.2
+            stagger: 0.5,
+            duration:0.25,
         })
         tl.to(".int_hd", {
-            y: -50,
-            opacity: 0
+            y: -25,
+            opacity: 0,
+            duration:0.25,
         })
         tl.to(".piran_img", {
-            opacity: 1
+            opacity: 1,
+            duration:0.25,
         }, "<")
         tl.to(".intro_txt", {
-            opacity: 0
+            opacity: 0,
+            duration:0.25,
         }, "<")
         tl.to(".above_img_txt", {
-            opacity: 1
+            opacity: 1,
+            duration:0.25,
+            delay:0.5,
         })
-        tl.to([".above_img_txt"], {
-            opacity: 0
+        tl.to([".above_img_txt",".piran_img"], {
+            opacity: 0,
+            duration:0.25,
+            delay:0.5,
         })
-        tl.to(".piran_img", {
-            top: "-100%",
-            duration: 1.5,
-            ease: "none"
-        }, "<")
-        tl.to([".about_bg"], {
-            transform: "translateY(0)",
-            duration: 1.5,
-            ease: "none"
-        }, "<")
         tl.to(".abt_txt_1", {
-            opacity: 1
+            opacity: 1,
         }, "<+=0.4")
         tl.to(".abt_txt_2", {
             opacity: 1
@@ -62,7 +60,7 @@ const About = () => {
             <div ref={containerRef} className="w-full relative h-[300vh] bg-[#0B1A2C]">
                 <div className=" sticky_bg sticky top-0 w-full h-screen center flex-col text-center leading-none">
                     <div className="text-white int_hd">
-                        <h2 className=''> <span className=' intro_txt_a intro_txt'>Meet</span> <span className='intro_txt opacity-0'> Piran</span></h2>
+                        <h2 className=''> <span className=' intro_txt_a intro_txt opacity-0'>Meet</span> <span className='intro_txt opacity-0'> Piran</span></h2>
                         <div className="intro_txt opacity-0">
                             <p className='text-lg  opacity-70'>Brand Architect & Strategic Catalyst</p>
                         </div>
@@ -76,7 +74,6 @@ const About = () => {
                     </div>
 
                     <div className="w-full container absolute! space-y-16 text-white inset-0 h-full center flex-col">
-                        <Image fill src={"/images/homepage/about_bg_img.png"} className='cover about_bg translate-y-full ' alt='piran pic' />
                         <h4 className=' md:w-[70%] mx-auto z-10 opacity-0 abt_txt_1'>The Shift Usually Starts Here, Most founders don't come looking for strategy. They come because something feels misaligned. Growth becomes harder. Teams move in different directions. Opportunities appear but don't compound. The business evolves, but the underlying foundations don't evolve with it. The challenge is rarely effort. It's clarity.</h4>
                         <h4 className=' md:w-[70%] mx-auto z-10 opacity-0 abt_txt_2'>For more than two decades, I've worked alongside founders, leadership teams, and investors helping them navigate the moments that determine what a business becomes. Not by adding complexity.</h4>
                         <h4 className=' md:w-[70%] mx-auto z-10 opacity-0 abt_txt_3'>By creating alignment between strategy, execution, capital, and narrative.</h4>

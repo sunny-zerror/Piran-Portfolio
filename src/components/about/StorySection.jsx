@@ -221,6 +221,17 @@ const StoryWaterDropCanvas = ({ activeIndex }) => {
 const StorySection = () => {
     const [activeIndex, setActiveIndex] = useState(0); // Start at 0 so first step is pre-selected
     const triggerRef = useRef(null);
+    const textRef = useRef(null);
+
+    useEffect(() => {
+        if (textRef.current) {
+            gsap.fromTo(
+                textRef.current,
+                { opacity: 0, y: 20 },
+                { opacity: 1, y: 0, duration: 0.8, ease: "power2.out" }
+            );
+        }
+    }, [activeIndex]);
 
     useEffect(() => {
         let mm = gsap.matchMedia();
@@ -302,8 +313,8 @@ const StorySection = () => {
                     </div>
 
                     {/* Active Story Description (Bottom Left) */}
-                    <div className="max-w-xl pb-6 transition-all duration-500 space-y-2">
-                        <h4 data-para-effect className=" font-medium  text-[#0B1A2C]">
+                    <div ref={textRef} className="max-w-xl pb-6 space-y-2">
+                        <h4 data-para-effect className=" font-medium text-[#0B1A2C]">
                             {activeStory.title}
                         </h4>
                         <p data-para-effect className=" text-[#0B1A2C]/70 leading-tight ">

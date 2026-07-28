@@ -106,7 +106,7 @@ const Partners = () => {
                                 duration: 0.6,
                                 ease: "back.out(1.2)"
                             },
-                            "-=0.2"
+                            "<"
                         )
                 },
                 onLeaveBack: () => {
@@ -152,7 +152,7 @@ const Partners = () => {
     };
 
     return (
-        <div ref={containerRef} className="container bg-[#0B1A2C] text-white relative h-auto md:h-[400vh]! w-full">
+        <div ref={containerRef} className="container bg-[#0B1A2C] text-white relative h-auto md:h-[300vh]! w-full">
             <div ref={stickyRef} className="hidden md:block sticky! top-0 w-full h-screen!  overflow-hidden ">
 
                 <div className="absolute top-1/2 -translate-y-1/2 left-0 w-[33%] z-10 transition-all duration-600 ease-out flex flex-col justify-center">

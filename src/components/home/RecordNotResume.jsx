@@ -6,6 +6,7 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/effect-fade';
 import Image from 'next/image';
+import gsap from 'gsap';
 
 const testimonials = [
     {
@@ -39,7 +40,25 @@ const testimonials = [
 
 const RecordNotResume = () => {
     const swiperRef = useRef(null);
+    const dragBtnRef = useRef(null);
     const [activeIndex, setActiveIndex] = useState(0);
+    const [isHovered, setIsHovered] = useState(false);
+
+    const handleMouseMove = (e) => {
+        const rect = e.currentTarget.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        if (dragBtnRef.current) {
+            gsap.to(dragBtnRef.current, {
+                x: x,
+                y: y,
+                duration: 0.5,
+                ease: 'power3.out',
+                overwrite: 'auto'
+            });
+        }
+    };
 
     return (
         <div className="container py-12 md:py-24 relative">
@@ -99,62 +118,84 @@ const RecordNotResume = () => {
                         </div>
                     </div>
 
-                    <div className="w-full md:w-[40%]">
-                        <Swiper
-                            ref={swiperRef}
-                            modules={[Autoplay]}
-                            autoplay={true}
-                            loop={true}
-                            className="h-full animate-marquee-custom"
-                            onSlideChange={(swiper) => setActiveIndex(swiper.realIndex)}
+                    <div className="w-full md:w-[40%] relative group overflow-hidden">
+                        {/* Custom Glassmorphism Drag Button */}
+                        <div
+                            ref={dragBtnRef}
+                            className={`pointer-events-none absolute left-0 top-0 z-30 -translate-x-1/2 -translate-y-1/2 rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-wider backdrop-blur-md bg-white/20 border border-white/40 text-black shadow-lg transition-opacity duration-300 ${
+                                isHovered ? 'opacity-100 scale-100' : 'opacity-0 scale-75'
+                            } flex items-center gap-1.5`}
+                            style={{
+                                backdropFilter: 'blur(8px)',
+                                WebkitBackdropFilter: 'blur(8px)',
+                            }}
                         >
-                            {testimonials.map((t,i) => (
-                                <SwiperSlide key={t.id}>
-                                    <div className={`w-full aspect-3/5 h-full flex flex-col justify-between max-sm:border max-sm:border-[#18253220] max-sm:border-dashed p-5 md:p-8 relative overflow-hidden ${t.bgColor} ${t.textColor}`}>
-                                    <div className="absolute inset-0 w-full h-full">
-                                        <Image fill src="/images/homepage/testimonials/card_bg.png" alt="" />
-                                    </div>
-                                        <div className="">
-                                        <div className="flex justify-between items-center mb-8 relative z-10">
-                                            <div className={`opacity-90 size-10 ${i===0 ? "invert-0 ":"invert-100"}`}>
-                                                <Image width={100} height={50} src="/icons/quote.svg" alt="quote" />
-                                            </div>
-                                            <div className="flex gap-1.5 items-center pointer-events-auto">
-                                                {testimonials.map((_, idx) => (
-                                                    <button
-                                                        key={idx}
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            swiperRef.current?.swiper?.slideToLoop(idx);
-                                                        }}
-                                                        className={`size-2 rounded-full border transition-all duration-300 ${
-                                                            activeIndex === idx
-                                                                ? 'bg-current border-current scale-110'
-                                                                : 'bg-transparent opacity-40 border-current'
-                                                        }`}
-                                                    />
-                                                ))}
-                                            </div>
-                                        </div>
+                            <span>Drag</span>
+                        </div>
 
-                                        <p className="text-2xl leading-tight">
-                                            "{t.quote}"
-                                        </p>
+                        <div
+                            onMouseEnter={() => setIsHovered(true)}
+                            onMouseLeave={() => setIsHovered(false)}
+                            onMouseMove={handleMouseMove}
+                            className="h-full cursor-none"
+                        >
+                            <Swiper
+                                ref={swiperRef}
+                                modules={[Autoplay]}
+                                autoplay={{ delay: 3500, disableOnInteraction: false }}
+                                speed={1000}
+                                loop={true}
+                                className="h-full animate-marquee-custom [&_.swiper-wrapper]:ease-out"
+                                onSlideChange={(swiper) => setActiveIndex(swiper.realIndex)}
+                            >
+                                {testimonials.map((t,i) => (
+                                    <SwiperSlide key={t.id}>
+                                        <div className={`w-full aspect-3/5 h-full flex flex-col justify-between max-sm:border max-sm:border-[#18253220] max-sm:border-dashed p-5 md:p-8 relative overflow-hidden ${t.bgColor} ${t.textColor}`}>
+                                        <div className="absolute inset-0 w-full h-full">
+                                            <Image fill src="/images/homepage/testimonials/card_bg.png" alt="" />
                                         </div>
+                                            <div className="">
+                                            <div className="flex justify-between items-center mb-8 relative z-10">
+                                                <div className={`opacity-90 size-10 ${i===0 ? "invert-0 ":"invert-100"}`}>
+                                                    <Image width={100} height={50} src="/icons/quote.svg" alt="quote" />
+                                                </div>
+                                                <div className="flex gap-1.5 items-center pointer-events-auto z-20">
+                                                    {testimonials.map((_, idx) => (
+                                                        <button
+                                                            key={idx}
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                swiperRef.current?.swiper?.slideToLoop(idx);
+                                                            }}
+                                                            className={`size-2 rounded-full border transition-all duration-300 ${
+                                                                activeIndex === idx
+                                                                    ? 'bg-current border-current scale-110'
+                                                                    : 'bg-transparent opacity-40 border-current'
+                                                            }`}
+                                                        />
+                                                    ))}
+                                                </div>
+                                            </div>
 
-                                        <div className="flex items-center gap-4 mt-12 relative z-10">
-                                            <div className="w-12 h-12 relative rounded-full bg-black/10 overflow-hidden flex-shrink-0">
-                                                <Image fill src={t.img} alt="" />
+                                            <p className="text-2xl leading-tight">
+                                                "{t.quote}"
+                                            </p>
                                             </div>
-                                            <div>
-                                                <h5 className=" font-medium leading-none">{t.name}</h5>
-                                                <p className="opacity-70">{t.title}</p>
+
+                                            <div className="flex items-center gap-4 mt-12 relative z-10">
+                                                <div className="w-12 h-12 relative rounded-full bg-black/10 overflow-hidden flex-shrink-0">
+                                                    <Image fill src={t.img} alt="" />
+                                                </div>
+                                                <div>
+                                                    <h5 className=" font-medium leading-none">{t.name}</h5>
+                                                    <p className="opacity-70">{t.title}</p>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </SwiperSlide>
-                            ))}
-                        </Swiper>
+                                    </SwiperSlide>
+                                ))}
+                            </Swiper>
+                        </div>
                     </div>
                 </div>
 

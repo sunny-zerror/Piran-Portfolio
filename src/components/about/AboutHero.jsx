@@ -61,67 +61,119 @@ const AboutHero = () => {
             ScrollTrigger.refresh();
         };
 
-        lockScroll();
+        const isMobile = window.innerWidth < 768;
+
+        if (!isMobile) {
+            lockScroll();
+        }
 
         // Initial entry animation (runs on mount)
         gsap.from(".initial-para", {
             opacity: 0,
             duration: 0.25,
-            stagger: 1,
+            stagger: 0.6,
             ease: "power2.out",
             onComplete: () => {
-                unlockScroll();
+                if (!isMobile) {
+                    unlockScroll();
 
-                // Initialize timeline with ScrollTrigger ONLY after intro animation finishes
-                const tl = gsap.timeline({
-                    scrollTrigger: {
-                        trigger: containerRef.current,
-                        start: "top top",
-                        end: "bottom bottom",
-                        scrub: 1,
-                    }
-                });
-
-                // Phase 1: Fade out non-target text and change background
-                tl.to(".fade-text", { opacity: 0, duration: 0.5 })
-
-                // Phase 2: Move targets to final destinations using Flip.fit & Reveal Mask
-                const targets = gsap.utils.toArray(".target-text");
-                const destinations = gsap.utils.toArray(".final-dest");
-
-                targets.forEach((target, i) => {
-                    const fitTween = Flip.fit(target, destinations[i], {
-                        duration: 1,
-                        scale: true,
+                    // Initialize desktop timeline with ScrollTrigger
+                    const tl = gsap.timeline({
+                        scrollTrigger: {
+                            trigger: containerRef.current,
+                            start: "top top",
+                            end: "bottom bottom",
+                            scrub: 1,
+                        }
                     });
-                    tl.add(fitTween, "move");
-                });
 
-                // Phase 3: Mask expands to fill the screen AND text splits open horizontally
-                tl.to(maskContainerRef.current, {
-                    "--mask-size": "5000px",
-                    duration: 2,
-                    ease: "power2.in"
-                }, "expand")
-                    .to([targets[0], targets[1]], {
-                        x: "-=50vw",
-                        opacity: 0,
-                        duration: 2.5,
-                        ease: "power1.inOut"
+                    tl.to(".fade-text", { opacity: 0, duration: 0.5 });
+
+                    const targets = gsap.utils.toArray(".target-text");
+                    const destinations = gsap.utils.toArray(".final-dest");
+
+                    targets.forEach((target, i) => {
+                        const fitTween = Flip.fit(target, destinations[i], {
+                            duration: 1,
+                            scale: true,
+                        });
+                        tl.add(fitTween, "move");
+                    });
+
+                    tl.to(maskContainerRef.current, {
+                        "--mask-size": "5000px",
+                        duration: 2,
+                        ease: "power2.in"
                     }, "expand")
-                    .to([targets[2], targets[3]], {
-                        x: "+=50vw",
-                        opacity: 0,
-                        duration: 2.5,
-                        ease: "power1.inOut"
-                    }, "expand");
+                        .to([targets[0], targets[1]], {
+                            x: "-=50vw",
+                            opacity: 0,
+                            duration: 2.5,
+                            ease: "power1.inOut"
+                        }, "expand")
+                        .to([targets[2], targets[3]], {
+                            x: "+=50vw",
+                            opacity: 0,
+                            duration: 2.5,
+                            ease: "power1.inOut"
+                        }, "expand");
+                } else {
+                    // Mobile-only: One-time automated timeline play on mount without scrub
+                    const mobileTl = gsap.timeline();
+
+                    mobileTl.to(".fade-text", { opacity: 0, duration: 0.8, delay: 0.5 });
+
+                    const targets = gsap.utils.toArray(".target-text");
+                    const destinations = gsap.utils.toArray(".final-dest");
+
+                    targets.forEach((target, i) => {
+                        const fitTween = Flip.fit(target, destinations[i], {
+                            duration: 1.2,
+                            scale: true,
+                            ease: "power2.inOut"
+                        });
+                        mobileTl.add(fitTween, "move");
+                    });
+
+                    mobileTl.to(maskContainerRef.current, {
+                        "--mask-size": "5000px",
+                        duration: 2,
+                        ease: "power2.inOut"
+                    }, "expand")
+                        .to([targets[0], targets[1]], {
+                            x: "-=50vw",
+                            opacity: 0,
+                            duration: 2,
+                            ease: "power1.inOut"
+                        }, "expand")
+                        .to([targets[2], targets[3]], {
+                            x: "+=50vw",
+                            opacity: 0,
+                            duration: 2,
+                            ease: "power1.inOut"
+                        }, "expand");
+                }
             }
         });
 
     }, { scope: containerRef });
 
+    const handleSkip = () => {
+        if (!containerRef.current) return;
+        const containerBottom = containerRef.current.offsetTop + containerRef.current.offsetHeight;
+        
+        if (window.lenis) {
+            window.lenis.scrollTo(containerBottom, { duration: 1.2 });
+        } else {
+            window.scrollTo({
+                top: containerBottom,
+                behavior: 'smooth'
+            });
+        }
+    };
+
     return (
-        <div ref={containerRef} className="h-[400vh] w-full bg-[#0B1A2C]">
+        <div ref={containerRef} className="h-[100vh] md:h-[400vh] w-full bg-[#0B1A2C] relative">
             <div
                 ref={stickyRef}
                 className="sticky top-0 h-screen w-full bg-[#0B1A2C] overflow-hidden flex items-center justify-center"
@@ -199,6 +251,14 @@ const AboutHero = () => {
                         <p className="final-dest  text-sm md:text-4xl ">everything else.</p>
                     </div>
                 </div>
+
+                {/* Mobile Only Skip Button */}
+                <button
+                    onClick={handleSkip}
+                    className="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-50 uppercase border rounded-full px-4 py-2 leading-none  text-white text-xs "
+                >
+                    Skip
+                </button>
 
             </div>
         </div>

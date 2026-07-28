@@ -84,11 +84,11 @@ void main(){
   // The noise moves over time and is influenced by mouse offsets
   vec3 noiseInput = vec3(
     position.x * 0.15 + uMouseOffset.x, 
-    position.y * 0.15 + uMouseOffset.y + uTime * 0.05, 
-    uTime * 0.05
+    position.y * 0.15 + uMouseOffset.y + uTime * 0.02, 
+    uTime * 0.02
   );
   
-  float n = snoise(noiseInput) * 1.5;
+  float n = snoise(noiseInput) * 1.0;
   
   // Distance from center on X axis to keep the moon visible
   float xDist = abs(position.x);
@@ -122,7 +122,7 @@ void main(){
   float thick = 0.12;
   
   // Flow lines based on mouse offset and time to match ocean direction
-  float linePosY = fract(vUv.y * uGridSize - uMouseOffset.y * 2.0 - uTime * 0.05);
+  float linePosY = fract(vUv.y * uGridSize - uMouseOffset.y * 2.0 - uTime * 0.03);
   
   // Smooth anti-aliased horizontal lines
   float alphaY = smoothstep(thick, thick - 0.015, linePosY) + smoothstep(1.0 - thick, 1.0 - thick + 0.015, linePosY);
@@ -229,8 +229,8 @@ const WavePlane = ({
     
     // Continuously add the pointer position to change the ocean's flow direction
     // Reduced speed for a calmer continuous movement
-    offsetRef.current.x += pointer.x * 0.005;
-    offsetRef.current.y += pointer.y * 0.005;
+    offsetRef.current.x += pointer.x * 0.003;
+    offsetRef.current.y += pointer.y * 0.003;
     
     matRef.current.uMouseOffset = offsetRef.current;
   });
@@ -359,8 +359,8 @@ const MoonGlobe = () => {
 
   const sphereRef = useRef();
   const [isDragging, setIsDragging] = useState(false);
-  const velocity = useRef({ x: 0.002, y: 0.005 });
-  const targetVelocity = useRef({ x: 0.002, y: 0.005 });
+  const velocity = useRef({ x: 0.0012, y: 0.003 });
+  const targetVelocity = useRef({ x: 0.0012, y: 0.003 });
   const lastPointer = useRef({ x: 0, y: 0, time: 0 });
   const { gl } = useThree();
 
@@ -429,8 +429,8 @@ const MoonGlobe = () => {
     const vy = velocity.current.y;
     const vx = velocity.current.x;
     
-    const steadyY = vy >= 0 ? 0.005 : -0.005;
-    const steadyX = vx >= 0 ? 0.002 : -0.002;
+    const steadyY = vy >= 0 ? 0.003 : -0.003;
+    const steadyX = vx >= 0 ? 0.0012 : -0.0012;
     
     targetVelocity.current = { x: steadyX, y: steadyY };
   };
