@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Flip } from 'gsap/Flip';
@@ -12,60 +12,38 @@ const AboutHero = () => {
     const containerRef = useRef(null);
     const stickyRef = useRef(null);
     const maskContainerRef = useRef(null);
+    const [scrollLocked, setScrollLocked] = React.useState(true);
 
-    useGSAP(() => {
-        const preventDefault = (e) => e.preventDefault();
+    // Lenis scroll locking effect
+    useEffect(() => {
+        const isMobile = window.innerWidth < 768;
+        if (isMobile) {
+            setScrollLocked(false);
+            return;
+        }
 
-        // Block keys that trigger scroll (Space, PageUp, PageDown, End, Home, Up, Down)
-        const keys = { Space: 1, PageUp: 1, PageDown: 1, End: 1, Home: 1, ArrowUp: 1, ArrowDown: 1 };
-        const preventDefaultForScrollKeys = (e) => {
-            if (keys[e.code]) {
-                e.preventDefault();
-                return false;
+        if (scrollLocked) {
+            if (window.lenis) {
+                window.lenis.stop();
+            } else {
+                document.body.style.overflow = "hidden";
             }
-        };
-
-        let isLocked = true;
-
-        const lockScroll = () => {
-            document.body.style.overflow = "hidden";
-            document.documentElement.style.overflow = "hidden";
-
-            window.addEventListener("wheel", preventDefault, { passive: false });
-            window.addEventListener("touchmove", preventDefault, { passive: false });
-            window.addEventListener("keydown", preventDefaultForScrollKeys, { passive: false });
-
-            // Continuously enforce Lenis stop while locked
-            const interval = setInterval(() => {
-                if (window.lenis && isLocked) {
-                    window.lenis.stop();
-                }
-                if (!isLocked) {
-                    clearInterval(interval);
-                }
-            }, 50);
-        };
-
-        const unlockScroll = () => {
-            isLocked = false;
-            document.body.style.overflow = "";
-            document.documentElement.style.overflow = "";
-
-            window.removeEventListener("wheel", preventDefault);
-            window.removeEventListener("touchmove", preventDefault);
-            window.removeEventListener("keydown", preventDefaultForScrollKeys);
-
+        } else {
             if (window.lenis) {
                 window.lenis.start();
+            } else {
+                document.body.style.overflow = "";
             }
-            ScrollTrigger.refresh();
-        };
-
-        const isMobile = window.innerWidth < 768;
-
-        if (!isMobile) {
-            lockScroll();
         }
+
+        return () => {
+            if (window.lenis) window.lenis.start();
+            document.body.style.overflow = "";
+        };
+    }, [scrollLocked]);
+
+    useGSAP(() => {
+        const isMobile = window.innerWidth < 768;
 
         // Initial entry animation (runs on mount)
         gsap.from(".initial-para", {
@@ -75,7 +53,7 @@ const AboutHero = () => {
             ease: "power2.out",
             onComplete: () => {
                 if (!isMobile) {
-                    unlockScroll();
+                    setScrollLocked(false);
 
                     // Initialize desktop timeline with ScrollTrigger
                     const tl = gsap.timeline({

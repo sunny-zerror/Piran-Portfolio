@@ -41,6 +41,7 @@ const RotatingText = () => {
       const nextWordStr = TITLES[nextIndex];
 
       // Build next word chars into DOM directly
+      if (!currentRowRef.current || !nextRowRef.current) return;
       buildChars(nextWordStr, nextRowRef.current, "char-in");
 
       const outChars = currentRowRef.current.querySelectorAll(".char-out");
@@ -52,9 +53,11 @@ const RotatingText = () => {
       const tl = gsap.timeline({
         onComplete: () => {
           // Swap: move next word text into current row, clear next row
-          buildChars(nextWordStr, currentRowRef.current, "char-out");
-          nextRowRef.current.innerHTML = "";
-          gsap.set(currentRowRef.current.querySelectorAll(".char-out"), { yPercent: 0 });
+          if (currentRowRef.current && nextRowRef.current) {
+            buildChars(nextWordStr, currentRowRef.current, "char-out");
+            nextRowRef.current.innerHTML = "";
+            gsap.set(currentRowRef.current.querySelectorAll(".char-out"), { yPercent: 0 });
+          }
           indexRef.current = nextIndex;
         }
       });
@@ -144,23 +147,19 @@ const Hero = () => {
   };
 
   useGSAP(() => {
-    const heading_split = SplitText.create(".heading_split", {
-      type: "lines",
-      linesClass: "split-line"
-    });
     const paragraph_split = SplitText.create(".paragraph_split", {
       type: "lines",
       linesClass: "split-line"
     });
 
-    [...heading_split.lines, ...paragraph_split.lines].forEach((line) => {
+    [...paragraph_split.lines].forEach((line) => {
       const wrapper = document.createElement("div");
       wrapper.classList.add("line-wrapper");
       line.parentNode.insertBefore(wrapper, line);
       wrapper.appendChild(line);
     });
 
-    gsap.set([heading_split.lines, paragraph_split.lines], { yPercent: 100 });
+    gsap.set([".txt2_head", paragraph_split.lines], { yPercent: 100 });
 
     const masterTl = gsap.timeline();
 
@@ -197,22 +196,23 @@ const Hero = () => {
       opacity: 1,
       duration: 0.01
     });
-    masterTl.to(heading_split.lines, {
-      yPercent: -8,
-      duration: 0.8,
-      ease: "expo.out",
-      stagger: 0.05,
-    }, "<");
-    masterTl.to(paragraph_split.lines, {
+
+    masterTl.to([".txt2_head", paragraph_split.lines], {
       yPercent: 0,
       duration: 0.8,
       ease: "expo.out",
       stagger: 0.05,
     }, "<+0.2");
+    masterTl.to([".txt2_head"], {
+      transform: "translateX(0)",
+      stagger: 0.15,
+      duration:1,
+      ease: "power2.inOut"
+    });
     masterTl.to([".vid_cont", ".hero_logos"], {
       opacity: 1,
       stagger: 0.15
-    });
+    }, ">");
 
   });
 
@@ -250,7 +250,7 @@ const Hero = () => {
         ref={loaderRef}
         className="fixed inset-0 z-[999] bg-[#0B1A2C] flex flex-col items-center justify-center pointer-events-auto"
       >
-        <div className="relative w-24 h-24 sm:w-52 sm:h-52 flex items-center justify-center">
+        <div className="relative w-52 h-52  flex items-center justify-center">
           {/* Background Dark Outline Logo */}
           <img
             src="/logo.svg"
@@ -277,10 +277,23 @@ const Hero = () => {
 
       <div className=" content_box opacity-0 container pb-5 relative z-10 w-full h-full flex items-end pointer-events-none">
         <div className=" absolute w-full h-full flex items-center pointer-events-auto">
-          <h1 className=" heading_split leading-none">
-            Creating Growth <br />
-            Through Strong <br />
-            Foundations
+          <h1 className=" w-full leading-18">
+            <div className="wrapper_heading block w-full overflow-hidden">
+              <div className="txt2_head translate-x-[31%]">
+                Creating Growth
+              </div>
+            </div>
+            <div className="wrapper_heading block w-full overflow-hidden">
+              <div className="txt2_head translate-x-[31.5%]">
+                Through Strong
+              </div>
+            </div>
+            <div className="wrapper_heading block w-full overflow-hidden">
+              <div className="txt2_head translate-x-[34.5%]">
+                Foundations
+              </div>
+            </div>
+
           </h1>
         </div>
 

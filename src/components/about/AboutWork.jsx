@@ -16,36 +16,6 @@ const AboutWork = () => {
   };
     const sectionRef = useRef(null);
     const bgRef = useRef(null);
-    const imageParentRef = useRef(null);
-    const innerImgRef = useRef(null);
-
-    useEffect(() => {
-        const ctx = gsap.context(() => {
-            if (imageParentRef.current && innerImgRef.current) {
-                const tl = gsap.timeline({
-                    scrollTrigger: {
-                        trigger: imageParentRef.current,
-                        start: 'top 70%',
-                        toggleActions: 'play none none reverse',
-                    },
-                });
-
-                tl.fromTo(
-                    imageParentRef.current,
-                    { clipPath: 'polygon(20% 20%, 80% 20%, 80% 80%, 20% 80%)', opacity:0 },
-                    { clipPath: 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)',opacity:1, duration: 1, ease: 'power2.out' },
-                    0
-                ).fromTo(
-                    innerImgRef.current,
-                    { scale: 1.5 },
-                    { scale: 1, duration: 1, ease: 'power2.out' },
-                    0
-                );
-            }
-        }, sectionRef);
-
-        return () => ctx.revert();
-    }, []);
 
     const cards = [
         {
@@ -159,7 +129,7 @@ const AboutWork = () => {
                     </div>
                 </div>
 
-                <div className="w-full py-12 md:py-24 border-t border-dashed border-white/50 text-white">
+                <div className="w-full py-12 md:py-24 bg-[#0B1A2C] text-white">
                     <div className="container h-fit!">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20">
                             {/* Left Column: Strengths & Accordion */}
@@ -205,18 +175,18 @@ const AboutWork = () => {
                                 </div>
                             </div>
 
-                            {/* Right Column: Portrait Image */}
+                            {/* Right Column: Transparent Cutout exposing sticky city background */}
                             <div className="flex justify-center md:justify-end">
-                                <div ref={imageParentRef} className="relative w-full max-sm:aspect-square md:w-[80%] overflow-hidden rounded-xl bg-[#162534]">
-                                    <div ref={innerImgRef} className="relative w-full h-full aspect-square md:aspect-auto min-h-[400px]">
-                                        <Image
-                                            src="/images/aboutpage/piran_pic.png"
-                                            alt="Piran Portrait"
-                                            fill
-                                            priority
-                                            className="cover"
-                                        />
-                                    </div>
+                                <div 
+                                    className="relative w-full max-sm:aspect-square md:w-[80%] aspect-square md:aspect-auto min-h-[400px] overflow-hidden rounded-xl  flex items-center justify-center pointer-events-none"
+                                    style={{
+                                        backgroundImage: "url('/images/aboutpage/mumbai_city_bg.png')",
+                                        backgroundAttachment: "fixed",
+                                        backgroundPosition: "center",
+                                        backgroundSize: "cover",
+                                        backgroundRepeat: "no-repeat"
+                                    }}
+                                >
                                 </div>
                             </div>
                         </div>

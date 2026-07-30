@@ -14,56 +14,82 @@ gsap.registerPlugin(ScrollTrigger, SplitText)
 
 
 const TITLES = ['Brand Architect', 'Growth Strategist', 'Vision Builder'];
-const SCRAMBLE_CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%&*';
 
 const RotatingText = () => {
-  const textRef = useRef(null);
+  const currentRowRef = useRef(null);
+  const nextRowRef = useRef(null);
   const indexRef = useRef(0);
 
+  const buildChars = (text, parent, className) => {
+    parent.innerHTML = "";
+    text.split("").forEach((char) => {
+      const span = document.createElement("span");
+      span.className = `${className} inline-block`;
+      span.style.willChange = "transform";
+      span.textContent = char === " " ? "\u00A0" : char;
+      parent.appendChild(span);
+    });
+  };
+
   useEffect(() => {
-    const scrambleTo = (target) => {
-      const el = textRef.current;
-      if (!el) return;
-      const len = target.length;
-      const duration = 0.8;
-      const obj = { progress: 0 };
-
-      gsap.to(obj, {
-        progress: 1,
-        duration,
-        ease: 'power2.inOut',
-        onUpdate: () => {
-          const p = obj.progress;
-          let result = '';
-          for (let i = 0; i < len; i++) {
-            // Each character resolves at a staggered point
-            const charThreshold = i / len;
-            if (p > charThreshold + 0.3) {
-              result += target[i];
-            } else {
-              result += SCRAMBLE_CHARS[Math.floor(Math.random() * SCRAMBLE_CHARS.length)];
-            }
-          }
-          el.textContent = result;
-        },
-        onComplete: () => {
-          el.textContent = target;
-        },
-      });
-    };
-
-    // Initial text
-    if (textRef.current) textRef.current.textContent = TITLES[0];
+    // Set initial word
+    if (currentRowRef.current) {
+      buildChars(TITLES[0], currentRowRef.current, "char-out");
+    }
 
     const interval = setInterval(() => {
-      indexRef.current = (indexRef.current + 1) % TITLES.length;
-      scrambleTo(TITLES[indexRef.current]);
+      const nextIndex = (indexRef.current + 1) % TITLES.length;
+      const nextWordStr = TITLES[nextIndex];
+
+      // Build next word chars into DOM directly
+      if (!currentRowRef.current || !nextRowRef.current) return;
+      buildChars(nextWordStr, nextRowRef.current, "char-in");
+
+      const outChars = currentRowRef.current.querySelectorAll(".char-out");
+      const inChars = nextRowRef.current.querySelectorAll(".char-in");
+
+      // Set incoming chars below
+      gsap.set(inChars, { yPercent: 100 });
+
+      const tl = gsap.timeline({
+        onComplete: () => {
+          // Swap: move next word text into current row, clear next row
+          if (currentRowRef.current && nextRowRef.current) {
+            buildChars(nextWordStr, currentRowRef.current, "char-out");
+            nextRowRef.current.innerHTML = "";
+            gsap.set(currentRowRef.current.querySelectorAll(".char-out"), { yPercent: 0 });
+          }
+          indexRef.current = nextIndex;
+        }
+      });
+
+      // Current chars slide out upward (0 -> -100) with stagger
+      tl.to(outChars, {
+        yPercent: -100,
+        duration: 0.3,
+        ease: "power2.out",
+        stagger: 0.02
+      }, 0);
+
+      // Next chars slide in from below (100 -> 0) with stagger, in parallel
+      tl.to(inChars, {
+        yPercent: 0,
+        duration: 0.3,
+        ease: "power2.out",
+        stagger: 0.02
+      }, 0.01);
+
     }, 3000);
 
     return () => clearInterval(interval);
   }, []);
 
-  return <p ref={textRef} className="uppercase">{TITLES[0]}</p>;
+  return (
+    <div className=" hero_logos opacity-0 relative h-6 overflow-hidden uppercase flex justify-start items-center">
+      <div ref={currentRowRef} className="flex relative" />
+      <div ref={nextRowRef} className="flex absolute top-0 left-0" />
+    </div>
+  );
 };
 
 const MobileHero = () => {
@@ -74,6 +100,10 @@ const MobileHero = () => {
   const [showWebGL, setShowWebGL] = useState(false);
   const [isMobile, setIsMobile] = useState(true);
   const [activeLogoIndex, setActiveLogoIndex] = useState(null);
+
+  const loaderRef = useRef(null);
+  const fillLogoRef = useRef(null);
+  const [loadProgress, setLoadProgress] = useState(0);
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 750);
@@ -118,54 +148,78 @@ const MobileHero = () => {
   };
 
   useGSAP(() => {
-    const heading_split = SplitText.create(".heading_split", {
+    const heading_split = SplitText.create(".mob_heading_split", {
       type: "lines",
       linesClass: "split-line"
     });
-    const paragraph_split = SplitText.create(".paragraph_split", {
+    const paragraph_split = SplitText.create(".mob_paragraph_split", {
       type: "lines",
       linesClass: "split-line"
     });
 
     [...heading_split.lines, ...paragraph_split.lines].forEach((line) => {
       const wrapper = document.createElement("div");
-
       wrapper.classList.add("line-wrapper");
-
       line.parentNode.insertBefore(wrapper, line);
       wrapper.appendChild(line);
     });
 
     gsap.set([heading_split.lines, paragraph_split.lines], { yPercent: 100 });
 
-    const tl = gsap.timeline({
-      delay: 4
-    })
-    tl.to(".content_box", {
+    const masterTl = gsap.timeline();
+
+    // Step 1: Bottom-to-Top Logo Fill Loader Animation (0% to 100%)
+    const progressObj = { value: 0 };
+    masterTl.to(progressObj, {
+      value: 100,
+      duration: 2.2,
+      ease: "power1.inOut",
+      onUpdate: () => {
+        const val = Math.round(progressObj.value);
+        setLoadProgress(val);
+        if (fillLogoRef.current) {
+          fillLogoRef.current.style.clipPath = `inset(${100 - val}% 0% 0% 0%)`;
+        }
+      }
+    });
+
+    // Step 2: Fade out loader overlay
+    masterTl.to(loaderRef.current, {
+      opacity: 0,
+      duration: 0.6,
+      ease: "power2.inOut",
+      onComplete: () => {
+        if (loaderRef.current) {
+          loaderRef.current.style.display = "none";
+        }
+      }
+    });
+
+    // Step 3: Reveal hero content
+    masterTl.to(".mob_content_box", {
       opacity: 1,
       duration: 0.01
-    })
-    tl.to(".border_bar", {
+    });
+    masterTl.to(".mob_border_bar", {
       height: "100%",
       stagger: 0.2
     });
-    tl.to(heading_split.lines, {
+    masterTl.to(heading_split.lines, {
       yPercent: -8,
       duration: 0.8,
       ease: "expo.out",
       stagger: 0.05,
     }, "<");
-    tl.to(paragraph_split.lines, {
+    masterTl.to(paragraph_split.lines, {
       yPercent: 0,
       duration: 0.8,
       ease: "expo.out",
       stagger: 0.05,
     }, "<+0.2");
-    tl.to([".vid_cont", "hero_logos",".header"], {
+    masterTl.to([".mob_vid_cont", ".mob_hero_logos"], {
       opacity: 1,
       stagger: 0.15
     });
-
   });
 
   const logoData = [
@@ -196,19 +250,45 @@ const MobileHero = () => {
   if (!isMobile) return null;
 
   return (
-
     <div className='bg-[#0B1A2C] overflow-hidden'>
+
+      {/* Full-Screen Site Loader — identical to Hero.jsx */}
+      <div
+        ref={loaderRef}
+        className="fixed inset-0 z-[999] bg-[#0B1A2C] flex flex-col items-center justify-center pointer-events-auto"
+      >
+        <div className="relative w-24 h-24 md:w-52 md:h-52 flex items-center justify-center">
+          {/* Background Dark Outline Logo */}
+          <img
+            src="/logo.svg"
+            alt="logo placeholder"
+            className="w-full h-full object-contain opacity-20 brightness-0 invert"
+          />
+          {/* Foreground Pure White Logo Fill (Bottom-to-Top clip-path) */}
+          <img
+            ref={fillLogoRef}
+            src="/logo.svg"
+            alt="logo fill"
+            className="absolute inset-0 w-full h-full object-contain brightness-0 invert"
+            style={{ clipPath: "inset(100% 0% 0% 0%)" }}
+          />
+        </div>
+        {/* Counter Percentage */}
+        <div className="absolute bottom-10 text-xs tracking-widest font-mono text-white">
+          {loadProgress}%
+        </div>
+      </div>
       <div className="   w-full h-svh relative  text-white overflow-hidden">
         <LogoParticles />
 
-        <div className=" content_box opacity-0 flex items-end container pb-10 relative z-10 w-full h-full  pointer-events-none">
-          <div className="space-y-2 ">
-            <h1 className=" heading_split leading-none">
+        <div className="mob_content_box opacity-0 flex items-end container pb-10 relative z-10 w-full h-full pointer-events-none">
+          <div className="space-y-2">
+            <h1 className="mob_heading_split leading-none">
               Creating Growth
               Through Strong
               Foundations
             </h1>
-            <p className=" paragraph_split opacity-60 leading-tight">
+            <p className="mob_paragraph_split opacity-60 leading-tight">
               Our leadership solutions empower businesses
               to grow with confidence, clarity, and purpose.
             </p>
@@ -222,7 +302,7 @@ const MobileHero = () => {
           <div className="w-full space-y-2">
             <div className="text-left md:text-right">
               <RotatingText />
-              <p className="opacity-60 paragraph_split">Currently in Amsterdam/NL.</p>
+              <p className="opacity-60 mob_paragraph_split">Currently in Amsterdam/NL.</p>
             </div>
 
             <div className=" relative w-full aspect-video mb-2">

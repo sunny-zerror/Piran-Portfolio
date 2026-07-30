@@ -20,7 +20,8 @@ const ParallaxSection = () => {
 
         parallaxRef.current = new Parallax(sceneRef.current, {
             relativeInput: true,
-            hoverOnly: false,
+            hoverOnly: true,
+            inputElement: containerRef.current,
             pointerEvents: true,
             gyroscope: true,
             frictionX: 0.1,
