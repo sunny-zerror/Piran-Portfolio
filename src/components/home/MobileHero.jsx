@@ -280,7 +280,7 @@ const MobileHero = () => {
           />
         </div>
         {/* Counter Percentage */}
-        <div className="absolute bottom-10 text-xs tracking-widest font-mono text-white">
+        <div className="absolute bottom-10 text-xs tracking-widest   text-white">
           {loadProgress}%
         </div>
       </div>
@@ -319,14 +319,14 @@ const MobileHero = () => {
 
         <div className="border-t border-white/10 py-2 relative ">
           <div className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-80 bg-[#eaf4fa] text-black p-6 rounded-md shadow-2xl transition-all duration-500 ease-out z-50 
-            ${activeLogoIndex !== null 
-              ? 'opacity-100 translate-y-0 pointer-events-auto' 
+            ${activeLogoIndex !== null
+              ? 'opacity-100 translate-y-0 pointer-events-auto'
               : 'opacity-0 translate-y-4 pointer-events-none'
             }`}
           >
             <div className="flex justify-between items-start">
               <Image height={20} width={20} className='invert-100' src="/icons/quote.svg" alt="" />
-              <button 
+              <button
                 onClick={() => setActiveLogoIndex(null)}
                 aria-label="Close details"
                 className="text-black/50 hover:text-black text-xs font-bold"
@@ -344,8 +344,8 @@ const MobileHero = () => {
 
           <div className="flex justify-between pointer-events-auto">
             {logoData.map((item, i) => (
-              <div 
-                key={item.id} 
+              <div
+                key={item.id}
                 className="group relative cursor-pointer"
                 onClick={() => setActiveLogoIndex(i)}
               >

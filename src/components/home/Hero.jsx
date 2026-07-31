@@ -207,7 +207,7 @@ const Hero = () => {
     masterTl.to([".txt2_head"], {
       transform: "translateX(0)",
       stagger: 0.15,
-      duration:1,
+      duration: 1,
       ease: "power2.inOut"
     });
     masterTl.to([".vid_cont", ".hero_logos"], {
@@ -273,7 +273,7 @@ const Hero = () => {
         </div>
 
         {/* Counter Percentage */}
-        <div className="absolute bottom-10 text-xs tracking-widest font-mono opacity-60">
+        <div className="absolute bottom-10 text-xs tracking-widest   opacity-60">
           {loadProgress}%
         </div>
       </div>

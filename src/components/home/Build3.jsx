@@ -34,9 +34,9 @@ const Build3 = () => {
             const gapX = window.innerWidth < 768 ? 80 : 150;
             const gapY = window.innerWidth < 768 ? -20 : -45;
 
-            tl.from(".main_crd",{
-                y:1000,
-                ease:"none"
+            tl.from(".main_crd", {
+                y: 1000,
+                ease: "none"
             })
 
             // Add a label so all cards fan out simultaneously AFTER coming up
@@ -71,7 +71,7 @@ const Build3 = () => {
     ];
 
     return (
-        <div ref={containerRef} className="w-full bg-[#0B1A2C] text-white font-sans relative h-[250vh]">
+        <div ref={containerRef} className="w-full bg-[#0B1A2C] text-white   relative h-[250vh]">
             <div className="w-full sticky top-0 h-screen overflow-hidden flex flex-col items-center justify-center">
 
                 {/* Center Content Group */}
@@ -84,7 +84,7 @@ const Build3 = () => {
                                 key={index}
                                 ref={addToRefs}
                                 className="absolute inset-0 overflow-hidden  will-change-transform"
-                                style={{ zIndex: index * 10, clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)" }} 
+                                style={{ zIndex: index * 10, clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)" }}
                             >
                                 <Image
                                     fill

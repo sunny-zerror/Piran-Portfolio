@@ -54,7 +54,7 @@ const AboutWork = () => {
     return (
         <section ref={sectionRef} className="relative w-full  bg-[#0B1A2C]">
             {/* Sticky Background Image with Dark Overlay */}
-            <div className="sticky top-0 h-screen w-full overflow-hidden pointer-events-none z-0">
+            <div className="sticky top-0 h-svh w-full overflow-hidden pointer-events-none z-0">
                 <div className="absolute inset-0 z-0">
                     <div ref={bgRef} className="absolute inset-0 w-full h-[120%] -top-[10%]">
                         <Image
@@ -69,7 +69,7 @@ const AboutWork = () => {
             </div>
 
             {/* Scrolling Content Layer over the Sticky Background */}
-            <div className="relative z-10 -mt-[100vh]">
+            <div className="relative z-10 -mt-[100svh]">
                 <div className="container h-fit! py-12 md:py-24 flex flex-col gap-y-16 justify-between">
                     <div className="w-full md:grid grid-cols-6 items-end text-white">
                         <h2 data-para-effect className=' col-span-4 leading-none'> What I'm <br className="hidden md:block" /> Working On Now</h2>
@@ -178,7 +178,7 @@ const AboutWork = () => {
                             {/* Right Column: Transparent Cutout exposing sticky city background */}
                             <div className="flex justify-center md:justify-end">
                                 <div 
-                                    className="relative w-full max-sm:aspect-square md:w-[80%] aspect-square md:aspect-auto min-h-[400px] overflow-hidden rounded-xl  flex items-center justify-center pointer-events-none"
+                                    className="relative w-full max-sm:aspect-square md:w-[80%] aspect-square md:aspect-auto min-h-100 overflow-hidden rounded-xl  flex items-center justify-center pointer-events-none"
                                     style={{
                                         backgroundImage: "url('/images/aboutpage/mumbai_city_bg.svg')",
                                         backgroundAttachment: "fixed",
