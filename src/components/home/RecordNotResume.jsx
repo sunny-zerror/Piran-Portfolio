@@ -166,6 +166,7 @@ const RecordNotResume = () => {
                                                                     e.stopPropagation();
                                                                     swiperRef.current?.swiper?.slideToLoop(idx);
                                                                 }}
+                                                                aria-label={`Go to slide ${idx + 1}`}
                                                                 className={`size-2 rounded-full border transition-all duration-300 ${activeIndex === idx
                                                                         ? 'bg-current border-current scale-110'
                                                                         : 'bg-transparent opacity-40 border-current'

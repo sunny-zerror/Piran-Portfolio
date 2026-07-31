@@ -27,8 +27,8 @@ const Footer = () => {
         <div className="flex flex-col md:grid md:grid-cols-8 gap-y-6 md:gap-y-0">
           <div className="col-span-8 md:col-span-6 md:space-y-10">
             <div className="flex items-center gap-3">
-              <Link href={"/"}>
-                <Image className="w-14 h-14 shrink-0 md:w-15 md:h-15" width={60} height={60} src="/logo.svg" alt="" />
+              <Link href={"/"} aria-label="Piran Tarapore Home">
+                <Image className="w-14 h-14 shrink-0 md:w-15 md:h-15" width={60} height={60} src="/logo.svg" alt="Piran Tarapore Logo" />
               </Link>
               <p className="text-[12vw] whitespace-nowrap md:text-7xl">Piran Tarapore</p>
             </div>

@@ -30,6 +30,7 @@ const GlobalParaReveal = () => {
         const split = new SplitText(el, {
           type: "lines",
           linesClass: "split-line",
+          aria: "none",
         })
 
         splits.push(split)

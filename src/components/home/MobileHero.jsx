@@ -150,11 +150,13 @@ const MobileHero = () => {
   useGSAP(() => {
     const heading_split = SplitText.create(".mob_heading_split", {
       type: "lines",
-      linesClass: "split-line"
+      linesClass: "split-line",
+      aria: "none"
     });
     const paragraph_split = SplitText.create(".mob_paragraph_split", {
       type: "lines",
-      linesClass: "split-line"
+      linesClass: "split-line",
+      aria: "none"
     });
 
     [...heading_split.lines, ...paragraph_split.lines].forEach((line) => {
@@ -259,16 +261,20 @@ const MobileHero = () => {
       >
         <div className="relative w-24 h-24 md:w-52 md:h-52 flex items-center justify-center">
           {/* Background Dark Outline Logo */}
-          <img
+          <Image
+            width={208}
+            height={208}
             src="/logo.svg"
-            alt="logo placeholder"
+            alt="Piran Tarapore Logo outline placeholder"
             className="w-full h-full object-contain opacity-20 brightness-0 invert"
           />
           {/* Foreground Pure White Logo Fill (Bottom-to-Top clip-path) */}
-          <img
+          <Image
             ref={fillLogoRef}
+            width={208}
+            height={208}
             src="/logo.svg"
-            alt="logo fill"
+            alt="Piran Tarapore Logo fill"
             className="absolute inset-0 w-full h-full object-contain brightness-0 invert"
             style={{ clipPath: "inset(100% 0% 0% 0%)" }}
           />
@@ -322,6 +328,7 @@ const MobileHero = () => {
               <Image height={20} width={20} className='invert-100' src="/icons/quote.svg" alt="" />
               <button 
                 onClick={() => setActiveLogoIndex(null)}
+                aria-label="Close details"
                 className="text-black/50 hover:text-black text-xs font-bold"
               >
                 ✕
@@ -342,10 +349,12 @@ const MobileHero = () => {
                 className="group relative cursor-pointer"
                 onClick={() => setActiveLogoIndex(i)}
               >
-                <img
+                <Image
+                  width={60}
+                  height={40}
                   src={item.img}
-                  alt="logo img"
-                  className={`h-10 transition-opacity duration-300 ${activeLogoIndex === i ? 'opacity-100' : 'opacity-50'}`}
+                  alt={`Company Logo ${item.id}`}
+                  className={`h-10 w-auto object-contain transition-opacity duration-300 ${activeLogoIndex === i ? 'opacity-100' : 'opacity-50'}`}
                 />
               </div>
             ))}

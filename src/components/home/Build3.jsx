@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useRef } from 'react';
+import Image from 'next/image';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { RiArrowRightUpLine } from '@remixicon/react';
@@ -85,10 +86,11 @@ const Build3 = () => {
                                 className="absolute inset-0 overflow-hidden  will-change-transform"
                                 style={{ zIndex: index * 10, clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)" }} 
                             >
-                                <img
+                                <Image
+                                    fill
                                     src={src}
-                                    alt={`Card ${5 - index}`}
-                                    className="cover"
+                                    alt={`Abstract building block shape ${5 - index}`}
+                                    className="object-cover"
                                 />
                             </div>
                         ))}

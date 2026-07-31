@@ -58,7 +58,7 @@ const AboutWork = () => {
                 <div className="absolute inset-0 z-0">
                     <div ref={bgRef} className="absolute inset-0 w-full h-[120%] -top-[10%]">
                         <Image
-                            src="/images/aboutpage/mumbai_city_bg.png"
+                            src="/images/aboutpage/mumbai_city_bg.svg"
                             alt="Mumbai Dusk Background"
                             fill
                             priority
@@ -180,7 +180,7 @@ const AboutWork = () => {
                                 <div 
                                     className="relative w-full max-sm:aspect-square md:w-[80%] aspect-square md:aspect-auto min-h-[400px] overflow-hidden rounded-xl  flex items-center justify-center pointer-events-none"
                                     style={{
-                                        backgroundImage: "url('/images/aboutpage/mumbai_city_bg.png')",
+                                        backgroundImage: "url('/images/aboutpage/mumbai_city_bg.svg')",
                                         backgroundAttachment: "fixed",
                                         backgroundPosition: "center",
                                         backgroundSize: "cover",

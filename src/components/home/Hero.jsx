@@ -149,7 +149,8 @@ const Hero = () => {
   useGSAP(() => {
     const paragraph_split = SplitText.create(".paragraph_split", {
       type: "lines",
-      linesClass: "split-line"
+      linesClass: "split-line",
+      aria: "none"
     });
 
     [...paragraph_split.lines].forEach((line) => {
@@ -252,16 +253,20 @@ const Hero = () => {
       >
         <div className="relative w-52 h-52  flex items-center justify-center">
           {/* Background Dark Outline Logo */}
-          <img
+          <Image
+            width={208}
+            height={208}
             src="/logo.svg"
-            alt="logo placeholder"
+            alt="Piran Tarapore Logo outline placeholder"
             className="w-full h-full object-contain opacity-20 brightness-0 invert"
           />
           {/* Foreground Pure White Logo Fill (Bottom-to-Top clip-path) */}
-          <img
+          <Image
             ref={fillLogoRef}
+            width={208}
+            height={208}
             src="/logo.svg"
-            alt="logo fill"
+            alt="Piran Tarapore Logo fill"
             className="absolute inset-0 w-full h-full object-contain brightness-0 invert"
             style={{ clipPath: "inset(100% 0% 0% 0%)" }}
           />
@@ -328,10 +333,12 @@ const Hero = () => {
             <div className="flex gap-x-12 items-center pointer-events-auto">
               {logoData.map((item, i) => (
                 <div key={item.id} className=" hero_logos opacity-0 group relative cursor-pointer">
-                  <img
+                  <Image
+                    width={80}
+                    height={56}
                     src={item.img}
-                    alt="logo img"
-                    className="h-14 opacity-50 group-hover:opacity-100 transition-opacity duration-300"
+                    alt={`Company Logo ${item.id}`}
+                    className="h-14 w-auto object-contain opacity-50 group-hover:opacity-100 transition-opacity duration-300"
                   />
 
                   <div className="absolute bottom-full left-0 space-y-4 mb-2 w-80 bg-[#eaf4fa] text-black p-6 rounded-md shadow-2xl opacity-0 translate-y-5 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 pointer-events-none z-50">
@@ -366,6 +373,7 @@ const Hero = () => {
       >
         <button
           onClick={toggleVideo}
+          aria-label="Close video"
           className={`absolute top-8 right-8 w-12 h-12 bg-white/10 hover:bg-[#0B1A2C] text-white rounded-full flex items-center justify-center z-50 transition-colors backdrop-blur-sm pointer-events-none ${expanded && "pointer-events-auto!"}`}
         >
           <RiCloseLine size={24} />

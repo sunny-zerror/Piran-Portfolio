@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useMemo, useRef, useState } from 'react'
+import Image from 'next/image';
 import ExecutionCanvas from './canvasComponent/ExecutionCanvas';
 import CapitalAccess from './canvasComponent/CapitalAccess';
 import ClarityCanvas from './canvasComponent/ClarityCanvas';
@@ -19,7 +20,7 @@ const WorkResult = () => {
           <div className=" md:h-100 md:grid grid-cols-8 p-5 md:p-8">
             <div className="  col-span-3 md:flex flex-col justify-between">
               <div className=" size-12 md:size-20">
-                <img src="/images/homepage/workResult/clarity.svg" alt="" />
+                <Image width={80} height={80} src="/images/homepage/workResult/clarity.svg" alt="Clarity icon" />
               </div>
               <div className=" max-sm:pt-10 space-y-2">
                 <h4 data-para-effect>Clarity</h4>
@@ -40,7 +41,7 @@ const WorkResult = () => {
             <div className=""></div>
             <div className="  col-span-3 md:flex flex-col justify-between">
               <div className=" size-12 md:size-20">
-                <img src="/images/homepage/workResult/execution.svg" alt="" />
+                <Image width={80} height={80} src="/images/homepage/workResult/execution.svg" alt="Execution icon" />
               </div>
               <div className=" max-sm:pt-10 space-y-2">
                 <h4 data-para-effect>Execution</h4>
@@ -53,7 +54,7 @@ const WorkResult = () => {
           <div className=" md:h-100 md:grid grid-cols-8 p-5 md:p-8">
             <div className="  col-span-3 md:flex flex-col justify-between">
               <div className=' size-12 md:size-20'>
-                <img src="/images/homepage/workResult/CA.svg" alt="" />
+                <Image width={80} height={80} src="/images/homepage/workResult/CA.svg" alt="Capital Access icon" />
               </div>
 
               <div className=" max-sm:pt-10 space-y-2">

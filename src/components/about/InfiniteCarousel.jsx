@@ -108,7 +108,7 @@ const InfiniteCarousel = ({ openGallerySwiper, setOpenGallerySwiper }) => {
 
   useEffect(() => {
     if (openGallerySwiper) {
-      const splt_wrd = SplitText.create(".spli_txt", { type: "words" , wordsClass: "splt_wrd" })
+      const splt_wrd = SplitText.create(".spli_txt", { type: "words" , wordsClass: "splt_wrd", aria: "none" })
       gsap.set(splt_wrd.words, {
         y: 50,
         opacity:0
@@ -155,8 +155,8 @@ const InfiniteCarousel = ({ openGallerySwiper, setOpenGallerySwiper }) => {
     <div className=" gallery_swiper_paren  pointer-events-none opacity-0 fixed top-0 left-0   z-[999] inset-0 bg-[#ECE3DB] text-[#18293A] overflow-hidden flex flex-col  justify-between">
       <div className=''>
         <div className="w-full flex items-center justify-between p-2">
-          <h5 className='text-2xl spli_txt '>01 / 30</h5>
-          <button onClick={() => setOpenGallerySwiper(false)} className='w-6 cursor-pointer'><RiCloseLine size={30}/></button>
+          <h5 className=' spli_txt '>01 / 30</h5>
+          <button onClick={() => setOpenGallerySwiper(false)} aria-label="Close gallery" className='w-6 cursor-pointer'><RiCloseLine size={30}/></button>
         </div>
         <div
           ref={carouselRef}
