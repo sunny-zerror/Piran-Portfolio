@@ -103,7 +103,7 @@ const WorkBehindGrowth = () => {
                         <div key={i} className={`anim_child_${i + 1} grid grid-cols-3 gap-4 md:gap-0`}>
                             <div className="col-span-3 md:col-span-1 flex border border-dashed md:h-30 overflow-hidden rounded-xl border-white/20 text-white">
                                 <div className=" num_svg  w-full overflow-hidden shrink-0 bg-[#E3E2DC] center">
-                                    <Image width={100} height={100} src={item.num_img} alt={`Step ${item.id} indicator`} className="h-20 lg:h-auto object-contain" />
+                                    <img src={item.num_img} alt={`Step ${item.id} indicator`} className="h-20 lg:h-auto object-contain" />
                                 </div>
                                 <div className=" h-full flex shrink-0 flex-col  justify-center gap-y-2 px-4 py-3 md:px-5 md:py-0 w-[70%] md:w-auto">
                                     <h5 className='capitalize leading-none text-base md:text-lg'>{item.title}</h5>
