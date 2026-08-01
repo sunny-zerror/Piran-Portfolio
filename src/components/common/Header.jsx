@@ -6,7 +6,6 @@ import { Link } from 'next-view-transitions'
 import { usePathname } from 'next/navigation'
 import React, { useState, useEffect, useRef } from 'react'
 import LinkParticles from './LinkParticles'
-import LogoParticleHeader from './LogoParticleHeader'
 import ViewTransitionLink from '@/hooks/ViewTransitionLink';
 
 const MobileMenuToggleLabel = ({ isOpen }) => {
@@ -108,15 +107,42 @@ const encodedPrompt = encodeURIComponent(prompt);
 
 const Header = () => {
   const pathname = usePathname()
+  const headerRef = useRef(null)
   const [isScrolled, setIsScrolled] = useState(false)
+  const [isForcedScrolled, setIsForcedScrolled] = useState(false)
+  const [isAiOpen, setIsAiOpen] = useState(false)
   const [isAiHovered, setIsAiHovered] = useState(false)
   const [hoveredIndex, setHoveredIndex] = useState(null)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+
+  const handleAiClick = () => {
+    if (isAiOpen) {
+      setIsAiOpen(false)
+      if (isForcedScrolled) {
+        setTimeout(() => {
+          setIsForcedScrolled(false)
+        }, 500)
+      }
+    } else {
+      if (!isScrolled) {
+        setIsForcedScrolled(true)
+        setTimeout(() => {
+          setIsAiOpen(true)
+        }, 500)
+      } else {
+        setIsAiOpen(true)
+      }
+    }
+  }
 
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY
       const pillThreshold = window.innerHeight * 0.2 // 20vh for pill shape transform
+
+      // Close the AI dropdown on scroll
+      setIsAiOpen(false)
+      setIsForcedScrolled(false)
 
       // Floating pill state after 20vh
       if (currentScrollY > pillThreshold) {
@@ -129,6 +155,25 @@ const Header = () => {
     window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
+
+  // Close AI dropdown on click outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (headerRef.current && !headerRef.current.contains(event.target)) {
+        if (isAiOpen) {
+          setIsAiOpen(false)
+          if (isForcedScrolled) {
+            setTimeout(() => {
+              setIsForcedScrolled(false)
+            }, 500)
+          }
+        }
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [isAiOpen, isForcedScrolled])
 
   // Close mobile menu on route change
   useEffect(() => {
@@ -160,17 +205,18 @@ const Header = () => {
         className={`header opacity-0 fixed! h-fit! top-0 container left-0 w-full z-[100] pointer-events-none hidden md:flex justify-center pt-5`}
       >
         <div
+          ref={headerRef}
           className={`px-4 py-2 pl-3 pointer-events-auto flex flex-col border border-white/10 rounded-lg justify-between w-full bg-transparent text-white
-            transition-all duration-500 ease-out ${isScrolled
-              ? isAiHovered
+            transition-all duration-500 ease-out ${(isScrolled || isForcedScrolled || isAiOpen)
+              ? isAiOpen
                 ? 'max-w-xl bg-[#0B1A2C]! pb-3'
                 : 'max-w-xl bg-[#0B1A2C]!'
               : 'max-w-full bg-transparent'
             }`}
         >
           <div className="flex items-center justify-between w-full">
-            <Link href={"/"} className="flex items-center" aria-label="Piran Tarapore Home">
-              <LogoParticleHeader />
+            <Link href={"/"} className="flex items-center group" aria-label="Piran Tarapore Home">
+              <Image src="/logo.svg" alt="Piran Tarapore Logo" className="w-10 transition-all duration-300 group-hover:scale-110" width={40} height={40} />
             </Link>
             <nav className="flex gap-x-5 items-center">
               {navLinks.map((item, i) => (
@@ -192,33 +238,32 @@ const Header = () => {
                 </Link>
               ))}
 
-              {isScrolled && (
-                <div
-                  className="relative flex items-center h-full"
-                  onMouseEnter={() => setIsAiHovered(true)}
-                  onMouseLeave={() => setIsAiHovered(false)}
+              <div
+                className="relative flex items-center h-full"
+                onMouseEnter={() => setIsAiHovered(true)}
+                onMouseLeave={() => setIsAiHovered(false)}
+              >
+                <button
+                  onClick={handleAiClick}
+                  className="flex items-center gap-x-1 transition-opacity hover:opacity-80"
                 >
-                  <button className="flex items-center gap-x-1 transition-opacity hover:opacity-80">
-                    <div className={`transition-all duration-300 ${isAiHovered ? "scale-100 opacity-100" : "scale-0 opacity-0"}`}>
-                      <LinkParticles
-                        shape={pn}
-                        active={false}
-                        hovered={isAiHovered}
-                      />
-                    </div>
-                    Ask Ai
-                  </button>
-                </div>
-              )}
+                  <div className={`transition-all duration-300 ${isAiOpen || isAiHovered ? "scale-100 opacity-100" : "scale-0 opacity-0"}`}>
+                    <LinkParticles
+                      shape={pn}
+                      active={false}
+                      hovered={isAiOpen || isAiHovered}
+                    />
+                  </div>
+                  Ask Ai
+                </button>
+              </div>
             </nav>
           </div>
 
-          {/* Dropdown panel appearing on hover */}
+          {/* Dropdown panel appearing on click */}
           <div
-            className={`w-full overflow-hidden transition-all duration-500 ease-in-out ${isScrolled && isAiHovered ? 'max-h-72 pt-4 opacity-100' : 'max-h-0 opacity-0'
+            className={`w-full overflow-hidden transition-all duration-500 ease-in-out ${isAiOpen ? 'max-h-72 pt-4 opacity-100' : 'max-h-0 opacity-0'
               }`}
-            onMouseEnter={() => setIsAiHovered(true)}
-            onMouseLeave={() => setIsAiHovered(false)}
           >
             <div className="w-full bg-[#ECE3DB] text-[#1E1E1E] rounded-md p-3 md:p-5 flex flex-col  select-none border border-black/5">
               {/* Header row */}
@@ -287,8 +332,8 @@ const Header = () => {
               e.stopPropagation();
               setIsMobileMenuOpen(false);
             }}
-            delay={600} href={"/"} className="flex items-center" aria-label="Piran Tarapore Home">
-            <Image src="/logo.svg" alt="Piran Tarapore Logo" className="w-8 transition-all duration-300" width={32} height={32} />
+            delay={600} href={"/"} className="flex items-center group" aria-label="Piran Tarapore Home">
+            <Image src="/logo.svg" alt="Piran Tarapore Logo" className="w-8 transition-all duration-300 group-hover:scale-110" width={32} height={32} />
           </ViewTransitionLink>
           <button
             onClick={(e) => {
