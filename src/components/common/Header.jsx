@@ -202,7 +202,7 @@ const Header = () => {
     <>
       {/* ═══════════ DESKTOP HEADER (hidden on mobile) ═══════════ */}
       <header
-        className={`header opacity-0 fixed! h-fit! top-0 container left-0 w-full z-[100] pointer-events-none hidden md:flex justify-center pt-5`}
+        className={`header opacity-0 fixed! h-fit! top-0 container left-0 w-full z-[10000] pointer-events-none hidden md:flex justify-center pt-5`}
       >
         <div
           ref={headerRef}
