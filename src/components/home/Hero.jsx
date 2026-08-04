@@ -162,37 +162,8 @@ const Hero = () => {
 
     gsap.set([".txt2_head", paragraph_split.lines], { yPercent: 100 });
 
-    const masterTl = gsap.timeline();
+    const masterTl = gsap.timeline({delay:1});
 
-    // Step 1: Bottom-to-Top Logo Fill Loader Animation (0% to 100%)
-    const progressObj = { value: 0 };
-
-    masterTl.to(progressObj, {
-      value: 100,
-      duration: 2.2,
-      ease: "power1.inOut",
-      onUpdate: () => {
-        const val = Math.round(progressObj.value);
-        setLoadProgress(val);
-        if (fillLogoRef.current) {
-          fillLogoRef.current.style.clipPath = `inset(${100 - val}% 0% 0% 0%)`;
-        }
-      }
-    });
-
-    // Step 2: Disappear Loader Overlay smoothly
-    masterTl.to(loaderRef.current, {
-      opacity: 0,
-      duration: 0.6,
-      ease: "power2.inOut",
-      onComplete: () => {
-        if (loaderRef.current) {
-          loaderRef.current.style.display = "none";
-        }
-      }
-    });
-
-    // Step 3: Run usual hero text reveal
     masterTl.to(".content_box", {
       opacity: 1,
       duration: 0.01
@@ -246,37 +217,6 @@ const Hero = () => {
 
   return (
     <div className="   w-full h-screen relative bg-[#0B1A2C] text-white overflow-hidden">
-      {/* Full-Screen Site Loader */}
-      <div
-        ref={loaderRef}
-        className="fixed inset-0 z-[999] bg-[#0B1A2C] flex flex-col items-center justify-center pointer-events-auto"
-      >
-        <div className="relative w-52 h-52  flex items-center justify-center">
-          {/* Background Dark Outline Logo */}
-          <Image
-            width={208}
-            height={208}
-            src="/logo.svg"
-            alt="Piran Tarapore Logo outline placeholder"
-            className="w-full h-full object-contain opacity-20 brightness-0 invert"
-          />
-          {/* Foreground Pure White Logo Fill (Bottom-to-Top clip-path) */}
-          <Image
-            ref={fillLogoRef}
-            width={208}
-            height={208}
-            src="/logo.svg"
-            alt="Piran Tarapore Logo fill"
-            className="absolute inset-0 w-full h-full object-contain brightness-0 invert"
-            style={{ clipPath: "inset(100% 0% 0% 0%)" }}
-          />
-        </div>
-
-        {/* Counter Percentage */}
-        <div className="absolute bottom-10 text-xs tracking-widest   opacity-60">
-          {loadProgress}%
-        </div>
-      </div>
 
       <LogoParticles />
 

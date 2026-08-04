@@ -38,7 +38,7 @@ const ParticleSystem = ({ gridPositions, logoPositions, randomDirs, orbitData, e
 
     const timeoutId = setTimeout(() => {
       inCenter.current = true;
-    }, 4000);
+    }, 2000);
 
     return () => {
       window.removeEventListener('mousemove', onMove);
