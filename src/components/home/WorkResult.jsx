@@ -11,8 +11,8 @@ const WorkResult = () => {
     <>
       <div className="container pt-12 md:pt-24 space-y-8 md:space-y-16 bg-[#E3E2DC]">
         <div className="w-full max-sm:space-y-2 md:grid grid-cols-6 items-end">
-          <h2 data-para-effect className=' col-span-4 leading-none'>The Work Behind <br /> the Results</h2>
-          <p data-para-effect className='opacity-70 leading-tight col-span-2 text-lg'>Behind every result is a process built on clarity, creativity, and execution—transforming ideas into experiences that create lasting impact.</p>
+          <h2 data-para-effect className=' col-span-4 leading-none'>Where I <br />Come In</h2>
+          <p data-para-effect className='opacity-70 leading-tight col-span-2 text-lg'>Founders rarely call about strategy. They call because something feels misaligned: drift, friction, growth that costs more than it returns. The problem is rarely effort. It's position. The brand never had one to organise around. Finding it is where I come in.</p>
         </div>
         <div className="w-full border border-black/20">
 
@@ -24,7 +24,7 @@ const WorkResult = () => {
               </div>
               <div className=" max-sm:pt-10 space-y-2">
                 <h4 data-para-effect>Clarity</h4>
-                <p className='opacity-70 leading-tight'>I help founders define positioning, sharpen strategic direction, clarify market relevance, and establish a narrative that aligns teams, investors, customers, and partners around the same future.</p>
+                <p className='opacity-70 leading-tight'>We start by finding where you actually stand, then map the route to where you're headed.</p>
               </div>
             </div>
             <div />
@@ -45,7 +45,7 @@ const WorkResult = () => {
               </div>
               <div className=" max-sm:pt-10 space-y-2">
                 <h4 data-para-effect>Execution</h4>
-                <p className='opacity-70 leading-tight'>Together, we translate ideas into operating realities—aligning leadership, decision-making, priorities, partnerships, and growth initiatives around a coherent strategic framework.</p>
+                <p className='opacity-70 leading-tight'>Then we walk it: identity, materials, and systems, built with Point Of and its vetted brand partners.</p>
               </div>
             </div>
           </div>
@@ -60,9 +60,7 @@ const WorkResult = () => {
               <div className=" max-sm:pt-10 space-y-2">
                 <h4 data-para-effect>Capital Access</h4>
                 <p className="opacity-70 leading-tight">
-                  I help companies become investment-ready by strengthening the narrative,
-                  strategic positioning, and credibility required to engage investors.
-                </p>
+                   And for the right founders, I go further: equity, introductions, and a network that travels with you.</p>
               </div>
             </div>
 

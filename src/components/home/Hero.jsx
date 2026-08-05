@@ -9,87 +9,9 @@ import ScrollTrigger from 'gsap/dist/ScrollTrigger'
 import SplitText from 'gsap/dist/SplitText'
 import { useGSAP } from '@gsap/react';
 import Image from 'next/image';
+import { RotatingText } from '../common/RotatingText';
+import { LiveTime } from '../common/LiveTime';
 gsap.registerPlugin(ScrollTrigger, SplitText)
-
-
-const TITLES = ['Brand Architect', 'Growth Strategist', 'Vision Builder'];
-
-const RotatingText = () => {
-  const currentRowRef = useRef(null);
-  const nextRowRef = useRef(null);
-  const indexRef = useRef(0);
-
-  const buildChars = (text, parent, className) => {
-    parent.innerHTML = "";
-    text.split("").forEach((char) => {
-      const span = document.createElement("span");
-      span.className = `${className} inline-block`;
-      span.style.willChange = "transform";
-      span.textContent = char === " " ? "\u00A0" : char;
-      parent.appendChild(span);
-    });
-  };
-
-  useEffect(() => {
-    // Set initial word
-    if (currentRowRef.current) {
-      buildChars(TITLES[0], currentRowRef.current, "char-out");
-    }
-
-    const interval = setInterval(() => {
-      const nextIndex = (indexRef.current + 1) % TITLES.length;
-      const nextWordStr = TITLES[nextIndex];
-
-      // Build next word chars into DOM directly
-      if (!currentRowRef.current || !nextRowRef.current) return;
-      buildChars(nextWordStr, nextRowRef.current, "char-in");
-
-      const outChars = currentRowRef.current.querySelectorAll(".char-out");
-      const inChars = nextRowRef.current.querySelectorAll(".char-in");
-
-      // Set incoming chars below
-      gsap.set(inChars, { yPercent: 100 });
-
-      const tl = gsap.timeline({
-        onComplete: () => {
-          // Swap: move next word text into current row, clear next row
-          if (currentRowRef.current && nextRowRef.current) {
-            buildChars(nextWordStr, currentRowRef.current, "char-out");
-            nextRowRef.current.innerHTML = "";
-            gsap.set(currentRowRef.current.querySelectorAll(".char-out"), { yPercent: 0 });
-          }
-          indexRef.current = nextIndex;
-        }
-      });
-
-      // Current chars slide out upward (0 -> -100) with stagger
-      tl.to(outChars, {
-        yPercent: -100,
-        duration: 0.3,
-        ease: "power2.out",
-        stagger: 0.02
-      }, 0);
-
-      // Next chars slide in from below (100 -> 0) with stagger, in parallel
-      tl.to(inChars, {
-        yPercent: 0,
-        duration: 0.3,
-        ease: "power2.out",
-        stagger: 0.02
-      }, 0.01);
-
-    }, 3000);
-
-    return () => clearInterval(interval);
-  }, []);
-
-  return (
-    <div className=" hero_logos opacity-0 relative h-6 overflow-hidden uppercase flex justify-start items-center">
-      <div ref={currentRowRef} className="flex relative" />
-      <div ref={nextRowRef} className="flex absolute top-0 left-0" />
-    </div>
-  );
-};
 
 const Hero = () => {
   const videoThumbRef = useRef(null);
@@ -98,11 +20,6 @@ const Hero = () => {
   const [isAnimating, setIsAnimating] = useState(false);
   const [showWebGL, setShowWebGL] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-
-  const loaderRef = useRef(null);
-  const fillLogoRef = useRef(null);
-  const counterRef = useRef(null);
-  const [loadProgress, setLoadProgress] = useState(0);
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 750);
@@ -191,26 +108,21 @@ const Hero = () => {
   const logoData = [
     {
       id: 1,
-      img: "/images/homepage/hero/logo1.svg",
-      desc: "I can standardize my approach and I can A-B test knowing that I'm actually A-B testing, not depending on someone to be in a good mood that day or in a bad mood that day.",
-      author: "ICP: SALES & GTM LEADERS"
+      desc: "A strategic partner to the Poonawalla Group across startups, real estate, and brand ventures.",
+      img: "/images/homepage/hero/logo3.svg",
+      author: "Poonawalla Group"
     }, {
       id: 2,
       img: "/images/homepage/hero/logo2.svg",
-      desc: "We saw immediate results and a huge increase in our outbound conversions within the first week of deployment.",
-      author: "ICP: MARKETING DIRECTORS"
+      desc: "A postgraduate year in marketing communication at the University of Melbourne, where international rooms sharpened the thinking and the speaking.",
+      author: "University of Melbourne"
     },
     {
       id: 3,
-      img: "/images/homepage/hero/logo3.svg",
-      desc: "The analytics provided are game-changing. We finally have clarity on our user journey from start to finish.",
-      author: "ICP: PRODUCT MANAGERS"
-    }, {
-      id: 4,
-      img: "/images/homepage/hero/logo4.svg",
-      desc: "A robust platform that scales seamlessly. Our engineering team loves the API-first approach and documentation.",
-      author: "ICP: VP OF ENGINEERING"
-    },
+      img: "/images/homepage/hero/logo1.svg",
+      desc: "A founder in Build3's tenth cohort, where the next venture took shape in the nutraceutical space.",
+      author: "Build3"
+    }
   ];
 
   if (isMobile) return null;
@@ -225,20 +137,14 @@ const Hero = () => {
           <h1 className=" w-full leading-18">
             <div className="wrapper_heading block w-full overflow-hidden">
               <div className="txt2_head translate-x-[31%]">
-                Creating Growth
+                 Building brands.
               </div>
             </div>
             <div className="wrapper_heading block w-full overflow-hidden">
-              <div className="txt2_head translate-x-[31.5%]">
-                Through Strong
+              <div className="txt2_head translate-x-[28%]">
+                Backing founders.
               </div>
             </div>
-            <div className="wrapper_heading block w-full overflow-hidden">
-              <div className="txt2_head translate-x-[34.5%]">
-                Foundations
-              </div>
-            </div>
-
           </h1>
         </div>
 
@@ -246,15 +152,16 @@ const Hero = () => {
           <div className="flex flex-col pb-5 md:flex-row justify-between items-start md:items-end w-full gap-10 md:gap-8 pointer-events-auto">
             <div className="max-w-lg w-full">
               <p data-para-effect className=" paragraph_split opacity-60 leading-tight">
-                Our leadership solutions empower businesses <br className="hidden md:block" />
-                to grow with confidence, clarity, and purpose.
+                The strategy comes first, the equity follows <br /> conviction, and the partnership stays long after.
               </p>
             </div>
 
             <div className="   flex flex-col md:flex-row items-start md:items-end gap-6">
               <div className="text-left md:text-right">
+                <div className="hero_logos opacity-0">
                 <RotatingText />
-                <p className="opacity-60 paragraph_split">Currently in Amsterdam/NL.</p>
+                </div>
+                <p className="opacity-60 paragraph_split"><LiveTime /></p>
               </div>
 
               <div className=" vid_cont opacity-0  relative w-72 aspect-video">

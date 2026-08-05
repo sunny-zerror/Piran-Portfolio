@@ -57,10 +57,10 @@ const About = () => {
 
     return (
         <>
-            <div ref={containerRef} className="w-full relative h-[300vh] bg-[#0B1A2C]">
+            <div ref={containerRef} className="w-full relative h-[350vh] bg-[#0B1A2C]">
                 <div className=" sticky_bg sticky top-0 w-full h-screen center flex-col text-center leading-none">
                     <div className="text-white int_hd">
-                        <h2 className=''> <span className=' intro_txt_a intro_txt opacity-0'>Meet</span> <span className='intro_txt opacity-0'> Piran</span></h2>
+                        <h2 className=''> <span className=' intro_txt_a intro_txt opacity-0'>Piran</span> <span className='intro_txt opacity-0'>Tarapore</span></h2>
                         <div className="intro_txt opacity-0">
                             <p className='text-lg  opacity-70'>Brand Architect & Strategic Catalyst</p>
                         </div>
@@ -68,15 +68,15 @@ const About = () => {
 
                     <div className="w-full h-full absolute top-0 inset-0">
                         <div className=" above_img_txt absolute! container  top-[16%] opacity-0 text-white z-10 ">
-                            <h4 className='md:w-[70%] mx-auto'>I help founders, operators, and investors build businesses with stronger foundations, clearer positioning, and the strategic alignment required for long-term growth.</h4>
+                            <h4 className='md:w-[70%] mx-auto'>I've spent seven years turning founders' ambiguity into brands the world can understand, trust, and want. He is building a practice where brand thinking is infrastructure, not a service layer on top of execution.</h4>
                         </div>
                         <Image fill src={"/images/homepage/piran_pic.png"} className='cover piran_img opacity-0' alt='piran pic' />
                     </div>
 
-                    <div className="w-full container absolute! space-y-16 text-white inset-0 h-full center flex-col">
-                        <h4 className=' md:w-[70%] mx-auto z-10 opacity-0 abt_txt_1'>The Shift Usually Starts Here, Most founders don't come looking for strategy. They come because something feels misaligned. Growth becomes harder. Teams move in different directions. Opportunities appear but don't compound. The business evolves, but the underlying foundations don't evolve with it. The challenge is rarely effort. It's clarity.</h4>
-                        <h4 className=' md:w-[70%] mx-auto z-10 opacity-0 abt_txt_2'>For more than two decades, I've worked alongside founders, leadership teams, and investors helping them navigate the moments that determine what a business becomes. Not by adding complexity.</h4>
-                        <h4 className=' md:w-[70%] mx-auto z-10 opacity-0 abt_txt_3'>By creating alignment between strategy, execution, capital, and narrative.</h4>
+                    <div className="w-full container absolute! space-y-12 text-white inset-0 h-full center flex-col">
+                        <h4 className=' md:w-[70%] mx-auto z-10 opacity-0 abt_txt_1'>In service of that, he founded Point Of, the independent creative consultancy behind 170+ brands across five continents.</h4>
+                        <h4 className=' md:w-[70%] mx-auto z-10 opacity-0 abt_txt_2'>Where the alignment runs deep, he invests: strategic equity in the brands he builds with, and positions in the businesses he believes in.</h4>
+                        <h4 className=' md:w-[70%] mx-auto z-10 opacity-0 abt_txt_3'>Piran is dedicated to the long game: work that means something, people who grow together, and things built carefully enough to last.</h4>
                     </div>
 
                 </div>

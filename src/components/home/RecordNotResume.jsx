@@ -11,29 +11,47 @@ import gsap from 'gsap';
 const testimonials = [
     {
         id: 1,
-        quote: "Working with Piran was one of the most valuable investments we made as a leadership team. He brought clarity to conversations that had been unresolved for months, helping us align around a shared direction and focus on what truly mattered.",
-        name: "Isaac Heath",
+        quote: "Piran took the time to understand the legacy before touching anything. The identity and the website that followed finally gave our digital presence the weight the name deserved.",
+        name: "Salman Khan Films",
         img: "/images/homepage/testimonials/img1.png",
-        title: "Founder & CEO",
+        title: "",
         bgColor: "bg-[#883F27]",
         textColor: "text-white"
     },
     {
         id: 2,
-        quote: "Working with Piran was one of the most valuable investments we made as a leadership team. He brought clarity to conversations that had been unresolved for months, helping us align around a shared direction and focus on what truly mattered.",
-        name: "Nora Mckee",
+        quote: "Piran rebuilt how Naturefit shows up: what we stand for, how we say it, and how it all holds together.",
+        name: "Naturefit",
         img: "/images/homepage/testimonials/img2.png",
-        title: "Founder & CEO",
+        title: "",
         bgColor: "bg-[#E3E2DC]",
         textColor: "text-gray-900"
     },
     {
         id: 3,
-        quote: "Working with Piran was one of the most valuable investments we made as a leadership team. He brought clarity to conversations that had been unresolved for months, helping us align around a shared direction and focus on what truly mattered.",
-        name: "Junior Frye",
+        quote: "Piran was in the room for every decision that made KVAR what it is, from how the brand carries itself to our five-floor experience centre. Today we deliver turnkey projects alongside international designers. It wouldn't have happened without him.",
+        name: "KVAR",
         img: "/images/homepage/testimonials/img3.png",
-        title: "Founder & CEO",
+        title: "",
         bgColor: "bg-white",
+        textColor: "text-gray-900"
+    },
+    {
+        id: 4,
+        quote: "Piran led our Campus Ambassador programme and treated JBL like his own brand. Engagement kept climbing, and his read of youth culture stayed in our playbook long after.",
+        name: "JBL / Harman",
+        img: "/images/homepage/testimonials/img1.png",
+        title: "",
+        bgColor: "bg-[#883F27]",
+        textColor: "text-white"
+    },
+    {
+        id: 5,
+        quote: "We perfected the product. Piran perfected everything the customer meets before it: the idea, the feel, the reason to care. From a sold-out first pop-up to three full ranges today, that early work shows.",
+        name: "House of Namah",
+        img: "/images/homepage/testimonials/img2.png",
+        title: "",
+        bgColor: "bg-[#E3E2DC]",
         textColor: "text-gray-900"
     }
 ];
@@ -67,7 +85,7 @@ const RecordNotResume = () => {
                 <div className="w-full md:col-span-1 flex flex-col justify-between space-y-4 md:space-y-0">
                     <div>
                         <h2 data-para-effect className="leading-none">
-                            A Record, <br className="hidden md:block" /> Not A Resume
+                            The work speaks in outcomes, not titles. 
                         </h2>
                         <p data-para-effect className=" hidden md:block opacity-70 leading-tight text-lg mt-3">
                             Creating meaningful outcomes <br className="hidden md:block" /> through strategy, action, and <br className="hidden md:block" /> partnership.
@@ -87,8 +105,8 @@ const RecordNotResume = () => {
                                 </div>
                             </div>
                             <div className="">
-                                <h4 data-para-effect className="">7+ Years</h4>
-                                <p className=" opacity-60 leading-tight">Building trusted relationships that drive <br className="hidden sm:block" /> meaningful business outcomes.</p>
+                                <h4 data-para-effect className="">7+</h4>
+                                <p className=" opacity-60 leading-tight">Years in Practice</p>
                             </div>
                         </div>
 
@@ -100,8 +118,8 @@ const RecordNotResume = () => {
                                     </div>
                                 </div>
                                 <div className="">
-                                    <h4 data-para-effect className="">150+</h4>
-                                    <p className="opacity-60 leading-tight">Founders & Leaders Advised</p>
+                                    <h4 data-para-effect className="">170+</h4>
+                                    <p className="opacity-60 leading-tight">Brands Worked With</p>
                                 </div>
                             </div>
                             <div className="w-1/2 p-5 sm:p-8 flex flex-col justify-between gap-y-6">
@@ -112,7 +130,7 @@ const RecordNotResume = () => {
                                 </div>
                                 <div className="">
                                     <h4 data-para-effect className="">5</h4>
-                                    <p className="opacity-60 leading-tight">Continents Worked Across</p>
+                                    <p className="opacity-60 leading-tight">Continents Spanned</p>
                                 </div>
                             </div>
                         </div>

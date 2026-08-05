@@ -12,24 +12,24 @@ const data = [
     {
         id: 1,
         title: "intensive",
-        desc: "We examine the business, opportunities, challenges, positioning, and future direction.",
+        desc: "Deep strategic work at close rhythm, where the value concentrates.",
         num_img: "/images/homepage/workResult/num_1.svg",
-        tags: ["Diagnosis", "alignment", "dentification", "opportunity"]
+        tags: ["Diagnosis", "Positioning", "Roadmap", "Alignment"]
     },
     {
         id: 2,
         title: "building",
-        desc: "This phase transforms strategy into decisions, systems, initiatives, and execution.",
+        desc: "Partners step in while I hold the strategic layer throughout.",
         num_img: "/images/homepage/workResult/num_2.svg",
-        tags: ["roadmap", "growth initiatives", "architecture", "organizational alignment"]
+        tags: ["Systems", "Identity", "Taste", "Momentum"]
     },
     {
         id: 3,
-        title: "intensive",
-        desc: "We examine the business, opportunities, challenges, positioning, and future direction.",
+        title: "steady",
+        desc: "A sounding board, a door-opener, and a catalyst as the company grows.",
         num_img: "/images/homepage/workResult/num_3.svg",
-        tags: ["Diagnosis", "alignment", "dentification", "opportunity"]
-    },
+        tags: ["Partnership", "Compounding", "Trust", "Counsel"]
+    }
 ]
 
 const WorkBehindGrowth = () => {
@@ -87,7 +87,7 @@ const WorkBehindGrowth = () => {
         <>
             <div className="container  bg-[#0B1A2C] mt-12 md:mt-24 pt-12 md:pt-24 space-y-8 md:space-y-16">
                 <div className="w-full relative z-10 text-center">
-                    <h2 data-para-effect className='leading-none text-white'>The Work Behind <br />   The Growth</h2>
+                    <h2 data-para-effect className='leading-none text-white'>How I Work</h2>
                 </div>
 
                 <div className="anim_pren relative z-10 space-y-5">

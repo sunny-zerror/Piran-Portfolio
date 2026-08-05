@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { RiArrowRightUpLine, RiArrowUpLine, RiInstagramFill, RiInstallFill, RiLinkedinFill } from '@remixicon/react';
 import FooterPhysicsBalls from './FooterPhysicsBalls';
 import Image from 'next/image';
+import { RotatingText } from './RotatingText';
 
 const Footer = () => {
 
@@ -12,7 +13,7 @@ const Footer = () => {
       <div className="w-full  relative  flex-1  flex flex-col items-center  py-12 md:py-24 text-center overflow-hidden">
         <div className="relative pointer-events-none z-10 flex flex-col items-center gap-y-4 md:gap-y-5">
           <p data-para-effect className="text-sm font-medium opacity-90">Get Started Now</p>
-          <h2 data-para-effect className="leading-none">Building Something<br />Worth Lasting?</h2>
+          <h2 data-para-effect className="leading-none">Things that matter <br /> should begin. </h2>
           <button className="bg-white text-[#883F27] rounded-full  px-6 hover:pl-1 leading-none h-10 text-sm group   transition-all duration-300 pointer-events-auto flex items-center gap-2">
             <span className="w-2 h-2 center text-white group-hover:h-8 group-hover:w-8 rounded-full bg-[#883F27] transition-all duration-300">
               <RiArrowRightUpLine size={18} className={` scale-0 group-hover:scale-100 transition-all duration-300`} />
@@ -23,9 +24,10 @@ const Footer = () => {
         <FooterPhysicsBalls />
       </div>
 
-      <div className="container h-fit! py-6 md:py-12 pb-2 md:pb-5 relative z-10 space-y-6 md:space-y-10">
+      <div className="container h-fit! py-6 md:py-12 pb-2 md:pb-5 relative z-10 space-y-6 md:space-y-6">
         <div className="flex flex-col md:grid md:grid-cols-8 gap-y-6 md:gap-y-0">
-          <div className="col-span-8 md:col-span-6 md:space-y-10">
+          <div className="col-span-8 md:col-span-6 md:space-y-6">
+            <RotatingText />
             <div className="flex items-center gap-3">
               <Link href={"/"} aria-label="Piran Tarapore Home">
                 <Image className="w-14 h-14 shrink-0 md:w-15 md:h-15" width={60} height={60} src="/logo.svg" alt="Piran Tarapore Logo" />
@@ -34,7 +36,7 @@ const Footer = () => {
             </div>
 
             <p className="text-lg leading-tight opacity-90 max-w-xs md:max-w-none">
-              Start Compounding Your Brand Equity<br /> for Long-Term Business Growth.
+              Some things compound quietly.
             </p>
           </div>
 
@@ -48,10 +50,10 @@ const Footer = () => {
             </div>
             <div className=" flex md:justify-end">
               <div className="flex flex-col gap-2 font-medium">
-                <a href="#" className="flex items-center gap-1 group"> <div className="size-2 opacity-0 group-hover:opacity-100 transition-all duration-300 bg-white rounded-full"></div> 
+                <a href="#" className="flex items-center gap-1 group"> <div className="size-2 opacity-0 group-hover:opacity-100 transition-all duration-300 bg-white rounded-full"></div>
                   Instagram
                 </a>
-                <a href="#" className="flex items-center gap-1 group "> <div className="size-2 opacity-0 group-hover:opacity-100 transition-all duration-300 bg-white rounded-full"></div> 
+                <a href="#" className="flex items-center gap-1 group "> <div className="size-2 opacity-0 group-hover:opacity-100 transition-all duration-300 bg-white rounded-full"></div>
                   Linkedin
                 </a>
               </div>
@@ -62,9 +64,9 @@ const Footer = () => {
         <div className="w-full h-[1px] bg-white/20 my-2 md:my-5"></div>
 
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center text-sm">
-          <p className='opacity-70'>© Copy Right 2026 - Piran Tarapore. All Rights Reserved.</p>
+          <p className='opacity-70'>© Piran Tarapore, {new Date().getFullYear()}. All rights reserved.</p>
           <Link href={"https://www.wearepointof.com"} target='_blank' className='group opacity-70 hover:opacity-100 transition-opacity duration-150'>
-            <p>Designed & Developed by <span className='group-hover:underline'> Point Of.</span></p>
+            <p>An experience by  <span className='group-hover:underline'> Point Of.</span></p>
           </Link>
         </div>
       </div>

@@ -1,12 +1,25 @@
+@font-face {
+  font-family: ak grotesk;
+  src: url("../../public/fonts/Aktiv.Grotesk/AktivGrotesk-Regular.woff2");
+}
+@font-face {
+  font-family: hk grotesk;
+  src: url("../../public/fonts/hk-grotesk-wide-font-family/hkgroteskwide-regular.woff2");
+}
 html,
 body {
   font-size: 14px;
   font-weight: 400;
-  font-family: sans-serif;
-  font-display: swap;
+  font-family: ak grotesk;
 }
 
-
+h1,
+h2,
+h3,
+h4,
+h5 {
+  font-family: hk grotesk;
+}
 
 h1 {
   font-size: 2.75rem;
@@ -51,4 +64,3 @@ h5 {
     font-size: 16px;
   }
 }
-

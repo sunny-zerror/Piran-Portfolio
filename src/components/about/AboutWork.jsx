@@ -42,12 +42,12 @@ const AboutWork = () => {
     {
       id: "strengths",
       title: "Strengths",
-      desc: "I can dismantle a brand's logic to find the single point of failure within 24 hours of audit."
+      desc: "I know who to call, and they pick up. My taste is in what I leave out. I collect questions faster than answers."
     },
     {
       id: "working",
       title: "Still Working On",
-      desc: "Continually refining design systems, exploring new interactive paradigms, and scaling cross-functional capabilities."
+      desc: `I'd rather do twelve takes than trust the first. I find the last ten percent hard to hand over. "Let's figure it out" is my reflex, and "no" still isn't.`
     }
   ];
 

@@ -83,13 +83,13 @@ const AboutHero = () => {
                         duration: 2,
                         ease: "power2.in"
                     }, "expand")
-                        .to([targets[0], targets[1]], {
+                        .to([targets[0]], {
                             x: "-=50vw",
                             opacity: 0,
                             duration: 2.5,
                             ease: "power1.inOut"
                         }, "expand")
-                        .to([targets[2], targets[3]], {
+                        .to([targets[1], targets[2]], {
                             x: "+=50vw",
                             opacity: 0,
                             duration: 2.5,
@@ -118,14 +118,14 @@ const AboutHero = () => {
                         duration: 2,
                         ease: "power2.inOut"
                     }, "expand")
-                        .to([targets[0], targets[1]], {
-                            x: "-=50vw",
+                        .to([targets[0]], {
+                            x: "-=100vw",
                             opacity: 0,
                             duration: 2,
                             ease: "power1.inOut"
                         }, "expand")
-                        .to([targets[2], targets[3]], {
-                            x: "+=50vw",
+                        .to([targets[1], targets[2]], {
+                            x: "+=100vw",
                             opacity: 0,
                             duration: 2,
                             ease: "power1.inOut"
@@ -188,26 +188,21 @@ const AboutHero = () => {
                 <div className="absolute flex flex-col justify-center gap-y-10 inset-0 w-full h-full p-6 md:p-16  pointer-events-none z-10">
 
                     <p className=" text-2xl initial-para leading-tight md:absolute top-[20%] left-[10%] md:left-[20%] max-w-md text-[#EAE9E4]">
-                        <span className="fade-text">The strongest brands are rarely built overnight. They begin with </span>
-                        <span className="target-text inline-block origin-top-left">a clear</span>
-                        <span className="fade-text"> conviction</span>
+                        <span className="fade-text">School knew me as </span>
+                        <span className="target-text inline-block origin-top-left">the quiet one</span>
+                        <span className="fade-text"> , and I didn't argue.</span>
                     </p>
 
                     <p className=" text-2xl initial-para leading-tight md:absolute top-[45%] right-[5%] md:right-[15%] max-w-md text-[#EAE9E4]">
-                        <span className="fade-text">Good strategy isn't about adding more. It's about </span>
-                        <span className="target-text inline-block origin-top-left">point of view</span>
-                        <span className="fade-text"> that guides every choice.</span>
+                        <span className="fade-text">What  </span>
+                        <span className="target-text inline-block origin-top-left">became</span>
+                        <span className="fade-text"> of him surprised everyone, including me.</span>
                     </p>
 
                     <p className=" text-2xl initial-para leading-tight md:absolute bottom-[35%] left-[5%] md:left-[15%] max-w-md text-[#EAE9E4]">
-                        <span className="fade-text">Design is simply the visible result of better thinking. It gives </span>
-                        <span className="target-text inline-block origin-top-left">that shapes</span>
-                        <span className="fade-text"> every interaction.</span>
-                    </p>
-
-                    <p className=" text-2xl initial-para leading-tight md:absolute bottom-[10%] right-[10%] md:right-[20%] max-w-md text-[#EAE9E4]">
-                        <span className="fade-text">When every piece moves together, growth feels natural. The outcome is </span>
-                        <span className="target-text inline-block origin-top-left">everything else.</span>
+                        <span className="fade-text">Friends now call me</span>
+                        <span className="target-text inline-block origin-top-left">the connector</span>
+                        <span className="fade-text"> ;  I let them. </span>
                     </p>
 
                 </div>
@@ -216,8 +211,7 @@ const AboutHero = () => {
                 <div className="w-full whitespace-nowrap  flex items-center justify-center opacity-0 pointer-events-none z-10">
                     {/* Left Text */}
                     <div className="flex-1 flex justify-end gap-2 pr-1.5 ">
-                        <p className="final-dest  text-sm md:text-4xl ">a clear</p>
-                        <p className="final-dest  text-sm md:text-4xl ">point of view</p>
+                        <p className="final-dest  text-sm md:text-4xl ">the quiet one</p>
                     </div>
 
                     {/* Gap exactly in the center for the mask logo to align perfectly */}
@@ -225,8 +219,8 @@ const AboutHero = () => {
 
                     {/* Right Text */}
                     <div className="flex-1 flex justify-start gap-2 pl-1.5">
-                        <p className="final-dest  text-sm md:text-4xl ">that shapes</p>
-                        <p className="final-dest  text-sm md:text-4xl ">everything else.</p>
+                        <p className="final-dest  text-sm md:text-4xl ">became</p>
+                        <p className="final-dest  text-sm md:text-4xl ">the connector.</p>
                     </div>
                 </div>
 
