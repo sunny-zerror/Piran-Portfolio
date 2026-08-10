@@ -20,7 +20,9 @@ h4,
 h5 {
   font-family: hk grotesk;
 }
-
+.grotesk{
+    font-family: hk grotesk;
+}
 h1 {
   font-size: 2.75rem;
 }

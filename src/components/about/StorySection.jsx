@@ -280,7 +280,7 @@ const StorySection = () => {
                     </div>
 
                     {/* Icon Timeline / Stepper Buttons */}
-                    <div className="flex items-center justify-between md:justify-start md:gap-x-2 scroller_none pb-2 w-full">
+                    <div className="flex items-center justify-between  md:justify-start md:gap-x-2 scroller_none pb-2 w-full">
                         {storySteps.map((step, idx) => {
                             const isActive = idx === activeIndex;
                             return (

@@ -78,11 +78,6 @@ const ParallaxSection = () => {
 
     }, [])
 
-
-
-
-
-
     return (
         <>
             <InfiniteCarousel openGallerySwiper={openGallerySwiper} setOpenGallerySwiper={setOpenGallerySwiper} />

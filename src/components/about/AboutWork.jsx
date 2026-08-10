@@ -9,11 +9,11 @@ import AboutStrength from './AboutStrength';
 gsap.registerPlugin(ScrollTrigger);
 
 const AboutWork = () => {
-     const [openItem, setOpenItem] = useState(null);
+    const [openItem, setOpenItem] = useState(null);
 
-  const toggleItem = (item) => {
-    setOpenItem(openItem === item ? null : item);
-  };
+    const toggleItem = (item) => {
+        setOpenItem(openItem === item ? null : item);
+    };
     const sectionRef = useRef(null);
     const bgRef = useRef(null);
 
@@ -38,33 +38,31 @@ const AboutWork = () => {
         },
     ];
 
-      const items = [
-    {
-      id: "strengths",
-      title: "Strengths",
-      desc: "I know who to call, and they pick up. My taste is in what I leave out. I collect questions faster than answers."
-    },
-    {
-      id: "working",
-      title: "Still Working On",
-      desc: `I'd rather do twelve takes than trust the first. I find the last ten percent hard to hand over. "Let's figure it out" is my reflex, and "no" still isn't.`
-    }
-  ];
+    const items = [
+        {
+            id: "strengths",
+            title: "Strengths",
+            desc: "I know who to call, and they pick up. My taste is in what I leave out. I collect questions faster than answers."
+        },
+        {
+            id: "working",
+            title: "Still Working On",
+            desc: `I'd rather do twelve takes than trust the first. I find the last ten percent hard to hand over. "Let's figure it out" is my reflex, and "no" still isn't.`
+        }
+    ];
 
     return (
         <section ref={sectionRef} className="relative w-full  bg-[#0B1A2C]">
             {/* Sticky Background Image with Dark Overlay */}
             <div className="sticky top-0 h-svh w-full overflow-hidden pointer-events-none z-0">
-                <div className="absolute inset-0 z-0">
-                    <div ref={bgRef} className="absolute inset-0 w-full h-[120%] -top-[10%]">
-                        <Image
-                            src="/images/aboutpage/mumbai_city_bg.svg"
-                            alt="Mumbai Dusk Background"
-                            fill
-                            priority
-                            className="cover"
-                        />
-                    </div>
+                <div ref={bgRef} className="absolute inset-0 w-full h-full">
+                    <Image
+                        src="/images/aboutpage/mumbai_city_bg.svg"
+                        alt="Mumbai Dusk Background"
+                        fill
+                        priority
+                        className="cover"
+                    />
                 </div>
             </div>
 
@@ -115,11 +113,11 @@ const AboutWork = () => {
                                         </div>
                                     </div>
 
-                                     {index === 1 && (
+                                    {index === 1 && (
                                         <div className="col-span-3 flex items-end pl-5">
-                                          <svg xmlns="http://www.w3.org/2000/svg" width="50%" viewBox="0 0 160 87" fill="none" preserveAspectRatio="none" aria-hidden="true" vectorEffect="non-scaling-stroke" data-process-svg-right="" className="joint-svg text-white/50">
-                                              <path d="M0 0.5H156C157.657 0.5 159 1.84315 159 3.5V86.5" stroke="currentColor" strokeDasharray="2 4" className="animate-dash-line" style={{ opacity: 1 }}></path>
-                                          </svg>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="50%" viewBox="0 0 160 87" fill="none" preserveAspectRatio="none" aria-hidden="true" vectorEffect="non-scaling-stroke" data-process-svg-right="" className="joint-svg text-white/50">
+                                                <path d="M0 0.5H156C157.657 0.5 159 1.84315 159 3.5V86.5" stroke="currentColor" strokeDasharray="2 4" className="animate-dash-line" style={{ opacity: 1 }}></path>
+                                            </svg>
                                         </div>
                                     )}
                                 </div>
@@ -161,9 +159,8 @@ const AboutWork = () => {
                                                     </h5>
                                                 </button>
                                                 <div
-                                                    className={`overflow-hidden transition-all duration-300 ease-in-out ${
-                                                        isOpen ? "max-h-24 opacity-100 mt-2" : "max-h-0 opacity-0"
-                                                    }`}
+                                                    className={`overflow-hidden transition-all duration-300 ease-in-out ${isOpen ? "max-h-24 opacity-100 mt-2" : "max-h-0 opacity-0"
+                                                        }`}
                                                 >
                                                     <p className=" text-white/70 leading-tight">
                                                         {item.desc}
@@ -177,7 +174,7 @@ const AboutWork = () => {
 
                             {/* Right Column: Transparent Cutout exposing sticky city background */}
                             <div className="flex justify-center md:justify-end">
-                                <div 
+                                <div
                                     className="relative w-full max-sm:aspect-square md:w-[80%] aspect-square md:aspect-auto min-h-100 overflow-hidden rounded-xl  flex items-center justify-center pointer-events-none"
                                     style={{
                                         backgroundImage: "url('/images/aboutpage/mumbai_city_bg.svg')",

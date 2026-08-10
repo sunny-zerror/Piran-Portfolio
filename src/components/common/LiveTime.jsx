@@ -6,23 +6,23 @@ export const LiveTime = ({ className }) => {
 
   useEffect(() => {
     const updateTime = () => {
-      const formatter = new Intl.DateTimeFormat('en-US', {
+      const istTime = new Date().toLocaleTimeString('en-US', {
         timeZone: 'Asia/Kolkata',
+        hour12: true,
         hour: 'numeric',
-        minute: 'numeric',
-        hour12: true
+        minute: '2-digit',
       });
-      setTime(formatter.format(new Date()));
+      setTime(`${istTime}`);
     };
 
     updateTime();
-    const interval = setInterval(updateTime, 60000); // Update every minute
+    const interval = setInterval(updateTime, 1000);
     return () => clearInterval(interval);
   }, []);
 
   return (
     <span className={className}>
-      Bombay · {time ? `${time} IST` : "..."}
+      Bombay · {time}
     </span>
   );
 };

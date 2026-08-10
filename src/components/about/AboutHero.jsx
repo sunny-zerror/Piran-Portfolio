@@ -202,7 +202,7 @@ const AboutHero = () => {
                     <p className=" text-2xl initial-para leading-tight md:absolute bottom-[35%] left-[5%] md:left-[15%] max-w-md text-[#EAE9E4]">
                         <span className="fade-text">Friends now call me</span>
                         <span className="target-text inline-block origin-top-left">the connector</span>
-                        <span className="fade-text"> ;  I let them. </span>
+                        <span className="fade-text">  , I let them. </span>
                     </p>
 
                 </div>

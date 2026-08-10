@@ -12,7 +12,7 @@ const WorkResult = () => {
       <div className="container pt-12 md:pt-24 space-y-8 md:space-y-16 bg-[#E3E2DC]">
         <div className="w-full max-sm:space-y-2 md:grid grid-cols-6 items-end">
           <h2 data-para-effect className=' col-span-4 leading-none'>Where I <br />Come In</h2>
-          <p data-para-effect className='opacity-70 leading-tight col-span-2 text-lg'>Founders rarely call about strategy. They call because something feels misaligned: drift, friction, growth that costs more than it returns. The problem is rarely effort. It's position. The brand never had one to organise around. Finding it is where I come in.</p>
+          <p data-para-effect className='opacity-70 leading-tight col-span-2 text-lg'>Founders rarely call about strategy. They call because something feels misaligned drift, friction, growth that costs more than it returns. The problem is rarely effort. It's position. The brand never had one to organise around. Finding it is where I come in.</p>
         </div>
         <div className="w-full border border-black/20">
 
@@ -45,7 +45,7 @@ const WorkResult = () => {
               </div>
               <div className=" max-sm:pt-10 space-y-2">
                 <h4 data-para-effect>Execution</h4>
-                <p className='opacity-70 leading-tight'>Then we walk it: identity, materials, and systems, built with Point Of and its vetted brand partners.</p>
+                <p className='opacity-70 leading-tight'>Then we walk it identity, materials, and systems, built with Point Of and its vetted brand partners.</p>
               </div>
             </div>
           </div>
@@ -60,7 +60,7 @@ const WorkResult = () => {
               <div className=" max-sm:pt-10 space-y-2">
                 <h4 data-para-effect>Capital Access</h4>
                 <p className="opacity-70 leading-tight">
-                   And for the right founders, I go further: equity, introductions, and a network that travels with you.</p>
+                   And for the right founders, I go further equity, introductions, and a network that travels with you.</p>
               </div>
             </div>
 

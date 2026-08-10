@@ -245,16 +245,9 @@ const Header = () => {
               >
                 <button
                   onClick={handleAiClick}
-                  className="flex items-center gap-x-1 transition-opacity hover:opacity-80"
+                  className="text-sm border ml-3 px-3 rounded-full py-1 bg-[#ECE3DB] text-[#883F27] border-[#883F27] hover:bg-[#883F27] hover:text-[#ECE3DB] transition-all duration-120"
                 >
-                  <div className={`transition-all duration-300 ${isAiOpen || isAiHovered ? "scale-100 opacity-100" : "scale-0 opacity-0"}`}>
-                    <LinkParticles
-                      shape={pn}
-                      active={false}
-                      hovered={isAiOpen || isAiHovered}
-                    />
-                  </div>
-                  Ask Ai
+                  Ask AI
                 </button>
               </div>
             </nav>
@@ -269,7 +262,7 @@ const Header = () => {
               {/* Header row */}
               <div className="flex items-center  text-sm mb-4 ">
                 <Image src="/icons/ai-icon.gif" className='w-5 invert-100' alt="AI helper" width={20} height={20} />
-                <span>Ask Ai</span>
+                <span>Ask AI</span>
               </div>
 
               {/* Title / Description */}
@@ -346,28 +339,27 @@ const Header = () => {
             <MobileMenuToggleLabel isOpen={isMobileMenuOpen} />
           </button>
         </div>
-
-        {/* Expandable menu content */}
+      </header>
         <div
-          className={`pointer-events-auto flex flex-col overflow-hidden transition-all duration-500 ease-out ${isMobileMenuOpen
-            ? 'max-h-screen opacity-100 mt-2 flex-1'
-            : 'max-h-0 opacity-0 mt-0'
+          className={` fixed! z-[100] container top-0 w-full pointer-events-auto flex flex-col justify-center h-svh bg-[#0B1A2C] overflow-hidden transition-all duration-500 ease-out ${isMobileMenuOpen
+            ? 'left-0'
+            : 'left-[101%]'
             }`}
         >
-          {/* Nav links with particle icons */}
-          <nav className="flex flex-col gap-y-1 flex-1 justify-center">
+
+          <nav className="space-y-5 mb-5">
             {navLinks.map((item, i) => (
               <ViewTransitionLink
                 delay={600}
                 href={item.href}
                 key={i}
                 onClick={() => setIsMobileMenuOpen(false)}
-                className={`flex items-center justify-between py-2 px-4 rounded-lg  uppercase  transition-all duration-300 ${pathname === item.href
+                className={`flex items-center justify-between py-5 px-4 rounded-lg  uppercase  transition-all duration-300 ${pathname === item.href
                   ? 'bg-white/10'
                   : 'bg-transparent'
                   }`}
               >
-                <span className='text-white'>{item.label}</span>
+                <span className='text-white text-5xl grotesk'>{item.label}</span>
                 <LinkParticles
                   shape={item.shape}
                   active={pathname === item.href}
@@ -378,20 +370,19 @@ const Header = () => {
             ))}
           </nav>
 
-          {/* AI box at the bottom */}
           <div className="pb-4 pt-4 shrink-0">
-            <div className="w-full bg-[#ECE3DB] text-[#1E1E1E] rounded-md p-3 flex flex-col select-none border border-black/5">
+            <div className="w-full text-white rounded-md border border-white/50 p-5 flex flex-col select-none ">
               <div className="flex items-center text-sm mb-3">
-                <Image src="/icons/ai-icon.gif" className='w-5 invert-100' alt="AI helper" width={20} height={20} />
-                <span>Ask Ai</span>
+                <Image src="/icons/ai-icon.gif" className='w-5' alt="AI helper" width={20} height={20} />
+                <span>Ask AI</span>
               </div>
-              <h3 className="text-[#0B1A2C] leading-none max-sm:text-2xl!">
+              <h3 className="text-[#ffffff] leading-none">
                 How can Piran help you?
               </h3>
-              <p className="text-[#0B1A2C] opacity-80 mb-3 text-sm">
+              <p className="text-[#ffffff] opacity-80 mb-3">
                 Pick one. They've already done the reading.
               </p>
-              <div className="grid grid-cols-3 gap-x-1 md:gap-x-2 overflow-hidden">
+              <div className="grid grid-cols-3 pt-20 gap-x-1 md:gap-x-2 overflow-hidden">
                 <Link
                   href={`https://chatgpt.com/?q=${encodedPrompt}`}
                   target="_blank"
@@ -422,8 +413,11 @@ const Header = () => {
               </div>
             </div>
           </div>
+
+          <div className="absolute bottom-10 left-5 text-white border rounded-full px-6 py-2">
+            <button>Mumbai, In</button>
+          </div>
         </div>
-      </header>
     </>
   )
 }

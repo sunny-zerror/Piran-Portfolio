@@ -83,7 +83,6 @@ export function createRootMetadata() {
     ...createMetadata(),
     title: {
       default: siteConfig.name,
-      template: `%s | ${siteConfig.name}`,
     },
   };
 }
