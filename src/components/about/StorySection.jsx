@@ -270,7 +270,7 @@ const StorySection = () => {
             <div className=" relative md:sticky top-0 h-auto md:h-screen w-full overflow-hidden text-[#0B1A2C] flex flex-col justify-between py-12 ">
 
                 {/* Main Content Layout Container */}
-                <div className="container h-full flex flex-col justify-center space-y-8 md:space-y-40 relative z-10">
+                <div className="container h-full flex flex-col  justify-center gap-y-8 md:gap-y-32 relative z-10">
 
                     {/* Main Title Header */}
                     <div className="max-w-md pt-4">
@@ -313,7 +313,7 @@ const StorySection = () => {
                     </div>
 
                     {/* Active Story Description (Bottom Left) */}
-                    <div ref={textRef} className="max-w-xl pb-6 space-y-2">
+                    <div ref={textRef} className="max-w-xl md:h-52 space-y-2">
                         <h4 data-para-effect className=" font-medium text-[#0B1A2C]">
                             {activeStory.title}
                         </h4>
