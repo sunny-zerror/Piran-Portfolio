@@ -23,7 +23,6 @@ const InfiniteCarousel = ({ openGallerySwiper, setOpenGallerySwiper }) => {
   const switchGallery = (newGallery) => {
     gsap.to(".slide_width, .spli_txt", {
         opacity: 0,
-        y: 20,
         duration: 0.3,
         onComplete: () => {
             setOpenGallerySwiper(newGallery);
@@ -151,7 +150,6 @@ const InfiniteCarousel = ({ openGallerySwiper, setOpenGallerySwiper }) => {
         opacity:0
       })
       gsap.set(".slide_width", {
-        transform: "translateY(2.5rem) scale(0.9)",
         opacity: 0
       })
       gsap.to(".header", { opacity: 0, pointerEvents: "none", duration: 0.3 })
@@ -166,7 +164,6 @@ const InfiniteCarousel = ({ openGallerySwiper, setOpenGallerySwiper }) => {
         pointerEvents: 'all'
       })
       openTl.to(".slide_width", {
-        transform: "translateY(0rem) scale(1)",
         opacity: 1,
         stagger: 0.1,
         duration: .5
@@ -187,7 +184,6 @@ const InfiniteCarousel = ({ openGallerySwiper, setOpenGallerySwiper }) => {
         pointerEvents: 'none'
       })
       gsap.set(".slide_width", {
-        transform: "translateY(2.5rem) scale(0.9)",
         opacity: 0,
         delay: 0.5
       })
@@ -230,7 +226,7 @@ const InfiniteCarousel = ({ openGallerySwiper, setOpenGallerySwiper }) => {
                   marginRight: gap,
                   width: itemWidth
                 }}
-                className={` slide_width relative aspect-[3/4] opacity-0 scale-90 translate-y-10 shrink-0 overflow-hidden bg-[#883F27] animate-pulse`}
+                className={` slide_width relative aspect-[3/4]  shrink-0 overflow-hidden bg-[#883F27] animate-pulse`}
               >
                 {media?.type === 'img' ? (
                   <Image
