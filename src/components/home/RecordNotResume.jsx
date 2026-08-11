@@ -85,13 +85,13 @@ const RecordNotResume = () => {
                 <div className="w-full md:col-span-1 flex flex-col justify-between space-y-4 md:space-y-0">
                     <div>
                         <h2 data-para-effect className="leading-none">
-                            The work speaks in outcomes, not titles. 
+                            A Record, <br />Not a Resume
                         </h2>
                         <p data-para-effect className=" hidden md:block opacity-70 leading-tight text-lg mt-3">
-                            Creating meaningful outcomes <br className="hidden md:block" /> through strategy, action, and <br className="hidden md:block" /> partnership.
+                            The work speaks in  outcomes,  <br className="hidden md:block" /> not titles.
                         </p>
                         <p data-para-effect className=" md:hidden opacity-70 leading-tight text-lg mt-3">
-                            Creating meaningful outcomes  through strategy, action, and  partnership.
+                            The work speaks in outcomes, not titles.
                         </p>
                     </div>
                 </div>

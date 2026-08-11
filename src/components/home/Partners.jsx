@@ -158,15 +158,16 @@ const Partners = () => {
                 <div className="absolute top-1/2 -translate-y-1/2 left-0 w-[33%] z-10 transition-all duration-600 ease-out flex flex-col justify-center">
                     <div className="relative w-full h-40">
                         <div className={`w-full transition-all duration-500 ease-out absolute inset-0 flex flex-col justify-center  ${!isGrowth && !isMerged ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 -translate-y-4 scale-95 pointer-events-none'}`}>
-                            <h2 data-para-effect className=" ">Ventures Founded</h2>
-                            <p data-para-effect className="opacity-60 leading-tight text-lg mt-6 ">Companies built from the <br /> ground up.</p>
+                            <h2 data-para-effect className=" "> Founded</h2>
+                            <p data-para-effect className="opacity-60 leading-tight text-lg mt-6 ">Companies built from the ground up, and the ones still being built.</p>
                         </div>
                         <div className={`w-full transition-all duration-500 ease-out absolute inset-0 flex flex-col justify-center  ${isGrowth && !isMerged ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-4 scale-95 pointer-events-none'}`}>
-                            <h2 data-para-effect className=" ">Growth Partners</h2>
-                            <p data-para-effect className="opacity-60 leading-tight text-lg mt-6 ">Businesses supported  through investment  <br />and strategic growth.</p>
+                            <h2 data-para-effect className=" ">Backed </h2>
+                            <p data-para-effect className="opacity-60 leading-tight text-lg mt-6 ">Brands where the thinking earned ownership and the engagement never really ends.</p>
                         </div>
                         <div className={`w-full transition-all duration-500 ease-out absolute inset-0 flex flex-col justify-center  ${isMerged ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-4 scale-95 pointer-events-none'}`}>
-                            <h2 data-para-effect className="leading-none ">Currently Building<br />Fintech Infrastructure</h2>
+                            <h2 data-para-effect className="leading-none ">Invested </h2>
+                            <p data-para-effect className="opacity-60 leading-tight text-lg mt-6 "> Private positions taken early and held with patience, in businesses playing long games.</p>
                         </div>
                     </div>
                 </div>
@@ -284,7 +285,7 @@ const Partners = () => {
                         `}</style>
                         <div className="absolute top-0 bottom-0 left-0 w-12 bg-gradient-to-r from-[#0B1A2C] to-transparent z-10 pointer-events-none"></div>
                         <div className="absolute top-0 bottom-0 right-0 w-12 bg-gradient-to-l from-[#0B1A2C] to-transparent z-10 pointer-events-none"></div>
-                        
+
                         <Swiper
                             modules={[Autoplay, FreeMode]}
                             loop={true}
@@ -330,7 +331,7 @@ const Partners = () => {
                     <div className="relative w-full overflow-hidden space-y-1">
                         <div className="absolute top-0 bottom-0 left-0 w-12 bg-gradient-to-r from-[#0B1A2C] to-transparent z-10 pointer-events-none"></div>
                         <div className="absolute top-0 bottom-0 right-0 w-12 bg-gradient-to-l from-[#0B1A2C] to-transparent z-10 pointer-events-none"></div>
-                        
+
                         <Swiper
                             modules={[Autoplay, FreeMode]}
                             loop={true}
@@ -447,10 +448,10 @@ const Partners = () => {
                 className={` ${selectedPartner ? "opacity-100 pointer-events-auto" : " opacity-0 pointer-events-none"} transition-all duration-300 fixed inset-0 z-50 flex items-center justify-center bg-[#0a1118]/80 backdrop-blur-sm p-4 `}
                 onClick={() => setSelectedPartner(null)}
             >
-                <div 
-                onClick={() => setSelectedPartner(null)}
-                 className=" text-black bg-white absolute rounded-full p-2 right-3 top-3 md:hidden">
-                    <RiCloseLine/>
+                <div
+                    onClick={() => setSelectedPartner(null)}
+                    className=" text-black bg-white absolute rounded-full p-2 right-3 top-3 md:hidden">
+                    <RiCloseLine />
                 </div>
                 <div
                     className={`bg-white text-black w-full max-w-2xl  rounded-xl md:rounded-3xl overflow-hidden relative flex flex-col max-h-[85vh] shadow-2xl transition-all duration-300 ${selectedPartner ? "translate-y-0" : " translate-y-5"}  `}

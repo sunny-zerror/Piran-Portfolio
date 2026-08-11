@@ -58,7 +58,7 @@ const WorkResult = () => {
               </div>
 
               <div className=" max-sm:pt-10 space-y-2">
-                <h4 data-para-effect>Capital Access</h4>
+                <h4 data-para-effect>Backing</h4>
                 <p className="opacity-70 leading-tight">
                    And for the right founders, I go further equity, introductions, and a network that travels with you.</p>
               </div>
