@@ -8,10 +8,10 @@ import { createPageMetadata } from "@/lib/seo";
 const AboutPage = () => {
   return (
     <>
-      <AboutHero/>
-      <StorySection/>
-      <ParallaxSection/>
-      <AboutWork/>
+      <AboutHero />
+      <StorySection />
+      <AboutStrength />
+      <ParallaxSection />
     </>
   );
 };

@@ -34,7 +34,7 @@ const FooterPhysicsBalls = () => {
     // Enable sleeping to stop continuous shaking when settled
     engine.enableSleeping = true;
 
-    // Start with gravity OFF — balls won't move until section is in view
+    // Start with gravity OFF  balls won't move until section is in view
     engine.gravity.y = 0;
 
     // Add boundaries

@@ -310,12 +310,12 @@ const Header = () => {
         </div>
       </header>
 
-      {/* ═══════════ MOBILE HEADER — expandable (hidden on desktop) ═══════════ */}
+      {/* ═══════════ MOBILE HEADER expandable (hidden on desktop) ═══════════ */}
       <header
         className={`header opacity-0 fixed! border border-white/10 rounded-lg top-0 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)]  z-[200] pointer-events-none flex md:hidden flex-col mt-5 px-4 transition-all duration-500 ease-out ${isMobileMenuOpen ? ' bg-[#0B1A2C]' : 'bg-transparent'
           }`}
       >
-        {/* Top bar — logo + menu/close toggle (always visible) */}
+        {/* Top bar  logo + menu/close toggle (always visible) */}
         <div
           onClick={() => setIsMobileMenuOpen(prev => !prev)}
           className="pointer-events-auto py-2 flex items-center justify-between w-full text-white shrink-0 cursor-pointer"

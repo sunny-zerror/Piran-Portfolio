@@ -7,7 +7,7 @@ import { galleryData } from "@/data/galleryData";
 import InfiniteCarousel from "./InfiniteCarousel";
 
 const ParallaxSection = () => {
-    const [openGallerySwiper, setOpenGallerySwiper] = useState(false)
+    const [openGallerySwiper, setOpenGallerySwiper] = useState(null)
     const containerRef = useRef(null);
     const sceneRef = useRef(null);
     const textBoxRef = useRef(null);
@@ -87,13 +87,12 @@ const ParallaxSection = () => {
                 {/* Fixed Center Image - outside parallax depth scene */}
                 <div 
                     className="galry_card absolute z-[-1] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none opacity-0 flex flex-col items-center gap-3"
-                    onClick={() => setOpenGallerySwiper(true)}
                 >
                     <div className="w-28 sm:w-36 md:w-60 lg:w-64 flex items-center justify-center">
                         <Image
                             width={300}
                             height={400}
-                            src="/images/aboutpage/parallax/piran_pic.svg"
+                            src="/images/aboutpage/gallery/piran_pic.svg"
                             alt="Piran Center Image"
                             className="object-contain w-full h-full normal_glry_img"
                         />
@@ -119,7 +118,11 @@ const ParallaxSection = () => {
                                         transform: 'translate3d(-50%, -50%, 0)',
                                         zIndex: 50
                                     }}
-                                    onClick={() => setOpenGallerySwiper(true)}
+                                    onClick={() => {
+                                        if (item.galleryImages && item.galleryImages.length > 0) {
+                                            setOpenGallerySwiper(item)
+                                        }
+                                    }}
                                     onMouseEnter={() => setActiveIndex(i)}
                                     onMouseLeave={() => setActiveIndex(null)}
                                 >
