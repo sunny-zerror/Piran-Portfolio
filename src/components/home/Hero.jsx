@@ -28,6 +28,17 @@ const Hero = () => {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
+  useEffect(() => {
+    if (expanded) {
+      if (window.lenis) window.lenis.stop();
+    } else {
+      if (window.lenis) window.lenis.start();
+    }
+    return () => {
+      if (window.lenis) window.lenis.start();
+    };
+  }, [expanded]);
+
   const toggleVideo = () => {
     if (isAnimating) return;
 
@@ -79,7 +90,7 @@ const Hero = () => {
 
     gsap.set([".txt2_head", paragraph_split.lines], { yPercent: 100 });
 
-    const masterTl = gsap.timeline({delay:1});
+    const masterTl = gsap.timeline({ delay: 1 });
 
     masterTl.to(".content_box", {
       opacity: 1,
@@ -137,7 +148,7 @@ const Hero = () => {
           <h1 className=" w-full leading-18">
             <div className="wrapper_heading block w-full overflow-hidden">
               <div className="txt2_head translate-x-[31%]">
-                 Building brands.
+                Building brands.
               </div>
             </div>
             <div className="wrapper_heading block w-full overflow-hidden">
@@ -159,7 +170,7 @@ const Hero = () => {
             <div className="   flex flex-col md:flex-row items-start md:items-end gap-6">
               <div className="text-left md:text-right">
                 <div className="hero_logos opacity-0">
-                <RotatingText />
+                  <RotatingText />
                 </div>
                 <p className="opacity-60 paragraph_split"><LiveTime /></p>
               </div>

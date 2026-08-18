@@ -207,7 +207,7 @@ const Header = () => {
         <div
           ref={headerRef}
           className={`px-4 py-2 pl-3 pointer-events-auto flex flex-col border border-white/10 rounded-lg justify-between w-full bg-transparent text-white
-            transition-all duration-500 ease-out ${(isScrolled || isForcedScrolled || isAiOpen)
+            transition-all duration-500 ease-out ${(isScrolled || isForcedScrolled || isAiOpen || pathname === '/contact')
               ? isAiOpen
                 ? 'max-w-xl bg-[#0B1A2C]! pb-3'
                 : 'max-w-xl bg-[#0B1A2C]!'
@@ -223,18 +223,27 @@ const Header = () => {
                 <Link
                   href={item.href}
                   key={i}
-                  className="flex items-center gap-x-1 transition-opacity hover:opacity-80"
+                  className="flex group items-center gap-x-1"
                   onMouseEnter={() => setHoveredIndex(i)}
                   onMouseLeave={() => setHoveredIndex(null)}
                 >
-                  <div className={`transition-all duration-300 ${pathname === item.href || hoveredIndex === i ? "scale-100 opacity-100" : "scale-0 opacity-0"}`}>
+                  <div className="transition-all duration-300">
                     <LinkParticles
                       shape={item.shape}
-                      active={pathname === item.href}
+                      active={true}
                       hovered={hoveredIndex === i}
                     />
                   </div>
-                  {item.label}
+                  <div className="relative">
+                    {item.label}
+                    <div
+                      className={`absolute bottom-0 left-0 w-full h-px bg-white transition-transform duration-300 rounded-full ${
+                        pathname === item.href
+                          ? "scale-x-100"
+                          : "scale-x-0 origin-right group-hover:scale-x-100 group-hover:origin-left"
+                      }`}
+                    ></div>
+                  </div>
                 </Link>
               ))}
 
@@ -245,9 +254,18 @@ const Header = () => {
               >
                 <button
                   onClick={handleAiClick}
-                  className="text-sm border ml-3 px-3 rounded-full py-1 bg-[#ECE3DB] text-[#883F27] border-[#883F27] hover:bg-[#883F27] hover:text-[#ECE3DB] transition-all duration-120"
+                  className="flex items-center gap-x-1 border  px-3 rounded-full py-1 bg-[#ECE3DB] text-[#883F27] border-[#883F27] hover:bg-[#883F27] hover:text-[#ECE3DB] transition-all duration-120"
                 >
-                  Ask AI
+                  <div className="transition-all duration-300">
+                    <LinkParticles
+                      shape={pn}
+                      active={true}
+                      hovered={isAiHovered}
+                      color={isAiHovered ? "236, 227, 219" : "136, 63, 39"}
+                      size={22}
+                    />
+                  </div>
+                  <span>Ask AI</span>
                 </button>
               </div>
             </nav>
@@ -279,7 +297,7 @@ const Header = () => {
                   href={`https://chatgpt.com/?q=${encodedPrompt}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex max-sm:text-sm items-center justify-center bg-white border border-[#0B1A2C80] rounded-md gap-x-2 py-3 px-2 group cursor-pointer text-[#1E1E1E] hover:text-[#1E1E1E]"
+                  className="flex max-sm:text-sm items-center justify-center bg-white border border-[#0B1A2C80]  rounded-md gap-x-2 py-3 px-2 group cursor-pointer"
                 >
                   <Image src="/icons/chatgpt.png" alt="ChatGPT" width={16} height={16} className="object-contain group-hover:scale-150 transition-all duration-300" />
                   ChatGPT
@@ -289,7 +307,7 @@ const Header = () => {
                   href={`https://claude.ai/new?q=${encodedPrompt}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex max-sm:text-sm items-center justify-center bg-white border border-[#0B1A2C80] rounded-md gap-x-2 py-3 px-2 group cursor-pointer text-[#1E1E1E] hover:text-[#1E1E1E]"
+                  className="flex max-sm:text-sm items-center justify-center bg-white border border-[#0B1A2C80]  rounded-md gap-x-2 py-3 px-2 group cursor-pointer"
                 >
                   <Image src="/icons/claude.webp" alt="Claude" width={16} height={16} className="object-contain group-hover:scale-150 transition-all duration-300" />
                   Claude
@@ -299,7 +317,7 @@ const Header = () => {
                   href={`https://google.com/search?udm=50&q=${encodedPrompt}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex max-sm:text-sm items-center justify-center bg-white border border-[#0B1A2C80] rounded-md gap-x-2 py-3 px-2 group cursor-pointer text-[#1E1E1E] hover:text-[#1E1E1E]"
+                  className="flex max-sm:text-sm items-center justify-center bg-white border border-[#0B1A2C80]  rounded-md gap-x-2 py-3 px-2 group cursor-pointer"
                 >
                   <Image src="/icons/gemini.webp" alt="Gemini" width={16} height={16} className="object-contain group-hover:scale-150 transition-all duration-300" />
                   Gemini
@@ -312,7 +330,7 @@ const Header = () => {
 
       {/* ═══════════ MOBILE HEADER expandable (hidden on desktop) ═══════════ */}
       <header
-        className={`header opacity-0 fixed! border border-white/10 rounded-lg top-0 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)]  z-[200] pointer-events-none flex md:hidden flex-col mt-5 px-4 transition-all duration-500 ease-out ${isMobileMenuOpen ? ' bg-[#0B1A2C]' : 'bg-transparent'
+        className={`header opacity-0 fixed! border border-white/10 rounded-lg top-0 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)]  z-[200] pointer-events-none flex md:hidden flex-col mt-5 px-4 transition-all duration-500 ease-out ${(isMobileMenuOpen || pathname === '/contact') ? ' bg-[#0B1A2C]' : 'bg-transparent'
           }`}
       >
         {/* Top bar  logo + menu/close toggle (always visible) */}
@@ -340,84 +358,85 @@ const Header = () => {
           </button>
         </div>
       </header>
-        <div
-          className={` fixed! z-[100] container top-0 w-full pointer-events-auto flex flex-col justify-center h-svh bg-[#0B1A2C] overflow-hidden transition-all duration-500 ease-out ${isMobileMenuOpen
-            ? 'left-0'
-            : 'left-[101%]'
-            }`}
-        >
+      <div
+        className={` fixed! z-[100] pt-20 container top-0 w-full pointer-events-auto flex flex-col  h-dvh bg-[#0B1A2C] overflow-hidden transition-all duration-500 ${isMobileMenuOpen
+          ? 'left-0'
+          : 'left-[101%]'
+          }`}
+      >
 
-          <nav className="space-y-5 mb-5">
-            {navLinks.map((item, i) => (
-              <ViewTransitionLink
-                delay={600}
-                href={item.href}
-                key={i}
-                onClick={() => setIsMobileMenuOpen(false)}
-                className={`flex items-center justify-between py-5 px-4 rounded-lg  uppercase  transition-all duration-300 ${pathname === item.href
-                  ? 'bg-white/10'
-                  : 'bg-transparent'
-                  }`}
+        <nav className=" mb-5">
+          {navLinks.map((item, i) => (
+            <ViewTransitionLink
+              delay={600}
+              href={item.href}
+              key={i}
+              onClick={() => setIsMobileMenuOpen(false)}
+              className={`flex items-center justify-between py-3 px-4 rounded-lg  uppercase  transition-all duration-300 ${pathname === item.href
+                ? 'bg-white/10'
+                : 'bg-transparent'
+                }`}
+            >
+              <span className={`text-white text-2xl grotesk`}>
+                {item.label}
+              </span>
+              <LinkParticles
+                shape={item.shape}
+                active={true}
+                hovered={true}
+                size={28}
+              />
+            </ViewTransitionLink>
+          ))}
+        </nav>
+
+        <div className="pb-4 pt-4 shrink-0">
+          <div className="w-full text-white rounded-md border border-white/50 p-5 flex flex-col select-none ">
+            <div className="flex items-center text-sm mb-3">
+              <Image src="/icons/ai-icon.gif" className='w-5' alt="AI helper" width={20} height={20} />
+              <span>Ask AI</span>
+            </div>
+            <h3 className="text-[#ffffff] leading-none">
+              How can Piran help you?
+            </h3>
+            <p className="text-[#ffffff] opacity-80 mt-2 mb-3">
+              Pick one. They've already done the reading.
+            </p>
+            <div className="grid grid-cols-3 pt-20 gap-x-1 md:gap-x-2 overflow-hidden">
+              <Link
+                href={`https://chatgpt.com/?q=${encodedPrompt}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex text-sm items-center justify-center bg-white border border-[#0B1A2C80] rounded-md gap-x-2 py-2 md:py-3 px-2 group cursor-pointer text-[#1E1E1E] hover:text-[#1E1E1E]"
               >
-                <span className='text-white text-5xl grotesk'>{item.label}</span>
-                <LinkParticles
-                  shape={item.shape}
-                  active={pathname === item.href}
-                  hovered={true}
-                  size={28}
-                />
-              </ViewTransitionLink>
-            ))}
-          </nav>
-
-          <div className="pb-4 pt-4 shrink-0">
-            <div className="w-full text-white rounded-md border border-white/50 p-5 flex flex-col select-none ">
-              <div className="flex items-center text-sm mb-3">
-                <Image src="/icons/ai-icon.gif" className='w-5' alt="AI helper" width={20} height={20} />
-                <span>Ask AI</span>
-              </div>
-              <h3 className="text-[#ffffff] leading-none">
-                How can Piran help you?
-              </h3>
-              <p className="text-[#ffffff] opacity-80 mb-3">
-                Pick one. They've already done the reading.
-              </p>
-              <div className="grid grid-cols-3 pt-20 gap-x-1 md:gap-x-2 overflow-hidden">
-                <Link
-                  href={`https://chatgpt.com/?q=${encodedPrompt}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex text-sm items-center justify-center bg-white border border-[#0B1A2C80] rounded-md gap-x-2 py-2 md:py-3 px-2 group cursor-pointer text-[#1E1E1E] hover:text-[#1E1E1E]"
-                >
-                  <Image src="/icons/chatgpt.png" alt="ChatGPT" width={16} height={16} className="object-contain" />
-                  ChatGPT
-                </Link>
-                <Link
-                  href={`https://claude.ai/new?q=${encodedPrompt}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex text-sm items-center justify-center bg-white border border-[#0B1A2C80] rounded-md gap-x-2 py-2 md:py-3 px-2 group cursor-pointer text-[#1E1E1E] hover:text-[#1E1E1E]"
-                >
-                  <Image src="/icons/claude.webp" alt="Claude" width={16} height={16} className="object-contain" />
-                  Claude
-                </Link>
-                <Link
-                  href={`https://google.com/search?udm=50&q=${encodedPrompt}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex text-sm items-center justify-center bg-white border border-[#0B1A2C80] rounded-md gap-x-2 py-2 md:py-3 px-2 group cursor-pointer text-[#1E1E1E] hover:text-[#1E1E1E]"
-                >
-                  <Image src="/icons/gemini.webp" alt="Gemini" width={16} height={16} className="object-contain" />
-                  Gemini
-                </Link>
-              </div>
+                <Image src="/icons/chatgpt.png" alt="ChatGPT" width={16} height={16} className="object-contain" />
+                ChatGPT
+              </Link>
+              <Link
+                href={`https://claude.ai/new?q=${encodedPrompt}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex text-sm items-center justify-center bg-white border border-[#0B1A2C80] rounded-md gap-x-2 py-2 md:py-3 px-2 group cursor-pointer text-[#1E1E1E] hover:text-[#1E1E1E]"
+              >
+                <Image src="/icons/claude.webp" alt="Claude" width={16} height={16} className="object-contain" />
+                Claude
+              </Link>
+              <Link
+                href={`https://google.com/search?udm=50&q=${encodedPrompt}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex text-sm items-center justify-center bg-white border border-[#0B1A2C80] rounded-md gap-x-2 py-2 md:py-3 px-2 group cursor-pointer text-[#1E1E1E] hover:text-[#1E1E1E]"
+              >
+                <Image src="/icons/gemini.webp" alt="Gemini" width={16} height={16} className="object-contain" />
+                Gemini
+              </Link>
             </div>
           </div>
-
-          <div className="absolute bottom-10 left-5 text-white border rounded-full px-6 py-2">
-            <button>Mumbai, In</button>
-          </div>
         </div>
+        <div className="absolute bottom-10 left-5 text-sm text-white border rounded-full px-4 py-2">
+          <button>Mumbai, In</button>
+        </div>
+      </div>
     </>
   )
 }

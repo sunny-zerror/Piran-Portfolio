@@ -1,523 +1,492 @@
 "use client";
-import { growthPartnersData, venturesData } from '@/data/PartnersData';
 import Image from 'next/image';
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Flip } from 'gsap/Flip';
 import { flushSync } from 'react-dom';
-import { RiArrowRightUpLine, RiCloseLine, RiLinkedinBoxFill, RiLinkedinBoxLine, RiTwitterXLine } from '@remixicon/react';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Autoplay, FreeMode } from 'swiper/modules';
+import { RiArrowRightUpLine, RiCloseLine } from '@remixicon/react';
 import 'swiper/css';
+import { Link } from 'next-view-transitions';
 
-gsap.registerPlugin(ScrollTrigger, Flip);
+gsap.registerPlugin(ScrollTrigger);
+
+const newPartnersData = {
+    founded: [
+        { id: 'f1', name: 'Point Of', role: 'Founder', desc: 'An independent consultancy rethinking how brands connect with culture and people. Point Of works at the intersection of design, strategy, and technology, translating ambition into identity and identity into impact. The Studio gives a brand its shape; the Consultancy keeps it sharp.', logo: '/images/homepage/partners/po.svg' },
+        { id: 'f2', name: 'Casa Carigar', role: 'Co-Founder', desc: "An editorial marketplace for India's most considered furniture and décor studios. Curated makers, named pieces: Casa Carigar is built on the belief that Indian craft does not need preservation, it needs systems. From India, with intention.", logo: '/images/homepage/partners/casacarigar.svg' }
+    ],
+    backed: [
+        { id: 'b1', name: 'Naturefit', role: 'Strategic Equity Partner', desc: 'A digital health platform for India\'s traditional medicine systems: Ayurveda, Yoga, and Siddha. Naturefit connects practitioners, products, diagnostics, and health plans in one place, bringing centuries-old practice the access and standards of modern healthcare. A Poonawalla Group company.', logo: '/images/homepage/partners/naturefit.png' },
+        { id: 'b2', name: 'LVL', role: 'Strategic Equity Partner', desc: 'The outsourced finance team for growing businesses. LVL takes on the accounting and financial operations founders shouldn\'t be running themselves, with the discipline of an in-house function and none of its overhead.', logo: '/images/homepage/partners/lvl.png' }
+    ],
+    invested: [
+        { id: 'i1', name: 'Marengo Asia Hospitals', role: 'Private Investor', desc: 'A multispecialty hospital network across the NCR, Rajasthan, and Gujarat, with 2,500 beds and counting. Marengo Asia is expanding healthcare capacity for a country that needs decades more of it.', logo: '/images/homepage/partners/marengo.png' },
+        { id: 'i2', name: 'Edme Insurance', role: 'Private Investor', desc: 'An insurance-broking platform built through acquisition, including Aditya Birla Insurance Brokers, one of the country\'s leading broking houses. Edme is consolidating India\'s insurance distribution around a single customer-first thesis, alongside institutional capital.', logo: '/images/homepage/partners/edme.png' },
+        { id: 'i3', name: 'Samara Capital', role: 'Limited Partner', desc: 'An India-focused investment firm that has deployed over 1.5 billion dollars since 2007. Samara Capital backs operators who transform fragmented businesses into scalable enterprises, across healthcare, insurance, and retail.', logo: '/images/homepage/partners/samara.png' }
+    ]
+};
 
 const Partners = () => {
     const [selectedPartner, setSelectedPartner] = useState(null);
-    const [isGrowth, setIsGrowth] = useState(false);
-    const [isMerged, setIsMerged] = useState(false);
+    const [isPopupOpen, setIsPopupOpen] = useState(false);
+    const [isThesisOpen, setIsThesisOpen] = useState(false);
+    const [activeIndex, setActiveIndex] = useState(0);
 
     const containerRef = useRef(null);
     const stickyRef = useRef(null);
+    const activeIndexRef = useRef(0);
+    const cardsRefs = useRef([[], [], [], []]);
+
+    useEffect(() => {
+        if (isPopupOpen || isThesisOpen) {
+            if (window.lenis) window.lenis.stop();
+        } else {
+            if (window.lenis) window.lenis.start();
+        }
+        return () => {
+            if (window.lenis) window.lenis.start();
+        };
+    }, [isPopupOpen, isThesisOpen]);
 
     useGSAP(() => {
+
+        gsap.to(".bottom_bar", {
+            scrollTrigger: {
+                trigger: containerRef.current,
+                start: "top top",
+                end: "bottom bottom",
+                scrub: true
+            },
+            width: "100%",
+            ease: "none"
+        })
+
         let mm = gsap.matchMedia();
 
         mm.add("(min-width: 768px)", () => {
-            // Initial scale/fade-in animation when section first enters viewport
-            gsap.fromTo(".partner-card",
-                { scale: 0, opacity: 0 },
-                {
-                    scale: 1,
-                    opacity: 1,
-                    stagger: 0.04,
-                    duration: 0.6,
-                    ease: "back.out(1.2)",
-                    scrollTrigger: {
-                        trigger: containerRef.current,
-                        start: "top 50%",
-                        toggleActions: "play none none reverse"
-                    }
-                }
-            );
+            // Set initial state for titles
+            gsap.set(".title-section", { y: -50, opacity: 0, pointerEvents: "none" });
+            gsap.set(".title-section-0", { y: 0, opacity: 1, pointerEvents: "auto" });
 
-            ScrollTrigger.create({
-                trigger: containerRef.current,
-                start: "top+=15% top",
-                onEnter: () => {
-                    const state = Flip.getState(".partner-card");
-                    flushSync(() => {
-                        setIsGrowth(true);
-                        setIsMerged(false);
-                    });
-                    Flip.from(state, {
-                        stagger: 0.04,
-                        duration: 0.6,
-                        ease: "back.out(1.2)",
-                        onEnter: elements => gsap.fromTo(elements,
-                            { scale: 0, opacity: 0, y: 0 },
-                            {
-                                scale: 1,
-                                opacity: 1,
-                                y: 0,
-                                stagger: 0.04,
-                                duration: 0.6,
-                                ease: "back.out(1.2)"
-                            }
-                        ),
-                    });
-                },
-                onLeaveBack: () => {
-                    const state = Flip.getState(".partner-card");
-                    flushSync(() => {
-                        setIsGrowth(false);
-                        setIsMerged(false);
-                    });
-                    Flip.from(state, {
-                        stagger: 0.04,
-                        duration: 0.6,
-                        ease: "back.out(1.2)",
-                        onLeave: elements => gsap.to(elements, { opacity: 0, scale: 0.8, duration: 0.6, stagger: { from: "end", each: 0.04 }, ease: "back.out(1.2)" }),
-                    });
-                },
+            // Set initial state for cards
+            [1, 2, 3].forEach(idx => {
+                gsap.set(cardsRefs.current[idx], { scale: 0.8, opacity: 0, pointerEvents: "none" });
+                gsap.set(`.card-section-${idx}`, { zIndex: 0 });
+            });
+            gsap.set(`.card-section-0`, { zIndex: 1 });
+            gsap.set(cardsRefs.current[0], { scale: 0.8, opacity: 0, pointerEvents: "auto" });
+
+            // Initial entry: cards pop from scale 0.8 to 1 with stagger
+            gsap.to(cardsRefs.current[0], {
+                scale: 1,
+                opacity: 1,
+                stagger: 0.1,
+                duration: 0.8,
+                ease: "back.out(1.5)",
+                scrollTrigger: {
+                    trigger: containerRef.current,
+                    start: "top 60%",
+                    toggleActions: "play none none reverse"
+                }
             });
 
+            const transitionState = (newIndex) => {
+                const oldIndex = activeIndexRef.current;
+                if (oldIndex === newIndex) return;
+
+                const goingForward = newIndex > oldIndex;
+
+                activeIndexRef.current = newIndex;
+                setActiveIndex(newIndex); // For mobile layout updates
+
+                // Animate old title out
+                gsap.to(`.title-section-${oldIndex}`, {
+                    y: goingForward ? -50 : 50,
+                    opacity: 0,
+                    duration: 0.4,
+                    ease: "power2.in",
+                    onComplete: () => gsap.set(`.title-section-${oldIndex}`, { pointerEvents: "none" })
+                });
+
+                // Animate new title in
+                gsap.fromTo(`.title-section-${newIndex}`,
+                    { y: goingForward ? 50 : -50, opacity: 0 },
+                    {
+                        y: 0,
+                        opacity: 1,
+                        duration: 0.5,
+                        ease: "power2.out",
+                        delay: 0.15,
+                        onStart: () => gsap.set(`.title-section-${newIndex}`, { pointerEvents: "auto" })
+                    }
+                );
+
+                // CARDS TRANSITION (No Flip, raw refs)
+                gsap.set(`.card-section-${oldIndex}`, { zIndex: 0 });
+                gsap.set(`.card-section-${newIndex}`, { zIndex: 1 });
+
+                // Animate old cards out
+                gsap.to(cardsRefs.current[oldIndex], {
+                    opacity: 0,
+                    scale: 0.8,
+                    duration: 0.4,
+                    ease: "power2.in",
+                    stagger: 0.05,
+                    onComplete: () => gsap.set(cardsRefs.current[oldIndex], { pointerEvents: "none" })
+                });
+
+                // Animate new cards in
+                gsap.set(cardsRefs.current[newIndex], { pointerEvents: "auto" });
+                gsap.fromTo(cardsRefs.current[newIndex],
+                    { scale: 0.8, opacity: 0 },
+                    { scale: 1, opacity: 1, duration: 0.6, ease: "back.out(1.5)", stagger: 0.1, delay: 0.1 }
+                );
+            };
+
             ScrollTrigger.create({
                 trigger: containerRef.current,
-                start: "top+=50% top",
-                onEnter: () => {
-                    flushSync(() => {
-                        setIsMerged(true);
-                    });
-
-                    const tl = gsap.timeline();
-                    tl.to(".grid-container",
-                        { gap: "0px", duration: 0.4, ease: "power2.inOut" }
-                    )
-                        .to(".partner-card",
-                            { borderWidth: "0px", duration: 0.4, ease: "power2.inOut" },
-                            "-=0.1"
-                        )
-                        .to(".merged-card-overlay",
-                            {
-                                opacity: 1,
-                                duration: 0.6,
-                                ease: "back.out(1.2)"
-                            },
-                            "<"
-                        )
-                },
-                onLeaveBack: () => {
-                    gsap.killTweensOf(".grid-container, .partner-card, .merged-card-overlay");
-                    gsap.to(".merged-card-overlay", { opacity: 0, duration: 0.3 });
-                    gsap.set(".grid-container", { clearProps: "gap" });
-                    gsap.set(".partner-card", { clearProps: "borderWidth" });
-
-                    flushSync(() => {
-                        setIsMerged(false);
-                    });
-                },
+                start: "top+=20% top",
+                onEnter: () => transitionState(1),
+                onLeaveBack: () => transitionState(0),
+            });
+            ScrollTrigger.create({
+                trigger: containerRef.current,
+                start: "top+=40% top",
+                onEnter: () => transitionState(2),
+                onLeaveBack: () => transitionState(1),
+            });
+            ScrollTrigger.create({
+                trigger: containerRef.current,
+                start: "top+=60% top",
+                onEnter: () => transitionState(3),
+                onLeaveBack: () => transitionState(2),
             });
         });
 
         return () => mm.revert();
     }, { scope: containerRef });
 
-    const dummyDetails = {
-        name: "UNP",
-        tags: ["TECHNOLOGY", "INDIA", "USA"],
-        founder: "Robin Charles",
-        website: "#",
-        desc1: "At its core, UNP is a platform built around people. We believe the strongest businesses are created through trusted relationships, clear thinking, and a shared commitment to long-term success. By bringing together exceptional founders, strategic partners, and growth opportunities, we help create the conditions for meaningful progress.",
-        desc2: "More than a network, UNP is a catalyst for collaboration and transformation. We work alongside ambitious leaders to navigate complexity, uncover opportunities, and build stronger foundations for the future. Through strategic guidance, trusted partnerships, and a long-term perspective, we help businesses move forward with greater clarity."
+    const handlePartnerClick = (item) => {
+        setSelectedPartner(item);
+        setIsPopupOpen(true);
     };
 
-    const getLogo = (item, i) => {
-        if (!isGrowth && !isMerged) {
-            return venturesData[i]?.logo || item.logo;
-        } else {
-            return `/images/homepage/partners/ventures/img${(i % 5) + 1}.svg`;
-        }
+    const handleClosePopup = () => {
+        setIsPopupOpen(false);
+        setTimeout(() => {
+            setSelectedPartner(null);
+        }, 300);
     };
 
-    const handlePartnerClick = (item, i) => {
-        if (isMerged) return;
-        if (!isGrowth) {
-            setSelectedPartner(venturesData[i] || item);
-        } else {
-            setSelectedPartner(item);
-        }
+    const renderAllCardSections = () => {
+        return [0, 1, 2, 3].map(index => {
+            let cards = [];
+            let cardBasis = '100%';
+
+            if (index === 0) {
+                cards = newPartnersData.founded;
+                cardBasis = 'calc(50% - 4px)';
+            } else if (index === 1) {
+                cards = newPartnersData.backed;
+                cardBasis = 'calc(50% - 4px)';
+            } else if (index === 2) {
+                cards = newPartnersData.invested;
+                cardBasis = 'calc(33.333% - 6px)';
+            }
+
+            if (index === 3) {
+                return (
+                    <div key={`section-${index}`} className={`card-section card-section-${index} absolute inset-0 w-full flex flex-wrap gap-2 items-center`}>
+                        <div
+                            ref={el => cardsRefs.current[3][0] = el}
+                            className="bg-[#152535] p-8 md:p-12 rounded-lg w-full flex flex-col justify-between"
+                            style={{ flexBasis: '100%' }}
+                        >
+                            <div className="inner-content flex flex-col justify-between h-full w-full">
+                                <div>
+                                    <h3 className="text-2xl font-medium mb-6 text-white">How I Choose</h3>
+                                    <p className="opacity-80 text-lg  text-white">
+                                        Consultants leave after the recommendation. Agencies leave after the deliverable. Investors show up for board meetings. Nobody stays. I stay. I come in before the institutions do, usually pre-seed to seed, where positioning is the bottleneck rather than the product. Home ground: wellness, healthcare, and financial services. The ask is simple and documented: strategic equity, agreed before the work begins.
+                                    </p>
+                                </div>
+                                <div className="mt-8 border-t border-white/10 pt-6">
+                                    <button
+                                        onClick={() => setIsThesisOpen(true)}
+                                        className="bg-white uppercase  text-[#883F27] rounded-full  px-6 hover:pl-1 leading-none h-10 text-sm group   transition-all duration-300 pointer-events-auto flex items-center gap-2">
+                                        <span className="w-2 h-2 center text-white group-hover:h-8 group-hover:w-8 rounded-full bg-[#883F27] transition-all duration-300">
+                                            <RiArrowRightUpLine size={18} className={` scale-0 group-hover:scale-100 transition-all duration-300`} />
+                                        </span>
+                                        Read Full Thesis
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+
+            return (
+                <div key={`section-${index}`} className={`card-section card-section-${index} absolute inset-0 w-full flex flex-wrap gap-2 items-center`}>
+                    {cards.map((item, i) => (
+                        <div
+                            key={item.id}
+                            ref={el => cardsRefs.current[index][i] = el}
+                            onClick={() => handlePartnerClick(item)}
+                            style={{ flexBasis: cardBasis }}
+                            className={`group relative flex items-center justify-center aspect-6/5 bg-white/5 rounded-lg cursor-pointer hover:bg-[#253646] transition-colors duration-300`}
+                        >
+                            <div className="w-full absolute bottom-0 flex items-end justify-between p-3 leading-none">
+                                <p className='text-sm uppercase w-[80%]'>{item.name}</p>
+                                <button className='p-1.5 bg-white/10 rounded-full group-hover:bg-white group-hover:text-[#0B1A2C] transition-all duration-300 '><RiArrowRightUpLine className='size-4' /></button>
+                            </div>
+                            <div className="w-full h-full absolute inset-0 flex items-center justify-center">
+                                <div className="w-44 h-20 center relative">
+                                    <Image fill src={item.logo} alt="" className="object-contain invert-100" />
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            );
+        });
     };
 
     return (
-        <div ref={containerRef} className="container bg-[#0B1A2C] text-white relative h-auto md:h-[300vh]! w-full">
-            <div ref={stickyRef} className="hidden md:block sticky! top-0 w-full h-screen!  overflow-hidden ">
+        <div ref={containerRef} className="container bg-[#0B1A2C] text-white relative h-auto md:h-[400vh]! w-full">
+            <div ref={stickyRef} className="hidden md:block sticky! top-0 w-full h-screen! overflow-hidden ">
 
-                <div className="absolute top-1/2 -translate-y-1/2 left-0 w-[33%] z-10 transition-all duration-600 ease-out flex flex-col justify-center">
-                    <div className="relative w-full h-40">
-                        <div className={`w-full transition-all duration-500 ease-out absolute inset-0 flex flex-col justify-center  ${!isGrowth && !isMerged ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 -translate-y-4 scale-95 pointer-events-none'}`}>
-                            <h2 data-para-effect className=" "> Founded</h2>
-                            <p data-para-effect className="opacity-60 leading-tight text-lg mt-6 ">Companies built from the ground up, and the ones still being built.</p>
+                <div className="bottom_bar absolute h-1 bg-white w-0 left-0 bottom-1 rounded-full"></div>
+
+                <div className="absolute top-1/2 -translate-y-1/2 left-0 w-[40%] z-10 flex flex-col justify-center">
+                    <div className="relative w-[80%] h-40">
+                        <div className="title-section title-section-0 w-full absolute inset-0 flex flex-col justify-center">
+                            <h2>Founded</h2>
+                            <p className="opacity-60 leading-tight text-lg mt-6">Companies built from the ground up, and the ones still being built.</p>
                         </div>
-                        <div className={`w-full transition-all duration-500 ease-out absolute inset-0 flex flex-col justify-center  ${isGrowth && !isMerged ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-4 scale-95 pointer-events-none'}`}>
-                            <h2 data-para-effect className=" ">Backed </h2>
-                            <p data-para-effect className="opacity-60 leading-tight text-lg mt-6 ">Brands where the thinking earned ownership and the engagement never really ends.</p>
+                        <div className="title-section title-section-1 w-full absolute inset-0 flex flex-col justify-center">
+                            <h2>Backed </h2>
+                            <p className="opacity-60 leading-tight text-lg mt-6">Brands where the thinking earned ownership and the engagement never really ends.</p>
                         </div>
-                        <div className={`w-full transition-all duration-500 ease-out absolute inset-0 flex flex-col justify-center  ${isMerged ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-4 scale-95 pointer-events-none'}`}>
-                            <h2 data-para-effect className="leading-none ">Invested </h2>
-                            <p data-para-effect className="opacity-60 leading-tight text-lg mt-6 "> Private positions taken early and held with patience, in businesses playing long games.</p>
+                        <div className="title-section title-section-2 w-full absolute inset-0 flex flex-col justify-center">
+                            <h2>Invested </h2>
+                            <p className="opacity-60 leading-tight text-lg mt-6">Private positions taken early and held with patience, in businesses playing long games.</p>
                         </div>
-                    </div>
-                </div>
-
-                <div className="absolute top-1/2 -translate-y-1/2 right-0 w-[64%] h-[50vh] flex items-center">
-                    <div className="relative w-full transition-all duration-500 ease-in-out">
-                        <div className={`grid-container w-full grid
-                            ${isMerged ? 'gap-0 h-full' : 'gap-2'}
-                            ${isGrowth ? 'grid-cols-6' : 'grid-cols-5'}
-                            `}
-                        >
-                            {Array.from({ length: isMerged ? 18 : (isGrowth ? growthPartnersData.length : 5) }).map((_, i) => {
-                                const item = growthPartnersData[i] || { id: `dummy-${i}` };
-                                const isDummy = i >= growthPartnersData.length;
-                                return (
-                                    <div
-                                        key={item.id}
-                                        data-flip-id={isDummy ? `dummy-${i}` : `partner-${item.id}`}
-                                        onClick={() => !isDummy && handlePartnerClick(item, i)}
-                                        className={`partner-card flex items-center justify-center w-full ${isGrowth ? 'aspect-6/5' : 'aspect-square'}
-                                            ${isMerged
-                                                ? 'bg-[#152535]/80 rounded-none border-[0.5px] border-[#0B1A2C]/50'
-                                                : 'bg-white/5 rounded-lg cursor-pointer hover:bg-[#253646] transition-colors duration-300'
-                                            }`}
-                                    >
-                                        {!isMerged && !isDummy && (
-                                            <div className="w-20 h-10 center relative">
-                                                <Image fill src={getLogo(item, i)} alt="" />
-                                            </div>
-                                        )}
-                                    </div>
-                                );
-                            })}
-                        </div>
-
-                        <div
-                            className="merged-card-overlay absolute inset-0 bg-[#152535]/90  overflow-hidden  p-4 md:p-8"
-                            style={{ opacity: 0, zIndex: 50, pointerEvents: isMerged ? 'auto' : 'none' }}
-                        >
-                            <div className="w-full h-full">
-                                <div className="grid grid-cols-5 w-full h-full gap-x-16 text-white">
-
-                                    <div className="  col-span-2 h-full flex flex-col justify-between w-full">
-                                        <div className="">
-
-                                            <div className="flex items-center gap-3 mb-8">
-                                                <div className="w-8 h-8 bg-white rounded-sm transform rotate-45 flex-shrink-0 mt-1"></div>
-                                                <h3 className=" text-white tracking-tight">{dummyDetails.name}</h3>
-                                            </div>
-
-                                            <div className="flex flex-wrap items-center justify-between mb-8 gap-4">
-                                                <div className="flex flex-wrap gap-2 text-xs ">
-                                                    <span className="px-4 py-2 border border-white/20  text-white rounded-full flex items-center gap-2">
-                                                        <div className="w-2 h-2 rounded-full bg-white"></div> {dummyDetails.tags[0]}
-                                                    </span>
-                                                    <span className="px-4 py-2 border border-white/20  text-white rounded-full">{dummyDetails.tags[1]}</span>
-                                                    <span className="px-4 py-2 border border-white/20  text-white rounded-full">{dummyDetails.tags[2]}</span>
-                                                </div>
-                                                <a href={dummyDetails.website} className="px-4 py-2 pl-3 border border-white/20 rounded-full text-xs  flex items-center gap-2 text-white hover:bg-white hover:text-[#152535] transition-colors duration-300">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
-                                                    </svg>
-                                                    WEBSITE
-                                                </a>
-                                            </div>
-                                        </div>
-
-                                        <div className="flex flex-wrap text-white items-center justify-between border-t border-white/10 pt-4 gap-4">
-                                            <div>
-                                                <p className="text-sm mb-1 opacity-70">Founder</p>
-                                                <p className="font-medium text-lg">{dummyDetails.founder}</p>
-                                            </div>
-                                            <div className="flex gap-2 opacity-80">
-                                                <RiTwitterXLine />
-                                                <RiLinkedinBoxFill />
-
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div className=" col-span-3   w-full">
-                                        <div className="flex justify-between items-center ">
-                                            <h5 className="">Introducing {dummyDetails.name}</h5>
-                                        </div>
-                                        <div data-lenis-prevent className="mt-4 overflow-y-scroll scroller_none h-70">
-                                            <div className="text-white opacity-70 leading-relaxed space-y-4">
-                                                <p>{dummyDetails.desc1}</p>
-                                                <p>{dummyDetails.desc2}</p>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                </div>
-
+                        <div className="title-section title-section-3 w-full absolute inset-0 flex flex-col justify-center">
+                            <div className="flex items-center gap-4 mb-4">
+                                <h2 className="leading-none m-0 p-0">Founder</h2>
                             </div>
+                            <p className="opacity-60 leading-tight text-lg mt-2">A company of my own is underway a wellness and nutraceutical brand, in stealth. After years of building for founders, it was time. The name arrives only when it's ready.</p>
                         </div>
                     </div>
                 </div>
 
+                <div className="absolute top-1/2 -translate-y-1/2 right-0 w-[60%] h-[50vh] flex items-center">
+                    <div className="relative w-full h-full">
+                        {renderAllCardSections()}
+                    </div>
+                </div>
             </div>
 
             {/* Mobile Layout */}
-            <div className="  block md:hidden py-12  space-y-16">
-                {/* Ventures Section */}
+            <div className="block md:hidden py-12 space-y-16">
+                {/* Mobile Founded */}
                 <div className="space-y-6">
                     <div>
-                        <h2 data-para-effect className="leading-none">Ventures Founded</h2>
-                        <p data-para-effect className="opacity-60 leading-tight  mt-2">Companies built from the ground up.</p>
+                        <h2>Founded</h2>
+                        <p className="opacity-60 leading-tight mt-2">Companies built from the ground up, and the ones still being built.</p>
                     </div>
-                    <div className="relative w-full overflow-hidden py-1">
-                        <style>{`
-                            .marquee-swiper .swiper-wrapper {
-                                transition-timing-function: linear !important;
-                            }
-                        `}</style>
-                        <div className="absolute top-0 bottom-0 left-0 w-12 bg-gradient-to-r from-[#0B1A2C] to-transparent z-10 pointer-events-none"></div>
-                        <div className="absolute top-0 bottom-0 right-0 w-12 bg-gradient-to-l from-[#0B1A2C] to-transparent z-10 pointer-events-none"></div>
-
-                        <Swiper
-                            modules={[Autoplay, FreeMode]}
-                            loop={true}
-                            freeMode={{ enabled: true, momentum: true }}
-                            autoplay={{
-                                delay: 0,
-                                disableOnInteraction: false,
-                            }}
-                            speed={5000}
-                            slidesPerView="auto"
-                            spaceBetween={4}
-                            className="w-full marquee-swiper"
-                            onTouchEnd={(swiper) => {
-                                setTimeout(() => {
-                                    if (swiper && !swiper.destroyed && swiper.autoplay) {
-                                        swiper.autoplay.start();
-                                    }
-                                }, 150);
-                            }}
-                        >
-                            {venturesData.map((item, i) => (
-                                <SwiperSlide key={item.id || i} className="!w-auto">
-                                    <div
-                                        onClick={() => setSelectedPartner(item)}
-                                        className="flex items-center justify-center w-28 aspect-4/3 bg-white/5 rounded-md cursor-pointer active:bg-[#253646] transition-colors duration-300 border border-white/10 shrink-0"
-                                    >
-                                        <div className="w-16 h-10 center relative">
-                                            <Image fill src={item.logo} alt="" className="object-contain" />
-                                        </div>
+                    <div className="grid grid-cols-2 gap-2">
+                        {newPartnersData.founded.map((item) => (
+                            <div key={item.id} onClick={() => setSelectedPartner(item)} className="flex relative items-center justify-center w-full aspect-6/5 bg-white/5 rounded-md cursor-pointer active:bg-[#253646] transition-colors border border-white/10 shrink-0">
+                                <div className="w-full absolute bottom-0 flex items-end justify-between p-2 leading-none">
+                                    <p className='text-sm uppercase w-[80%]'>{item.name}</p>
+                                    <button className='p-1 bg-white/10 rounded-full group-hover:bg-white group-hover:text-[#0B1A2C] transition-all duration-300 '><RiArrowRightUpLine className='size-4' /></button>
+                                </div>
+                                <div className="w-full h-full absolute inset-0 flex items-center justify-center">
+                                    <div className="w-24 h-10 center relative">
+                                        <Image fill src={item.logo} alt="" className="object-contain invert-100" />
                                     </div>
-                                </SwiperSlide>
-                            ))}
-                        </Swiper>
+                                </div>
+                            </div>
+                        ))}
                     </div>
                 </div>
 
-                {/* Growth Partners Section */}
+                {/* Mobile Backed */}
                 <div className="space-y-6">
                     <div>
-                        <h2 data-para-effect className="leading-none">Growth Partners</h2>
-                        <p data-para-effect className="opacity-60 leading-tight  mt-2">Businesses supported through investment and strategic growth.</p>
+                        <h2>Backed </h2>
+                        <p className="opacity-60 leading-tight mt-2">Brands where the thinking earned ownership and the engagement never really ends.</p>
                     </div>
-                    <div className="relative w-full overflow-hidden space-y-1">
-                        <div className="absolute top-0 bottom-0 left-0 w-12 bg-gradient-to-r from-[#0B1A2C] to-transparent z-10 pointer-events-none"></div>
-                        <div className="absolute top-0 bottom-0 right-0 w-12 bg-gradient-to-l from-[#0B1A2C] to-transparent z-10 pointer-events-none"></div>
-
-                        <Swiper
-                            modules={[Autoplay, FreeMode]}
-                            loop={true}
-                            freeMode={{ enabled: true, momentum: true }}
-                            autoplay={{
-                                delay: 0,
-                                disableOnInteraction: false,
-                            }}
-                            speed={5000}
-                            slidesPerView="auto"
-                            spaceBetween={4}
-                            className="w-full marquee-swiper"
-                            onTouchEnd={(swiper) => {
-                                setTimeout(() => {
-                                    if (swiper && !swiper.destroyed && swiper.autoplay) {
-                                        swiper.autoplay.start();
-                                    }
-                                }, 150);
-                            }}
-                        >
-                            {growthPartnersData.slice(0, Math.ceil(growthPartnersData.length / 2)).map((item, i) => (
-                                <SwiperSlide key={item.id || i} className="!w-auto">
-                                    <div
-                                        onClick={() => setSelectedPartner(item)}
-                                        className="flex items-center justify-center w-28 aspect-4/3 bg-white/5 rounded-md cursor-pointer active:bg-[#253646] transition-colors duration-300 border border-white/10 shrink-0"
-                                    >
-                                        <div className="w-16 h-10 center relative">
-                                            <Image fill src={item.logo} alt="" className="object-contain" />
-                                        </div>
+                    <div className="grid grid-cols-2 gap-2">
+                        {newPartnersData.backed.map((item) => (
+                            <div key={item.id} onClick={() => setSelectedPartner(item)} className="flex relative items-center justify-center w-full aspect-6/5 bg-white/5 rounded-md cursor-pointer active:bg-[#253646] transition-colors border border-white/10 shrink-0">
+                                <div className="w-full absolute bottom-0 flex items-end justify-between p-2 leading-none">
+                                    <p className='text-sm uppercase w-[80%]'>{item.name}</p>
+                                    <button className='p-1 bg-white/10 rounded-full group-hover:bg-white group-hover:text-[#0B1A2C] transition-all duration-300 '><RiArrowRightUpLine className='size-4' /></button>
+                                </div>
+                                <div className="w-full h-full absolute inset-0 flex items-center justify-center">
+                                    <div className="w-24 h-10 center relative">
+                                        <Image fill src={item.logo} alt="" className="object-contain invert-100" />
                                     </div>
-                                </SwiperSlide>
-                            ))}
-                        </Swiper>
-
-                        <Swiper
-                            modules={[Autoplay, FreeMode]}
-                            loop={true}
-                            freeMode={{ enabled: true, momentum: true }}
-                            autoplay={{
-                                delay: 0,
-                                disableOnInteraction: false,
-                                reverseDirection: true,
-                            }}
-                            speed={5000}
-                            slidesPerView="auto"
-                            spaceBetween={4}
-                            className="w-full marquee-swiper"
-                            onTouchEnd={(swiper) => {
-                                setTimeout(() => {
-                                    if (swiper && !swiper.destroyed && swiper.autoplay) {
-                                        swiper.autoplay.start();
-                                    }
-                                }, 150);
-                            }}
-                        >
-                            {growthPartnersData.slice(Math.ceil(growthPartnersData.length / 2)).map((item, i) => (
-                                <SwiperSlide key={item.id || i} className="!w-auto">
-                                    <div
-                                        onClick={() => setSelectedPartner(item)}
-                                        className="flex items-center justify-center w-28 aspect-4/3 bg-white/5 rounded-lg cursor-pointer active:bg-[#253646] transition-colors duration-300 border border-white/10 shrink-0"
-                                    >
-                                        <div className="w-16 h-10 center relative">
-                                            <Image fill src={item.logo} alt="" className="object-contain" />
-                                        </div>
-                                    </div>
-                                </SwiperSlide>
-                            ))}
-                        </Swiper>
+                                </div>
+                            </div>
+                        ))}
                     </div>
                 </div>
 
-                {/* Fintech Infrastructure Section */}
+                {/* Mobile Invested */}
                 <div className="space-y-6">
                     <div>
-                        <h2 data-para-effect className="leading-none">Currently Building Fintech Infrastructure</h2>
+                        <h2>Invested </h2>
+                        <p className="opacity-60 leading-tight mt-2">Private positions taken early and held with patience, in businesses playing long games.</p>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2">
+                        {newPartnersData.invested.map((item) => (
+                            <div key={item.id} onClick={() => setSelectedPartner(item)} className="flex relative items-center justify-center w-full aspect-6/5 bg-white/5 rounded-md cursor-pointer active:bg-[#253646] transition-colors border border-white/10 shrink-0">
+                                <div className="w-full absolute bottom-0 flex items-end justify-between p-2 leading-none">
+                                    <p className='text-sm uppercase w-[80%]'>{item.name}</p>
+                                    <button className='p-1 bg-white/10 rounded-full group-hover:bg-white group-hover:text-[#0B1A2C] transition-all duration-300 '><RiArrowRightUpLine className='size-4' /></button>
+                                </div>
+                                <div className="w-full h-full absolute inset-0 flex items-center justify-center">
+                                    <div className="w-24 h-10 center relative">
+                                        <Image fill src={item.logo} alt="" className="object-contain invert-100" />
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+                {/* Mobile NOW */}
+                <div className="space-y-6">
+                    <div>
+                        <div className="flex items-center gap-4 mb-2">
+                            <h2 className="leading-none m-0 p-0">Founder</h2>
+                        </div>
+                        <p className="opacity-60 leading-tight mt-2">A company of my own is underway a wellness and nutraceutical brand, in stealth. After years of building for founders, it was time. The name arrives only when it's ready.</p>
                     </div>
 
-                    <div className="bg-[#152535]/90 rounded-lg p-6 border border-white/10 space-y-6">
-                        <div className="flex items-center gap-3">
-                            <div className="w-6 h-6 bg-white rounded-sm transform rotate-45 flex-shrink-0"></div>
-                            <h3 className="text-white tracking-tight">{dummyDetails.name}</h3>
+                    <div className="bg-[#152535] p-5 rounded-lg  w-full flex flex-col justify-between">
+                        <div>
+                            <h3 className=" mb-4 text-white">How I Choose</h3>
+                            <p className="opacity-80  text-white">
+                                Consultants leave after the recommendation. Agencies leave after the deliverable. Investors show up for board meetings. Nobody stays. I stay. I come in before the institutions do, usually pre-seed to seed, where positioning is the bottleneck rather than the product. Home ground: wellness, healthcare, and financial services. The ask is simple and documented: strategic equity, agreed before the work begins.
+                            </p>
                         </div>
-
-                        <div className="flex flex-wrap gap-2 text-[10px]">
-                            <span className="px-3 py-1.5 border border-white/20 text-white rounded-full flex items-center gap-1.5">
-                                <div className="w-1.5 h-1.5 rounded-full bg-white"></div> {dummyDetails.tags[0]}
-                            </span>
-                            <span className="px-3 py-1.5 border border-white/20 text-white rounded-full">{dummyDetails.tags[1]}</span>
-                            <span className="px-3 py-1.5 border border-white/20 text-white rounded-full">{dummyDetails.tags[2]}</span>
-                        </div>
-
-                        <div className="text-white opacity-80 leading-tight  space-y-3">
-                            <p>{dummyDetails.desc1}</p>
-                            <p>{dummyDetails.desc2}</p>
-                        </div>
-
-                        <div className="flex items-center justify-between border-t border-white/10 pt-4 gap-4 text-xs">
-                            <div>
-                                <p className="opacity-70 mb-0.5">Founder</p>
-                                <p className="text-xl">{dummyDetails.founder}</p>
-                            </div>
-                            <div className="flex gap-3 opacity-80 text-white">
-                                <a href={dummyDetails.website} className="px-3 py-1.5 border border-white/20 rounded-full flex items-center gap-1.5 hover:bg-white hover:text-[#152535] transition-colors duration-300">
-                                    <RiArrowRightUpLine size={14} /> WEBSITE
-                                </a>
-                            </div>
+                        <div className="mt-6 border-t border-white/10 pt-4">
+                            <button
+                                onClick={() => setIsThesisOpen(true)}
+                                className="bg-white uppercase  text-[#883F27] rounded-full  px-6 hover:pl-1 leading-none h-10 text-sm group   transition-all duration-300 pointer-events-auto flex items-center gap-2">
+                                <span className="w-2 h-2 center text-white group-hover:h-8 group-hover:w-8 rounded-full bg-[#883F27] transition-all duration-300">
+                                    <RiArrowRightUpLine size={18} className={` scale-0 group-hover:scale-100 transition-all duration-300`} />
+                                </span>
+                                Read Full Thesis
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
 
-
+            {/* Popup Overlay for selected partner */}
             <div
-                className={` ${selectedPartner ? "opacity-100 pointer-events-auto" : " opacity-0 pointer-events-none"} transition-all duration-300 fixed inset-0 z-50 flex items-center justify-center bg-[#0a1118]/80 backdrop-blur-sm p-4 `}
-                onClick={() => setSelectedPartner(null)}
+                className={`${isPopupOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"} transition-all duration-300 fixed inset-0 z-50 flex items-center justify-center bg-[#0a1118]/80 backdrop-blur-sm p-4`}
+                onClick={handleClosePopup}
             >
                 <div
-                    onClick={() => setSelectedPartner(null)}
-                    className=" text-black bg-white absolute rounded-full p-2 right-3 top-3 md:hidden">
+                    onClick={handleClosePopup}
+                    className="text-black bg-white absolute rounded-full p-2 right-3 top-3 md:hidden z-10"
+                >
                     <RiCloseLine />
                 </div>
                 <div
-                    className={`bg-white text-black w-full max-w-2xl  rounded-xl md:rounded-3xl overflow-hidden relative flex flex-col max-h-[85vh] shadow-2xl transition-all duration-300 ${selectedPartner ? "translate-y-0" : " translate-y-5"}  `}
+                    className={`bg-white text-black w-full max-w-2xl rounded-xl md:rounded-3xl overflow-hidden relative flex flex-col max-h-[85vh] shadow-2xl transition-all duration-300 ${isPopupOpen ? "translate-y-0" : "translate-y-5"}`}
                     onClick={(e) => e.stopPropagation()}
                 >
-                    <div className=" p-4 md:p-6 overflow-y-auto">
-
-                        <div className="bg-[#0B1A2C10] rounded-2xl p-4 md:p-6">
-                            <div className="flex items-center gap-3 mb-8">
-                                <div className="w-8 h-8 bg-[#883F27] rounded-sm transform rotate-45 flex-shrink-0 mt-1"></div>
-                                <h3 data-para-effect className=" text-[#883F27] tracking-tight">{dummyDetails.name}</h3>
-                            </div>
-
-                            <div className="flex flex-wrap items-center justify-between mb-8 gap-4">
-                                <div className="flex flex-wrap gap-2 text-xs  text-black">
-                                    <span className="px-4 py-1.5 border border-black/10 rounded-full flex items-center gap-2">
-                                        <div className="w-1.5 h-1.5 rounded-full bg-[#883F27]"></div> {dummyDetails.tags[0]}
-                                    </span>
-                                    <span className="px-4 py-1.5 border border-black/10 rounded-full">{dummyDetails.tags[1]}</span>
-                                    <span className="px-4 py-1.5 border border-black/10 rounded-full">{dummyDetails.tags[2]}</span>
-                                </div>
-                                <a href={dummyDetails.website} className="px-4 py-1.5 pl-3 border-black/10 border rounded-full text-xs  flex items-center gap-2 hover:bg-[#883F27] hover:text-white transition-colors duration-300 ">
-                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
-                                    </svg>
-                                    WEBSITE
-                                </a>
-                            </div>
-
-                            <div className="flex flex-wrap text-[#883F27] items-center justify-between border-b border-gray-100  gap-4">
+                    <div className="p-4 md:p-6 overflow-y-auto">
+                        <div className="bg-[#0B1A2C10] rounded-2xl p-4 md:p-8 border border-black/5">
+                            <div className="flex justify-between items-start mb-6 border-b border-black/10 pb-6">
                                 <div>
-                                    <p className=" text-sm mb-1">Founder</p>
-                                    <p className=" font-medium text-lg">{dummyDetails.founder}</p>
+                                    <h3 className="text-2xl font-bold tracking-tight text-[#0B1A2C] mb-2">{selectedPartner?.name}</h3>
+                                    <p className="text-sm font-medium opacity-60 uppercase">{selectedPartner?.role}</p>
                                 </div>
-                                <div className="flex gap-4">
-                                    <a href="#" aria-label="Twitter" className="hover:opacity-70 transition-opacity">
-                                        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 24.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" /></svg>
-                                    </a>
-                                    <a href="#" aria-label="LinkedIn" className="hover:opacity-70 transition-opacity">
-                                        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" /></svg>
-                                    </a>
+                                <div className="w-16 h-8 relative shrink-0">
+                                    <Image fill src={selectedPartner?.logo || '/images/homepage/partners/ventures/img1.svg'} alt="" className="object-contain" style={{ filter: 'invert(1)' }} />
                                 </div>
+                            </div>
+
+                            <div className="text-[#0B1A2C] opacity-80 space-y-4 text-lg">
+                                <p>{selectedPartner?.desc}</p>
                             </div>
                         </div>
-
-                        <div>
-                            <div
-                                className="flex justify-between items-center pt-5  cursor-pointer group"
-
-                            >
-                                <h5 className="">Introducing {dummyDetails.name}</h5>
-                            </div>
-                            <div className={`grid transition-all duration-300 ease-in-out `}>
-                                <div data-lenis-prevent className=" overflow-y-scroll scroller_none h-44">
-                                    <div className=" text-[#0B1A2C] opacity-70 leading-tight space-y-4  pt-1">
-                                        <p>{dummyDetails.desc1}</p>
-                                        <p>{dummyDetails.desc2}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
                     </div>
                 </div>
             </div>
 
+            {/* Thesis Overlay */}
+            <div
+                className={`${isThesisOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"} transition-all duration-500 fixed inset-0 z-[1000000] bg-[#0B1A2C] text-white overflow-y-auto scroller_none`}
+            >
+                <div data-lenis-prevent className="mx-auto  max-w-4xl py-12 relative">
+                    <button
+                        onClick={() => setIsThesisOpen(false)}
+                        className="fixed top-6 right-6 md:top-12 md:right-12 w-12 h-12 bg-white/10 hover:bg-white hover:text-[#0B1A2C] rounded-full flex items-center justify-center transition-all duration-300 z-50"
+                        aria-label="Close Thesis"
+                    >
+                        <RiCloseLine size={24} />
+                    </button>
+
+                    <div className="space-y-12 ">
+                        <div>
+                            <h4 className=" mb-2">The Thesis</h4>
+                            <p className="opacity-80 text-lg ">Most early-stage founders don't fail because the product was wrong or the money ran out. They fail because clarity was missing in the year it mattered most. The pre-institutional phase is where decisions compound fastest: positioning, narrative, market understanding, direction. Everything downstream inherits that clarity or its absence.</p>
+                            <p className="opacity-80 text-lg mt-6 ">The support around founders is fragmented by design. Consultants optimise for the recommendation, agencies for the asset, capital for the board seat. Each exits before the hardest part: the pivots, the repositioning, the translation of strategy into something real. No one holds the full picture, and no one stays. That gap is the practice.</p>
+                        </div>
+
+                        <div>
+                            <h4 className=" mb-2">Where I Work</h4>
+                            <p className="opacity-80 text-lg ">Home ground: wellness, healthcare, and financial services. That is where the conviction has clustered, in equity earned through the work and in positions taken early. What I bring into these markets is the brand lens: the early bottleneck is rarely the science or the licence, it is positioning, narrative, and direction. That is the bottleneck I unlock.</p>
+                            <p className="opacity-80 text-lg mt-6 ">I come in early: pre-revenue or early revenue, before institutional capital, while the strategic decisions still compound. Selectively, the work reaches beyond the home ground, into consumer and craft-led businesses where positioning carries the same weight. If positioning isn't the problem, I'm not the answer.</p>
+                        </div>
+
+                        <div>
+                            <h4 className=" mb-2">How I Choose</h4>
+                            <p className="opacity-80 text-lg ">A handful of founders at a time, never more. The formal read covers strategic intent, decision-making, execution and ownership, equity alignment, and time horizon. The informal read decides more: how a founder treats people with nothing to offer them, whether they arrive prepared, how they respond to challenge, what their follow-through looks like between meetings.</p>
+                            <p className="opacity-80 text-lg mt-6 ">What has to be true: the founder has fire. They're coachable without being dependent. The problem is real and they've been inside it, testing and adapting, not theorising. And there's a clear leverage point for the thinking. What makes me walk away: misalignment in values or commitment, founders who want capital without partnership, and resistance to what the market is plainly saying.</p>
+                        </div>
+
+                        <div>
+                            <h4 className=" mb-2">The Ask</h4>
+                            <p className="opacity-80 text-lg ">Strategic equity is the default and the anchor. I earn it by creating value, not by deploying capital. Structures are agreed upfront and tied to clear dependencies: milestones delivered, scope fulfilled, value unlocked. Shares vest when the agreed condition is met.</p>
+                            <p className="opacity-80 text-lg mt-6 ">Capital itself is rare. It follows conviction built through an engagement that's already proving itself, and when it happens it's structured simply and accompanies a relationship that's been tested. My upside is the founder's upside. I don't extract. I earn.</p>
+                        </div>
+
+                        <div>
+                            <h4 className=" mb-2">How I Work</h4>
+                            <p className="opacity-80 text-lg ">It starts with a conversation that isn't a pitch but a read, on both sides. If there's mutual interest, a structured questionnaire follows, and after that the deeper conversations: scope, involvement, equity, milestones, cadence. Nothing is implied, everything is agreed, and a signed agreement comes before any work and any doors open. Typically seven or more meetings before commitment is discussed seriously.</p>
+                            <p className="opacity-80 text-lg mt-6 ">The engagement then moves through three phases. Intensive: close rhythm, the foundational decisions, the phase where value concentrates. Building: partners step in, Point Of and vetted specialists, while I hold the strategic layer. Steady: reports and open availability, a sounding board and a door-opener as the company grows. Partners are introduced transparently, and the founder always chooses. Through every phase, I'm a message away.</p>
+                        </div>
+
+                        <div>
+                            <h4 className=" mb-2">What I Don't Do</h4>
+                            <p className="opacity-80 text-lg ">No passive involvement: if I'm in, I'm embedded. No template-first work: playbooks are starting points, never the deliverable. No operational takeover: the founder leads the business. No engagements where clarity isn't the bottleneck. And no capital without conviction that's been earned in the room. The boundaries protect every engagement and the model itself. Restraint is structural, not posturing.</p>
+                        </div>
+
+                        <div className="pt-12 border-t border-white/10">
+                            <p className="opacity-80 text-lg  mb-8">If you're building something that deserves this kind of attention, the door is one form away.</p>
+                            <Link href={"/contact"} 
+                                // onClick={() => setIsThesisOpen(false)}
+                             className="bg-white uppercase w-fit  text-[#883F27] rounded-full  px-6 hover:pl-1 leading-none h-10 text-sm group   transition-all duration-300 pointer-events-auto flex items-center gap-2">
+                                <span className="w-2 h-2 center text-white group-hover:h-8 group-hover:w-8 rounded-full bg-[#883F27] transition-all duration-300">
+                                    <RiArrowRightUpLine size={18} className={` scale-0 group-hover:scale-100 transition-all duration-300`} />
+                                </span>
+                                Begin
+                            </Link>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 };

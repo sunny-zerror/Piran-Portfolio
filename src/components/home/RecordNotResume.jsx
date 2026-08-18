@@ -7,13 +7,14 @@ import 'swiper/css/pagination';
 import 'swiper/css/effect-fade';
 import Image from 'next/image';
 import gsap from 'gsap';
+import { RiArrowLeftLine, RiArrowRightLine } from '@remixicon/react';
 
 const testimonials = [
     {
         id: 1,
         quote: "Piran took the time to understand the legacy before touching anything. The identity and the website that followed finally gave our digital presence the weight the name deserved.",
         name: "Salman Khan Films",
-        img: "/images/homepage/testimonials/img1.png",
+        img: "/images/homepage/testimonials/logos/skf.svg",
         title: "",
         bgColor: "bg-[#883F27]",
         textColor: "text-white"
@@ -22,7 +23,7 @@ const testimonials = [
         id: 2,
         quote: "Piran rebuilt how Naturefit shows up: what we stand for, how we say it, and how it all holds together.",
         name: "Naturefit",
-        img: "/images/homepage/testimonials/img2.png",
+        img: "/images/homepage/testimonials/logos/naturefit.png",
         title: "",
         bgColor: "bg-[#E3E2DC]",
         textColor: "text-gray-900"
@@ -31,7 +32,7 @@ const testimonials = [
         id: 3,
         quote: "Piran was in the room for every decision that made KVAR what it is, from how the brand carries itself to our five-floor experience centre. Today we deliver turnkey projects alongside international designers. It wouldn't have happened without him.",
         name: "KVAR",
-        img: "/images/homepage/testimonials/img3.png",
+        img: "/images/homepage/testimonials/logos/kvar.png",
         title: "",
         bgColor: "bg-white",
         textColor: "text-gray-900"
@@ -40,7 +41,7 @@ const testimonials = [
         id: 4,
         quote: "Piran led our Campus Ambassador programme and treated JBL like his own brand. Engagement kept climbing, and his read of youth culture stayed in our playbook long after.",
         name: "JBL / Harman",
-        img: "/images/homepage/testimonials/img1.png",
+        img: "/images/homepage/testimonials/logos/jbl.svg",
         title: "",
         bgColor: "bg-[#883F27]",
         textColor: "text-white"
@@ -49,7 +50,7 @@ const testimonials = [
         id: 5,
         quote: "We perfected the product. Piran perfected everything the customer meets before it: the idea, the feel, the reason to care. From a sold-out first pop-up to three full ranges today, that early work shows.",
         name: "House of Namah",
-        img: "/images/homepage/testimonials/img2.png",
+        img: "/images/homepage/testimonials/logos/namah.png",
         title: "",
         bgColor: "bg-[#E3E2DC]",
         textColor: "text-gray-900"
@@ -58,25 +59,7 @@ const testimonials = [
 
 const RecordNotResume = () => {
     const swiperRef = useRef(null);
-    const dragBtnRef = useRef(null);
     const [activeIndex, setActiveIndex] = useState(0);
-    const [isHovered, setIsHovered] = useState(false);
-
-    const handleMouseMove = (e) => {
-        const rect = e.currentTarget.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-
-        if (dragBtnRef.current) {
-            gsap.to(dragBtnRef.current, {
-                x: x,
-                y: y,
-                duration: 0.5,
-                ease: 'power3.out',
-                overwrite: 'auto'
-            });
-        }
-    };
 
     return (
         <div className="container py-12 md:py-24 relative">
@@ -136,61 +119,27 @@ const RecordNotResume = () => {
                         </div>
                     </div>
 
-                    <div className="w-full md:w-[40%] relative group overflow-hidden">
-                        {/* Custom Glassmorphism Drag Button */}
-                        <div
-                            ref={dragBtnRef}
-                            className={`pointer-events-none absolute left-0 top-0 z-30 -translate-x-1/2 -translate-y-1/2 rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-wider backdrop-blur-md bg-white/20 border border-white/40 text-black shadow-lg transition-opacity duration-300 ${isHovered ? 'opacity-100 scale-100' : 'opacity-0 scale-75'
-                                } flex items-center gap-1.5`}
-                            style={{
-                                backdropFilter: 'blur(8px)',
-                                WebkitBackdropFilter: 'blur(8px)',
-                            }}
-                        >
-                            <span>Drag</span>
-                        </div>
-
-                        <div
-                            onMouseEnter={() => setIsHovered(true)}
-                            onMouseLeave={() => setIsHovered(false)}
-                            onMouseMove={handleMouseMove}
-                            className="h-full cursor-none"
-                        >
+                    <div className="w-full md:w-[40%] aspect-3/5 border-l border-[#0B1A2C20] border-dashed relative group overflow-hidden flex flex-col">
+                        <div className="flex-1 w-full min-h-0 relative">
                             <Swiper
                                 ref={swiperRef}
                                 modules={[Autoplay]}
-                                autoplay={{ delay: 3500, disableOnInteraction: false }}
+                                autoplay={{ delay: 6000, disableOnInteraction: false, pauseOnMouseEnter: true }}
                                 speed={1000}
                                 loop={true}
-                                className="h-full animate-marquee-custom [&_.swiper-wrapper]:ease-out"
+                                className="h-full w-full"
                                 onSlideChange={(swiper) => setActiveIndex(swiper.realIndex)}
                             >
                                 {testimonials.map((t, i) => (
                                     <SwiperSlide key={t.id}>
-                                        <div className={`w-full aspect-3/5 h-full flex flex-col justify-between max-sm:border max-sm:border-[#0B1A2C20] max-sm:border-dashed p-5 md:p-8 relative overflow-hidden ${t.bgColor} ${t.textColor}`}>
+                                        <div className={`w-full h-full flex flex-col justify-between max-sm:border max-sm:border-[#0B1A2C20] max-sm:border-dashed p-5 md:p-8 relative overflow-hidden ${t.bgColor} ${t.textColor}`}>
                                             <div className="absolute inset-0 w-full h-full">
                                                 <Image fill src="/images/homepage/testimonials/card_bg.png" alt="" />
                                             </div>
                                             <div className="">
                                                 <div className="flex justify-between items-center mb-8 relative z-10">
-                                                    <div className={`opacity-90 size-10 ${i === 0 ? "invert-0 " : "invert-100"}`}>
+                                                    <div className={`opacity-90 size-10 ${(i === 0 || i === 3) ? "invert-0 " : "invert-100"}`}>
                                                         <Image width={100} height={50} src="/icons/quote.svg" alt="quote" />
-                                                    </div>
-                                                    <div className="flex gap-1.5 items-center pointer-events-auto z-20">
-                                                        {testimonials.map((_, idx) => (
-                                                            <button
-                                                                key={idx}
-                                                                onClick={(e) => {
-                                                                    e.stopPropagation();
-                                                                    swiperRef.current?.swiper?.slideToLoop(idx);
-                                                                }}
-                                                                aria-label={`Go to slide ${idx + 1}`}
-                                                                className={`size-2 rounded-full border transition-all duration-300 ${activeIndex === idx
-                                                                        ? 'bg-current border-current scale-110'
-                                                                        : 'bg-transparent opacity-40 border-current'
-                                                                    }`}
-                                                            />
-                                                        ))}
                                                     </div>
                                                 </div>
 
@@ -200,11 +149,8 @@ const RecordNotResume = () => {
                                             </div>
 
                                             <div className="flex items-center gap-4 mt-12 relative z-10">
-                                                <div className="w-12 h-12 relative rounded-full bg-black/10 overflow-hidden flex-shrink-0">
-                                                    <Image fill src={t.img} alt="" />
-                                                </div>
                                                 <div>
-                                                    <h5 className=" font-medium leading-none">{t.name}</h5>
+                                                    <h5 className="font-medium leading-none">{t.name}</h5>
                                                     <p className="opacity-70">{t.title}</p>
                                                 </div>
                                             </div>
@@ -212,6 +158,19 @@ const RecordNotResume = () => {
                                     </SwiperSlide>
                                 ))}
                             </Swiper>
+                        </div>
+                        <div className="w-full grid grid-cols-5 border-t border-[#0B1A2C20] border-dashed shrink-0">
+                            {testimonials.map((item, i) => (
+                                <button
+                                    key={i}
+                                    onClick={() => swiperRef.current?.swiper?.slideToLoop(i)}
+                                    className={`center aspect-square border-r border-[#0B1A2C20] border-dashed last:border-r-0 transition-colors group/btn ${activeIndex === i ? 'bg-[#883F27]' : 'hover:bg-[#0B1A2C05]'}`}
+                                >
+                                    <div
+                                        className={`w-10 h-10 relative ${activeIndex === i ? 'invert-100' : 'invert-0'}`}
+                                    ><Image fill className='object-contain' src={item.img} alt="testimonial logo" /></div>
+                                </button>
+                            ))}
                         </div>
                     </div>
                 </div>

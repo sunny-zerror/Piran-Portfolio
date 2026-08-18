@@ -65,7 +65,7 @@ const AboutHero = () => {
                         }
                     });
 
-                    tl.to(".fade-text", { opacity: 0, duration: 0.5 });
+                    tl.to(".fade-text, .comma-fade", { opacity: 0, duration: 0.5 });
 
                     const targets = gsap.utils.toArray(".target-text");
                     const destinations = gsap.utils.toArray(".final-dest");
@@ -99,7 +99,7 @@ const AboutHero = () => {
                     // Mobile-only: One-time automated timeline play on mount without scrub
                     const mobileTl = gsap.timeline();
 
-                    mobileTl.to(".fade-text", { opacity: 0, duration: 0.8, delay: 0.5 });
+                    mobileTl.to(".fade-text, .comma-fade", { opacity: 0, duration: 0.8, delay: 0.5 });
 
                     const targets = gsap.utils.toArray(".target-text");
                     const destinations = gsap.utils.toArray(".final-dest");
@@ -189,20 +189,20 @@ const AboutHero = () => {
 
                     <p className=" text-2xl initial-para leading-tight md:absolute top-[20%] left-[10%] md:left-[20%] max-w-md text-[#EAE9E4]">
                         <span className="fade-text">School knew me as </span>
-                        <span className="target-text inline-block origin-top-left">the quiet one</span>
-                        <span className="fade-text"> , and I didn't argue.</span>
+                        <span className="target-text inline-block origin-top-left">the quiet one<span className="comma-fade">,</span></span>
+                        <span className="fade-text"> and I didn't argue.</span>
                     </p>
 
                     <p className=" text-2xl initial-para leading-tight md:absolute top-[45%] right-[5%] md:right-[15%] max-w-md text-[#EAE9E4]">
-                        <span className="fade-text">What  </span>
+                        <span className="fade-text">What </span>
                         <span className="target-text inline-block origin-top-left">became</span>
                         <span className="fade-text"> of him surprised everyone, including me.</span>
                     </p>
 
                     <p className=" text-2xl initial-para leading-tight md:absolute bottom-[35%] left-[5%] md:left-[15%] max-w-md text-[#EAE9E4]">
                         <span className="fade-text">Friends now call me </span>
-                        <span className="target-text inline-block origin-top-left">the connector</span>
-                        <span className="fade-text">  , I let them. </span>
+                        <span className="target-text inline-block origin-top-left">the connector<span className="comma-fade">,</span></span>
+                        <span className="fade-text"> I let them. </span>
                     </p>
 
                 </div>
@@ -211,7 +211,7 @@ const AboutHero = () => {
                 <div className="w-full whitespace-nowrap  flex items-center justify-center opacity-0 pointer-events-none z-10">
                     {/* Left Text */}
                     <div className="flex-1 flex justify-end gap-2 pr-1.5 ">
-                        <p className="final-dest  text-sm md:text-4xl ">the quiet one</p>
+                        <p className="final-dest  text-sm md:text-4xl ">the quiet one<span className="opacity-0">,</span></p>
                     </div>
 
                     {/* Gap exactly in the center for the mask logo to align perfectly */}
@@ -220,7 +220,7 @@ const AboutHero = () => {
                     {/* Right Text */}
                     <div className="flex-1 flex justify-start gap-2 pl-1.5">
                         <p className="final-dest  text-sm md:text-4xl ">became</p>
-                        <p className="final-dest  text-sm md:text-4xl ">the connector.</p>
+                        <p className="final-dest  text-sm md:text-4xl ">the connector<span className="opacity-0">,</span></p>
                     </div>
                 </div>
 

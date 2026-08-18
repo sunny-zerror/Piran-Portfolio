@@ -1,15 +1,21 @@
 "use client";
 import React, { useEffect, useRef, useMemo } from 'react';
 
-export default function LinkParticles({ shape, active, hovered, size = 24 }) {
+export default function LinkParticles({ shape, active, hovered, size = 24, color = "255, 255, 255" }) {
   const canvasRef = useRef(null);
   const animRef = useRef(null);
   const isHoveredRef = useRef(false);
   const mouseRef = useRef({ x: -999, y: -999 });
 
+  const colorRef = useRef(color);
+
   useEffect(() => {
     isHoveredRef.current = hovered;
   }, [hovered]);
+
+  useEffect(() => {
+    colorRef.current = color;
+  }, [color]);
 
   // Pre-process shape: normalize coordinates to canvas space
   const normalizedPoints = useMemo(() => {
@@ -115,7 +121,7 @@ export default function LinkParticles({ shape, active, hovered, size = 24 }) {
         }
 
         if (opacity > 0.01) {
-          ctx.fillStyle = `rgba(255, 255, 255, ${opacity})`;
+          ctx.fillStyle = `rgba(${colorRef.current}, ${opacity})`;
           ctx.fillRect(
             Math.round(p.x - dotSize / 2),
             Math.round(p.y - dotSize / 2),
