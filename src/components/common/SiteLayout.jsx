@@ -8,6 +8,7 @@ import { useEffect } from "react";
 
 import gsap from "gsap";
 import ScrollTrigger from "gsap/dist/ScrollTrigger";
+import { useGSAP } from '@gsap/react';
 import { ViewTransitions } from "next-view-transitions";
 import GlobalParaReveal from "../animation/GlobalParaReveal";
 
@@ -20,7 +21,7 @@ export default function SiteLayout({ children }) {
     window.history.scrollRestoration = "manual";
   }, []);
 
-  useEffect(() => {
+  useGSAP(() => {
     window.scrollTo(0, 0);
 
     if (window.lenis) {
