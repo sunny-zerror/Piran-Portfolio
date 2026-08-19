@@ -44,7 +44,7 @@ const FAQ = () => {
     };
 
     return (
-        <section className="w-full border-t border-dashed border-[#0B1A2C] py-24">
+        <section className=" faq_paren w-full py-12 md:py-24 md:relative z-10 bg-[#E3E2DC]">
             <div className="container">
                 <div className="grid grid-cols-1 md:grid-cols-5 ">
                     
@@ -56,29 +56,29 @@ const FAQ = () => {
                     </div>
 
                     {/* Right: Accordion */}
-                    <div className=" col-span-3 flex flex-col border-t border-dashed space-y-2 border-[#0B1A2C30]">
+                    <div className=" col-span-3 max-sm:mt-5 flex flex-col space-y-2">
                         {faqs.map((faq, index) => {
                             const isOpen = openIndex === index;
                             return (
                                 <div 
                                     key={index} 
-                                    className={`border border-dashed border-[#0B1A2C30] transition-colors duration-300 ${isOpen ? 'bg-[#ffffff]' : 'bg-transparent'}`}
+                                    className={` group border border-dashed border-[#0B1A2C30] transition-colors duration-300 ${isOpen ? 'bg-[#ffffff]' : 'bg-transparent'}`}
                                 >
                                     <button
                                         onClick={() => toggleFaq(index)}
-                                        className="w-full flex justify-between items-center text-left px-6 py-6 max-sm:pl-0 focus:outline-none group cursor-pointer"
+                                        className="w-full flex justify-between items-center text-left px-6 py-6  focus:outline-none group cursor-pointer"
                                     >
                                         <h5 className={`m-0 leading-tight transition-colors duration-300 ${isOpen ? 'text-[#883F27]' : 'text-[#0B1A2C]'}`}>
                                             {index + 1}. {faq.question}
                                         </h5>
-                                        <div className="w-6 h-6 rounded-full border border-[#0B1A2C30] flex items-center justify-center shrink-0">
-                                            <span className={`text-[#883F27] text-sm transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`}>
+                                        <div className={`w-6 h-6 text-[#883F27] rounded-full border border-[#0B1A2C30] flex items-center justify-center shrink-0 ${isOpen && "bg-[#883F27] text-white"} group-hover:bg-[#883F27] group-hover:text-white transition-all duration-300`}>
+                                            <span className={`  transition-transform  duration-300 ${isOpen ? 'rotate-180' : ''}`}>
                                                 {isOpen ? '−' : '+'}
                                             </span>
                                         </div>
                                     </button>
                                     <div
-                                        className={`grid transition-all duration-300 ease-in-out px-6 max-sm:pl-0 ${isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"}`}
+                                        className={`grid transition-all duration-300 ease-in-out px-6  ${isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"}`}
                                     >
                                         <div className="overflow-hidden">
                                             <p className="text-[#0B1A2C] opacity-70 w-[80%] pb-6">

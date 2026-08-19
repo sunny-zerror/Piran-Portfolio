@@ -175,7 +175,7 @@ const AboutHero = () => {
                 >
                     {/* Using the provided m3u8 video as the background that gets revealed */}
                     <video
-                        src="https://vz-f76b55f9-7b8.b-cdn.net/2b3c385c-35e7-406c-bb11-8c7d71d90001/playlist.m3u8"
+                        src="/videos/video.mp4"
                         className="w-full h-full object-cover"
                         autoPlay
                         loop

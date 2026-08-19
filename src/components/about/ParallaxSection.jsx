@@ -82,17 +82,17 @@ const ParallaxSection = () => {
         <>
             <InfiniteCarousel openGallerySwiper={openGallerySwiper} setOpenGallerySwiper={setOpenGallerySwiper} />
 
-            <div ref={containerRef} className="gallery_container overflow-hidden relative z-[100] -mt-1 bg-[#ECE3DB] min-h-screen flex items-center justify-center">
-                
+            <div ref={containerRef} className="gallery_container overflow-hidden relative z-[100] -mt-1 bg-[#E3E2DC] min-h-screen flex items-center justify-center">
+
                 {/* Fixed Center Image - outside parallax depth scene */}
-                <div 
+                <div
                     className="galry_card absolute z-[-1] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none opacity-0 flex flex-col items-center gap-3"
                 >
                     <div className="w-28 sm:w-36 md:w-60 lg:w-64 flex items-center justify-center">
                         <Image
                             width={300}
                             height={400}
-                            src="/images/aboutpage/gallery/piran_pic.svg"
+                            src="/images/aboutpage/gallery/piran.png"
                             alt="Piran Center Image"
                             className="object-contain w-full h-full normal_glry_img"
                         />
@@ -126,23 +126,23 @@ const ParallaxSection = () => {
                                     onMouseEnter={() => setActiveIndex(i)}
                                     onMouseLeave={() => setActiveIndex(null)}
                                 >
-                                        <div className="w-12 sm:w-16 md:w-28 lg:w-24 transition-all duration-300 flex items-center justify-center">
-                                            <Image
-                                                width={300}
-                                                height={400}
-                                                src={item.img}
-                                                alt={item.title || "Gallery Image"}
-                                                className={`object-contain w-full h-full transition-transform duration-300 group-hover:scale-110`}
-                                            />
-                                        </div>
+                                    <div className="w-12 sm:w-16 md:w-28 lg:w-24 transition-all duration-300 flex items-center justify-center">
+                                        <Image
+                                            width={300}
+                                            height={400}
+                                            src={item.img}
+                                            alt={item.title || "Gallery Image"}
+                                            className={`object-contain w-full h-full transition-transform duration-300 group-hover:scale-110`}
+                                        />
+                                    </div>
 
-                                        {item.title && (
-                                            <div className={`px-2 py-0.5 md:px-4 md:py-1 border rounded-full text-[9px] md:text-xs uppercase cursor-pointer transition-all duration-300 bg-transparent border-gray-400 text-gray-700 group-hover:bg-[#0A1B2F] group-hover:text-white group-hover:border-[#0A1B2F] ${activeIndex !== null && activeIndex !== i ? 'not_active' : 'normal_glry_img'}`}>
-                                                {item.title}
-                                            </div>
-                                        )}
-                                    </a>
-                                ))}
+                                    {item.title && (
+                                        <div className={`px-2 py-0.5 md:px-4 md:py-1 border rounded-full text-[9px] md:text-xs uppercase cursor-pointer transition-all duration-300 bg-transparent border-gray-400 text-gray-700 group-hover:bg-[#0A1B2F] group-hover:text-white group-hover:border-[#0A1B2F] ${activeIndex !== null && activeIndex !== i ? 'not_active' : 'normal_glry_img'}`}>
+                                            {item.title}
+                                        </div>
+                                    )}
+                                </a>
+                            ))}
                         </div>
                     </div>
                 </div>

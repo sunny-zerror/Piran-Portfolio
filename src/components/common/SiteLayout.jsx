@@ -55,9 +55,11 @@ export default function SiteLayout({ children }) {
           {children}
         </main>
 
-        <footer>
-          <Footer />
-        </footer>
+        {pathname !== '/contact' && (
+          <footer>
+            <Footer />
+          </footer>
+        )}
       </LenisScroll>
     </ViewTransitions>
 

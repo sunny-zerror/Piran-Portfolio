@@ -11,6 +11,7 @@ import { useGSAP } from '@gsap/react';
 import Image from 'next/image';
 import { RotatingText } from '../common/RotatingText';
 import { LiveTime } from '../common/LiveTime';
+import LogoParticlesNew from './LogoParticlesNew';
 gsap.registerPlugin(ScrollTrigger, SplitText)
 
 const Hero = () => {
@@ -90,7 +91,7 @@ const Hero = () => {
 
     gsap.set([".txt2_head", paragraph_split.lines], { yPercent: 100 });
 
-    const masterTl = gsap.timeline({ delay: 1 });
+    const masterTl = gsap.timeline({ delay: 2.5 });
 
     masterTl.to(".content_box", {
       opacity: 1,
@@ -141,7 +142,7 @@ const Hero = () => {
   return (
     <div className="   w-full h-screen relative bg-[#0B1A2C] text-white overflow-hidden">
 
-      <LogoParticles />
+      <LogoParticlesNew />
 
       <div className=" content_box opacity-0 container pb-5 relative z-10 w-full h-full flex items-end pointer-events-none">
         <div className=" absolute w-full h-full flex items-center pointer-events-auto">
@@ -195,13 +196,13 @@ const Hero = () => {
                     width={80}
                     height={56}
                     src={item.img}
-                    alt={`Company Logo ${item.id}`}
+                    alt={item.author}
                     className="h-14 w-auto object-contain opacity-50 group-hover:opacity-100 transition-opacity duration-300"
                   />
 
                   <div className="absolute bottom-full left-0 space-y-4 mb-2 w-80 bg-[#eaf4fa] text-black p-6 rounded-md shadow-2xl opacity-0 translate-y-5 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 pointer-events-none z-50">
                     <div className="">
-                      <Image height={20} width={20} className='invert-100' src="/icons/quote.svg" alt="" />
+                      <Image height={20} width={20} className='invert-100' src="/icons/quote.svg" alt="quote icon" />
                     </div>
                     <p className="text-lg  leading-tight font-medium text-black">
                       {item.desc}

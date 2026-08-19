@@ -20,6 +20,7 @@ const SuccessPopup = ({ isOpen, onClose }) => {
             <div className={`relative bg-[#EAE9E4] h-80 rounded-xl p-6 max-w-xl w-[90%] transition-transform duration-500 ${isOpen ? 'scale-100 translate-y-0' : 'scale-95 translate-y-4'}`}>
                 <button 
                     onClick={onClose}
+                    aria-label="Close popup"
                     className="absolute top-6 right-6 w-10 h-10 bg-black/5 hover:bg-[#883F27] hover:text-white rounded-full flex items-center justify-center transition-colors text-[#0B1A2C]"
                 >
                     <RiCloseLine size={24} />

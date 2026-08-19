@@ -8,6 +8,7 @@ import { flushSync } from 'react-dom';
 import { RiArrowRightUpLine, RiCloseLine } from '@remixicon/react';
 import 'swiper/css';
 import { Link } from 'next-view-transitions';
+import CustomButton from '../common/CustomButton';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -27,6 +28,77 @@ const newPartnersData = {
     ]
 };
 
+const ThesisCardContent = ({ isExpanded, onExpand, onClose }) => {
+    return isExpanded ? (
+        <div key="expanded" data-lenis-prevent className="w-full h-[75%] fade-in">
+            <button
+                onClick={(e) => { e.stopPropagation(); onClose(); }}
+                className="absolute top-4 right-4 md:top-8 md:right-8 w-10 h-10 bg-white/10 hover:bg-white hover:text-[#0B1A2C] rounded-full flex items-center justify-center transition-all duration-300 z-50"
+                aria-label="Close Thesis"
+            >
+                <RiCloseLine size={20} />
+            </button>
+            <div className="space-y-8 pr-2 pb-12  md:pr-4">
+                <div>
+                    <h4 className="mb-2 text-xl text-white">The Thesis</h4>
+                    <p className="opacity-80 text-lg text-white">Most early-stage founders don't fail because the product was wrong or the money ran out. They fail because clarity was missing in the year it mattered most. The pre-institutional phase is where decisions compound fastest: positioning, narrative, market understanding, direction. Everything downstream inherits that clarity or its absence.</p>
+                    <p className="opacity-80 text-lg mt-6 text-white">The support around founders is fragmented by design. Consultants optimise for the recommendation, agencies for the asset, capital for the board seat. Each exits before the hardest part: the pivots, the repositioning, the translation of strategy into something real. No one holds the full picture, and no one stays. That gap is the practice.</p>
+                </div>
+
+                <div>
+                    <h4 className="mb-2 text-xl text-white">Where I Work</h4>
+                    <p className="opacity-80 text-lg text-white">Home ground: wellness, healthcare, and financial services. That is where the conviction has clustered, in equity earned through the work and in positions taken early. What I bring into these markets is the brand lens: the early bottleneck is rarely the science or the licence, it is positioning, narrative, and direction. That is the bottleneck I unlock.</p>
+                    <p className="opacity-80 text-lg mt-6 text-white">I come in early: pre-revenue or early revenue, before institutional capital, while the strategic decisions still compound. Selectively, the work reaches beyond the home ground, into consumer and craft-led businesses where positioning carries the same weight. If positioning isn't the problem, I'm not the answer.</p>
+                </div>
+
+                <div>
+                    <h4 className="mb-2 text-xl text-white">How I Choose</h4>
+                    <p className="opacity-80 text-lg text-white">A handful of founders at a time, never more. The formal read covers strategic intent, decision-making, execution and ownership, equity alignment, and time horizon. The informal read decides more: how a founder treats people with nothing to offer them, whether they arrive prepared, how they respond to challenge, what their follow-through looks like between meetings.</p>
+                    <p className="opacity-80 text-lg mt-6 text-white">What has to be true: the founder has fire. They're coachable without being dependent. The problem is real and they've been inside it, testing and adapting, not theorising. And there's a clear leverage point for the thinking. What makes me walk away: misalignment in values or commitment, founders who want capital without partnership, and resistance to what the market is plainly saying.</p>
+                </div>
+
+                <div>
+                    <h4 className="mb-2 text-xl text-white">The Ask</h4>
+                    <p className="opacity-80 text-lg text-white">Strategic equity is the default and the anchor. I earn it by creating value, not by deploying capital. Structures are agreed upfront and tied to clear dependencies: milestones delivered, scope fulfilled, value unlocked. Shares vest when the agreed condition is met.</p>
+                    <p className="opacity-80 text-lg mt-6 text-white">Capital itself is rare. It follows conviction built through an engagement that's already proving itself, and when it happens it's structured simply and accompanies a relationship that's been tested. My upside is the founder's upside. I don't extract. I earn.</p>
+                </div>
+
+                <div>
+                    <h4 className="mb-2 text-xl text-white">How I Work</h4>
+                    <p className="opacity-80 text-lg text-white">It starts with a conversation that isn't a pitch but a read, on both sides. If there's mutual interest, a structured questionnaire follows, and after that the deeper conversations: scope, involvement, equity, milestones, cadence. Nothing is implied, everything is agreed, and a signed agreement comes before any work and any doors open. Typically seven or more meetings before commitment is discussed seriously.</p>
+                    <p className="opacity-80 text-lg mt-6 text-white">The engagement then moves through three phases. Intensive: close rhythm, the foundational decisions, the phase where value concentrates. Building: partners step in, Point Of and vetted specialists, while I hold the strategic layer. Steady: reports and open availability, a sounding board and a door-opener as the company grows. Partners are introduced transparently, and the founder always chooses. Through every phase, I'm a message away.</p>
+                </div>
+
+                <div>
+                    <h4 className="mb-2 text-xl text-white">What I Don't Do</h4>
+                    <p className="opacity-80 text-lg text-white">No passive involvement: if I'm in, I'm embedded. No template-first work: playbooks are starting points, never the deliverable. No operational takeover: the founder leads the business. No engagements where clarity isn't the bottleneck. And no capital without conviction that's been earned in the room. The boundaries protect every engagement and the model itself. Restraint is structural, not posturing.</p>
+                </div>
+
+                <div className="pt-8 border-t border-white/10">
+                    <p className="opacity-80 text-lg mb-8 text-white">If you're building something that deserves this kind of attention, the door is one form away.</p>
+                    <CustomButton href="/contact" className="w-fit">
+                        Begin
+                    </CustomButton>
+                </div>
+            </div>
+        </div>
+    ) : (
+        <div key="collapsed" className="inner-content h-full flex flex-col justify-between w-full fade-in">
+            <div>
+                <h3 className="text-2xl font-medium mb-4 md:mb-6 text-white">How I Choose</h3>
+                <p className="opacity-80 md:text-lg text-white">
+                    Consultants leave after the recommendation. Agencies leave after the deliverable. Investors show up for board meetings. Nobody stays. I stay. I come in before the institutions do, usually pre-seed to seed, where positioning is the bottleneck rather than the product. Home ground: wellness, healthcare, and financial services. The ask is simple and documented: strategic equity, agreed before the work begins.
+                </p>
+            </div>
+            <div className="">
+                <CustomButton onClick={() => onExpand()}>
+                    Read Full Thesis
+                </CustomButton>
+            </div>
+        </div>
+    );
+};
+
 const Partners = () => {
     const [selectedPartner, setSelectedPartner] = useState(null);
     const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -39,7 +111,7 @@ const Partners = () => {
     const cardsRefs = useRef([[], [], [], []]);
 
     useEffect(() => {
-        if (isPopupOpen || isThesisOpen) {
+        if (isPopupOpen) {
             if (window.lenis) window.lenis.stop();
         } else {
             if (window.lenis) window.lenis.start();
@@ -47,7 +119,32 @@ const Partners = () => {
         return () => {
             if (window.lenis) window.lenis.start();
         };
-    }, [isPopupOpen, isThesisOpen]);
+    }, [isPopupOpen]);
+
+    useEffect(() => {
+        if (!isThesisOpen) return;
+
+        let initialScroll = window.lenis ? window.lenis.scroll : window.scrollY;
+
+        const handleScroll = () => {
+            const currentScroll = window.lenis ? window.lenis.scroll : window.scrollY;
+            if (Math.abs(currentScroll - initialScroll) > 30) {
+                setIsThesisOpen(false);
+            }
+        };
+
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        if (window.lenis) {
+            window.lenis.on('scroll', handleScroll);
+        }
+
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+            if (window.lenis) {
+                window.lenis.off('scroll', handleScroll);
+            }
+        };
+    }, [isThesisOpen]);
 
     useGSAP(() => {
 
@@ -99,6 +196,17 @@ const Partners = () => {
 
                 activeIndexRef.current = newIndex;
                 setActiveIndex(newIndex); // For mobile layout updates
+
+                // Kill all tweens and reset inactive sections to ensure fast scrolling doesn't leave elements stuck
+                [0, 1, 2, 3].forEach(idx => {
+                    gsap.killTweensOf(`.title-section-${idx}`);
+                    gsap.killTweensOf(cardsRefs.current[idx]);
+                    if (idx !== oldIndex && idx !== newIndex) {
+                        gsap.set(`.title-section-${idx}`, { opacity: 0, pointerEvents: "none" });
+                        gsap.set(cardsRefs.current[idx], { opacity: 0, scale: 0.8, pointerEvents: "none" });
+                        gsap.set(`.card-section-${idx}`, { zIndex: 0 });
+                    }
+                });
 
                 // Animate old title out
                 gsap.to(`.title-section-${oldIndex}`, {
@@ -199,28 +307,12 @@ const Partners = () => {
                 return (
                     <div key={`section-${index}`} className={`card-section card-section-${index} absolute inset-0 w-full flex flex-wrap gap-2 items-center`}>
                         <div
+                            data-lenis-prevent
                             ref={el => cardsRefs.current[3][0] = el}
-                            className="bg-[#152535] p-8 md:p-12 rounded-lg w-full flex flex-col justify-between"
+                            className={`bg-[#152535] p-8 md:p-12 rounded-lg w-full flex flex-col transition-[height] duration-500 overflow-hidden relative ${isThesisOpen ? 'h-[75vh] overflow-y-auto custom_scroller z-[100]' : 'justify-between h-[25rem]'}`}
                             style={{ flexBasis: '100%' }}
                         >
-                            <div className="inner-content flex flex-col justify-between h-full w-full">
-                                <div>
-                                    <h3 className="text-2xl font-medium mb-6 text-white">How I Choose</h3>
-                                    <p className="opacity-80 text-lg  text-white">
-                                        Consultants leave after the recommendation. Agencies leave after the deliverable. Investors show up for board meetings. Nobody stays. I stay. I come in before the institutions do, usually pre-seed to seed, where positioning is the bottleneck rather than the product. Home ground: wellness, healthcare, and financial services. The ask is simple and documented: strategic equity, agreed before the work begins.
-                                    </p>
-                                </div>
-                                <div className="mt-8 border-t border-white/10 pt-6">
-                                    <button
-                                        onClick={() => setIsThesisOpen(true)}
-                                        className="bg-white uppercase  text-[#883F27] rounded-full  px-6 hover:pl-1 leading-none h-10 text-sm group   transition-all duration-300 pointer-events-auto flex items-center gap-2">
-                                        <span className="w-2 h-2 center text-white group-hover:h-8 group-hover:w-8 rounded-full bg-[#883F27] transition-all duration-300">
-                                            <RiArrowRightUpLine size={18} className={` scale-0 group-hover:scale-100 transition-all duration-300`} />
-                                        </span>
-                                        Read Full Thesis
-                                    </button>
-                                </div>
-                            </div>
+                            <ThesisCardContent isExpanded={isThesisOpen} onExpand={() => setIsThesisOpen(true)} onClose={() => setIsThesisOpen(false)} />
                         </div>
                     </div>
                 );
@@ -238,11 +330,11 @@ const Partners = () => {
                         >
                             <div className="w-full absolute bottom-0 flex items-end justify-between p-3 leading-none">
                                 <p className='text-sm uppercase w-[80%]'>{item.name}</p>
-                                <button className='p-1.5 bg-white/10 rounded-full group-hover:bg-white group-hover:text-[#0B1A2C] transition-all duration-300 '><RiArrowRightUpLine className='size-4' /></button>
+                                <button aria-label={`View ${item.name} details`} className='p-1.5 bg-white/10 rounded-full group-hover:bg-white group-hover:text-[#0B1A2C] transition-all duration-300 '><RiArrowRightUpLine className='size-4' /></button>
                             </div>
                             <div className="w-full h-full absolute inset-0 flex items-center justify-center">
                                 <div className="w-44 h-20 center relative">
-                                    <Image fill src={item.logo} alt="" className="object-contain invert-100" />
+                                    <Image fill src={item.logo} alt={item.name} className="object-contain invert-100" />
                                 </div>
                             </div>
                         </div>
@@ -256,12 +348,12 @@ const Partners = () => {
         <div ref={containerRef} className="container bg-[#0B1A2C] text-white relative h-auto md:h-[400vh]! w-full">
             <div ref={stickyRef} className="hidden md:block sticky! top-0 w-full h-screen! overflow-hidden ">
 
-                <div className="bottom_bar absolute h-1 bg-white w-0 left-0 bottom-1 rounded-full"></div>
+                <div className="bottom_bar absolute h-1 bg-[#E3E2DC] w-0 left-0 bottom-1 rounded-full"></div>
 
                 <div className="absolute top-1/2 -translate-y-1/2 left-0 w-[40%] z-10 flex flex-col justify-center">
                     <div className="relative w-[80%] h-40">
                         <div className="title-section title-section-0 w-full absolute inset-0 flex flex-col justify-center">
-                            <h2>Founded</h2>
+                            <h2 data-para-effect>Founded</h2>
                             <p className="opacity-60 leading-tight text-lg mt-6">Companies built from the ground up, and the ones still being built.</p>
                         </div>
                         <div className="title-section title-section-1 w-full absolute inset-0 flex flex-col justify-center">
@@ -281,10 +373,8 @@ const Partners = () => {
                     </div>
                 </div>
 
-                <div className="absolute top-1/2 -translate-y-1/2 right-0 w-[60%] h-[50vh] flex items-center">
-                    <div className="relative w-full h-full">
-                        {renderAllCardSections()}
-                    </div>
+                <div className="absolute top-1/2 -translate-y-1/2 right-0 w-[60%] h-full flex items-center">
+                    {renderAllCardSections()}
                 </div>
             </div>
 
@@ -293,19 +383,19 @@ const Partners = () => {
                 {/* Mobile Founded */}
                 <div className="space-y-6">
                     <div>
-                        <h2>Founded</h2>
+                        <h2 data-para-effect>Founded</h2>
                         <p className="opacity-60 leading-tight mt-2">Companies built from the ground up, and the ones still being built.</p>
                     </div>
                     <div className="grid grid-cols-2 gap-2">
                         {newPartnersData.founded.map((item) => (
-                            <div key={item.id} onClick={() => setSelectedPartner(item)} className="flex relative items-center justify-center w-full aspect-6/5 bg-white/5 rounded-md cursor-pointer active:bg-[#253646] transition-colors border border-white/10 shrink-0">
+                            <div key={item.id} onClick={() => { setSelectedPartner(item); setIsPopupOpen(true); }} className="flex relative items-center justify-center w-full aspect-6/5 bg-white/5 rounded-md cursor-pointer active:bg-[#253646] transition-colors border border-white/10 shrink-0">
                                 <div className="w-full absolute bottom-0 flex items-end justify-between p-2 leading-none">
-                                    <p className='text-sm uppercase w-[80%]'>{item.name}</p>
-                                    <button className='p-1 bg-white/10 rounded-full group-hover:bg-white group-hover:text-[#0B1A2C] transition-all duration-300 '><RiArrowRightUpLine className='size-4' /></button>
+                                    <p className='text-xs uppercase w-[80%]'>{item.name}</p>
+                                    <button aria-label={`View ${item.name} details`} className='p-1 bg-white/10 rounded-full group-hover:bg-white group-hover:text-[#0B1A2C] transition-all duration-300 '><RiArrowRightUpLine className='size-4' /></button>
                                 </div>
                                 <div className="w-full h-full absolute inset-0 flex items-center justify-center">
                                     <div className="w-24 h-10 center relative">
-                                        <Image fill src={item.logo} alt="" className="object-contain invert-100" />
+                                        <Image fill src={item.logo} alt={item.name} className="object-contain invert-100" />
                                     </div>
                                 </div>
                             </div>
@@ -316,19 +406,19 @@ const Partners = () => {
                 {/* Mobile Backed */}
                 <div className="space-y-6">
                     <div>
-                        <h2>Backed </h2>
+                        <h2 data-para-effect>Backed </h2>
                         <p className="opacity-60 leading-tight mt-2">Brands where the thinking earned ownership and the engagement never really ends.</p>
                     </div>
                     <div className="grid grid-cols-2 gap-2">
                         {newPartnersData.backed.map((item) => (
-                            <div key={item.id} onClick={() => setSelectedPartner(item)} className="flex relative items-center justify-center w-full aspect-6/5 bg-white/5 rounded-md cursor-pointer active:bg-[#253646] transition-colors border border-white/10 shrink-0">
+                            <div key={item.id} onClick={() => { setSelectedPartner(item); setIsPopupOpen(true); }} className="flex relative items-center justify-center w-full aspect-6/5 bg-white/5 rounded-md cursor-pointer active:bg-[#253646] transition-colors border border-white/10 shrink-0">
                                 <div className="w-full absolute bottom-0 flex items-end justify-between p-2 leading-none">
-                                    <p className='text-sm uppercase w-[80%]'>{item.name}</p>
-                                    <button className='p-1 bg-white/10 rounded-full group-hover:bg-white group-hover:text-[#0B1A2C] transition-all duration-300 '><RiArrowRightUpLine className='size-4' /></button>
+                                    <p className='text-xs uppercase w-[80%]'>{item.name}</p>
+                                    <button aria-label={`View ${item.name} details`} className='p-1 bg-white/10 rounded-full group-hover:bg-white group-hover:text-[#0B1A2C] transition-all duration-300 '><RiArrowRightUpLine className='size-4' /></button>
                                 </div>
                                 <div className="w-full h-full absolute inset-0 flex items-center justify-center">
                                     <div className="w-24 h-10 center relative">
-                                        <Image fill src={item.logo} alt="" className="object-contain invert-100" />
+                                        <Image fill src={item.logo} alt={item.name} className="object-contain invert-100" />
                                     </div>
                                 </div>
                             </div>
@@ -339,19 +429,19 @@ const Partners = () => {
                 {/* Mobile Invested */}
                 <div className="space-y-6">
                     <div>
-                        <h2>Invested </h2>
+                        <h2 data-para-effect>Invested </h2>
                         <p className="opacity-60 leading-tight mt-2">Private positions taken early and held with patience, in businesses playing long games.</p>
                     </div>
                     <div className="grid grid-cols-2 gap-2">
                         {newPartnersData.invested.map((item) => (
-                            <div key={item.id} onClick={() => setSelectedPartner(item)} className="flex relative items-center justify-center w-full aspect-6/5 bg-white/5 rounded-md cursor-pointer active:bg-[#253646] transition-colors border border-white/10 shrink-0">
+                            <div key={item.id} onClick={() => { setSelectedPartner(item); setIsPopupOpen(true); }} className="flex relative items-center justify-center w-full aspect-6/5 bg-white/5 rounded-md cursor-pointer active:bg-[#253646] transition-colors border border-white/10 shrink-0">
                                 <div className="w-full absolute bottom-0 flex items-end justify-between p-2 leading-none">
-                                    <p className='text-sm uppercase w-[80%]'>{item.name}</p>
-                                    <button className='p-1 bg-white/10 rounded-full group-hover:bg-white group-hover:text-[#0B1A2C] transition-all duration-300 '><RiArrowRightUpLine className='size-4' /></button>
+                                    <p className='text-xs uppercase w-[80%]'>{item.name}</p>
+                                    <button aria-label={`View ${item.name} details`} className='p-1 bg-white/10 rounded-full group-hover:bg-white group-hover:text-[#0B1A2C] transition-all duration-300 '><RiArrowRightUpLine className='size-4' /></button>
                                 </div>
                                 <div className="w-full h-full absolute inset-0 flex items-center justify-center">
                                     <div className="w-24 h-10 center relative">
-                                        <Image fill src={item.logo} alt="" className="object-contain invert-100" />
+                                        <Image fill src={item.logo} alt={item.name} className="object-contain invert-100" />
                                     </div>
                                 </div>
                             </div>
@@ -363,35 +453,20 @@ const Partners = () => {
                 <div className="space-y-6">
                     <div>
                         <div className="flex items-center gap-4 mb-2">
-                            <h2 className="leading-none m-0 p-0">Founder</h2>
+                            <h2 data-para-effect className="leading-none m-0 p-0">Founder</h2>
                         </div>
                         <p className="opacity-60 leading-tight mt-2">A company of my own is underway a wellness and nutraceutical brand, in stealth. After years of building for founders, it was time. The name arrives only when it's ready.</p>
                     </div>
 
-                    <div className="bg-[#152535] p-5 rounded-lg  w-full flex flex-col justify-between">
-                        <div>
-                            <h3 className=" mb-4 text-white">How I Choose</h3>
-                            <p className="opacity-80  text-white">
-                                Consultants leave after the recommendation. Agencies leave after the deliverable. Investors show up for board meetings. Nobody stays. I stay. I come in before the institutions do, usually pre-seed to seed, where positioning is the bottleneck rather than the product. Home ground: wellness, healthcare, and financial services. The ask is simple and documented: strategic equity, agreed before the work begins.
-                            </p>
-                        </div>
-                        <div className="mt-6 border-t border-white/10 pt-4">
-                            <button
-                                onClick={() => setIsThesisOpen(true)}
-                                className="bg-white uppercase  text-[#883F27] rounded-full  px-6 hover:pl-1 leading-none h-10 text-sm group   transition-all duration-300 pointer-events-auto flex items-center gap-2">
-                                <span className="w-2 h-2 center text-white group-hover:h-8 group-hover:w-8 rounded-full bg-[#883F27] transition-all duration-300">
-                                    <RiArrowRightUpLine size={18} className={` scale-0 group-hover:scale-100 transition-all duration-300`} />
-                                </span>
-                                Read Full Thesis
-                            </button>
-                        </div>
+                    <div className={`bg-[#152535] p-5 rounded-lg w-full flex flex-col transition-[height] duration-500 overflow-hidden relative ${isThesisOpen ? 'h-[80vh] overflow-y-auto custom_scroller z-[100]' : ' h-[30rem] justify-between'}`}>
+                        <ThesisCardContent isExpanded={isThesisOpen} onExpand={() => setIsThesisOpen(true)} onClose={() => setIsThesisOpen(false)} />
                     </div>
                 </div>
             </div>
 
             {/* Popup Overlay for selected partner */}
             <div
-                className={`${isPopupOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"} transition-all duration-300 fixed inset-0 z-50 flex items-center justify-center bg-[#0a1118]/80 backdrop-blur-sm p-4`}
+                className={`${isPopupOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"} transition-all duration-300 fixed inset-0 z-[100000] flex items-center justify-center bg-[#0a1118]/80 backdrop-blur-sm p-4`}
                 onClick={handleClosePopup}
             >
                 <div
@@ -408,15 +483,15 @@ const Partners = () => {
                         <div className="bg-[#0B1A2C10] rounded-2xl p-4 md:p-8 border border-black/5">
                             <div className="flex justify-between items-start mb-6 border-b border-black/10 pb-6">
                                 <div>
-                                    <h3 className="text-2xl font-bold tracking-tight text-[#0B1A2C] mb-2">{selectedPartner?.name}</h3>
+                                    <h3 className=" leading-none text-[#0B1A2C] mb-2">{selectedPartner?.name}</h3>
                                     <p className="text-sm font-medium opacity-60 uppercase">{selectedPartner?.role}</p>
                                 </div>
                                 <div className="w-16 h-8 relative shrink-0">
-                                    <Image fill src={selectedPartner?.logo || '/images/homepage/partners/ventures/img1.svg'} alt="" className="object-contain" style={{ filter: 'invert(1)' }} />
+                                    <Image fill src={selectedPartner?.logo || "/images/homepage/partners/casacarigar.svg"} alt={selectedPartner?.name || "Partner"} className="object-contain" style={{ filter: 'invert(1)' }} />
                                 </div>
                             </div>
 
-                            <div className="text-[#0B1A2C] opacity-80 space-y-4 text-lg">
+                            <div className="text-[#0B1A2C] opacity-80 space-y-4 md:text-lg">
                                 <p>{selectedPartner?.desc}</p>
                             </div>
                         </div>
@@ -424,69 +499,6 @@ const Partners = () => {
                 </div>
             </div>
 
-            {/* Thesis Overlay */}
-            <div
-                className={`${isThesisOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"} transition-all duration-500 fixed inset-0 z-[1000000] bg-[#0B1A2C] text-white overflow-y-auto scroller_none`}
-            >
-                <div data-lenis-prevent className="mx-auto  max-w-4xl py-12 relative">
-                    <button
-                        onClick={() => setIsThesisOpen(false)}
-                        className="fixed top-6 right-6 md:top-12 md:right-12 w-12 h-12 bg-white/10 hover:bg-white hover:text-[#0B1A2C] rounded-full flex items-center justify-center transition-all duration-300 z-50"
-                        aria-label="Close Thesis"
-                    >
-                        <RiCloseLine size={24} />
-                    </button>
-
-                    <div className="space-y-12 ">
-                        <div>
-                            <h4 className=" mb-2">The Thesis</h4>
-                            <p className="opacity-80 text-lg ">Most early-stage founders don't fail because the product was wrong or the money ran out. They fail because clarity was missing in the year it mattered most. The pre-institutional phase is where decisions compound fastest: positioning, narrative, market understanding, direction. Everything downstream inherits that clarity or its absence.</p>
-                            <p className="opacity-80 text-lg mt-6 ">The support around founders is fragmented by design. Consultants optimise for the recommendation, agencies for the asset, capital for the board seat. Each exits before the hardest part: the pivots, the repositioning, the translation of strategy into something real. No one holds the full picture, and no one stays. That gap is the practice.</p>
-                        </div>
-
-                        <div>
-                            <h4 className=" mb-2">Where I Work</h4>
-                            <p className="opacity-80 text-lg ">Home ground: wellness, healthcare, and financial services. That is where the conviction has clustered, in equity earned through the work and in positions taken early. What I bring into these markets is the brand lens: the early bottleneck is rarely the science or the licence, it is positioning, narrative, and direction. That is the bottleneck I unlock.</p>
-                            <p className="opacity-80 text-lg mt-6 ">I come in early: pre-revenue or early revenue, before institutional capital, while the strategic decisions still compound. Selectively, the work reaches beyond the home ground, into consumer and craft-led businesses where positioning carries the same weight. If positioning isn't the problem, I'm not the answer.</p>
-                        </div>
-
-                        <div>
-                            <h4 className=" mb-2">How I Choose</h4>
-                            <p className="opacity-80 text-lg ">A handful of founders at a time, never more. The formal read covers strategic intent, decision-making, execution and ownership, equity alignment, and time horizon. The informal read decides more: how a founder treats people with nothing to offer them, whether they arrive prepared, how they respond to challenge, what their follow-through looks like between meetings.</p>
-                            <p className="opacity-80 text-lg mt-6 ">What has to be true: the founder has fire. They're coachable without being dependent. The problem is real and they've been inside it, testing and adapting, not theorising. And there's a clear leverage point for the thinking. What makes me walk away: misalignment in values or commitment, founders who want capital without partnership, and resistance to what the market is plainly saying.</p>
-                        </div>
-
-                        <div>
-                            <h4 className=" mb-2">The Ask</h4>
-                            <p className="opacity-80 text-lg ">Strategic equity is the default and the anchor. I earn it by creating value, not by deploying capital. Structures are agreed upfront and tied to clear dependencies: milestones delivered, scope fulfilled, value unlocked. Shares vest when the agreed condition is met.</p>
-                            <p className="opacity-80 text-lg mt-6 ">Capital itself is rare. It follows conviction built through an engagement that's already proving itself, and when it happens it's structured simply and accompanies a relationship that's been tested. My upside is the founder's upside. I don't extract. I earn.</p>
-                        </div>
-
-                        <div>
-                            <h4 className=" mb-2">How I Work</h4>
-                            <p className="opacity-80 text-lg ">It starts with a conversation that isn't a pitch but a read, on both sides. If there's mutual interest, a structured questionnaire follows, and after that the deeper conversations: scope, involvement, equity, milestones, cadence. Nothing is implied, everything is agreed, and a signed agreement comes before any work and any doors open. Typically seven or more meetings before commitment is discussed seriously.</p>
-                            <p className="opacity-80 text-lg mt-6 ">The engagement then moves through three phases. Intensive: close rhythm, the foundational decisions, the phase where value concentrates. Building: partners step in, Point Of and vetted specialists, while I hold the strategic layer. Steady: reports and open availability, a sounding board and a door-opener as the company grows. Partners are introduced transparently, and the founder always chooses. Through every phase, I'm a message away.</p>
-                        </div>
-
-                        <div>
-                            <h4 className=" mb-2">What I Don't Do</h4>
-                            <p className="opacity-80 text-lg ">No passive involvement: if I'm in, I'm embedded. No template-first work: playbooks are starting points, never the deliverable. No operational takeover: the founder leads the business. No engagements where clarity isn't the bottleneck. And no capital without conviction that's been earned in the room. The boundaries protect every engagement and the model itself. Restraint is structural, not posturing.</p>
-                        </div>
-
-                        <div className="pt-12 border-t border-white/10">
-                            <p className="opacity-80 text-lg  mb-8">If you're building something that deserves this kind of attention, the door is one form away.</p>
-                            <Link href={"/contact"} 
-                                // onClick={() => setIsThesisOpen(false)}
-                             className="bg-white uppercase w-fit  text-[#883F27] rounded-full  px-6 hover:pl-1 leading-none h-10 text-sm group   transition-all duration-300 pointer-events-auto flex items-center gap-2">
-                                <span className="w-2 h-2 center text-white group-hover:h-8 group-hover:w-8 rounded-full bg-[#883F27] transition-all duration-300">
-                                    <RiArrowRightUpLine size={18} className={` scale-0 group-hover:scale-100 transition-all duration-300`} />
-                                </span>
-                                Begin
-                            </Link>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
     );
 };

@@ -139,12 +139,8 @@ const Header = () => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY
       const pillThreshold = window.innerHeight * 0.2 // 20vh for pill shape transform
-
-      // Close the AI dropdown on scroll
       setIsAiOpen(false)
       setIsForcedScrolled(false)
-
-      // Floating pill state after 20vh
       if (currentScrollY > pillThreshold) {
         setIsScrolled(true)
       } else {
@@ -156,7 +152,6 @@ const Header = () => {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  // Close AI dropdown on click outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (headerRef.current && !headerRef.current.contains(event.target)) {
@@ -175,12 +170,10 @@ const Header = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [isAiOpen, isForcedScrolled])
 
-  // Close mobile menu on route change
   useEffect(() => {
     setIsMobileMenuOpen(false)
   }, [pathname])
 
-  // Prevent body scroll when mobile menu is open
   useEffect(() => {
     if (isMobileMenuOpen) {
       document.body.style.overflow = 'hidden'
@@ -191,23 +184,30 @@ const Header = () => {
   }, [isMobileMenuOpen])
 
   useGSAP(() => {
-    gsap.to(".header", {
-      opacity: 1,
-      delay: pathname === "/" ? 4.5 : 0.5,
-      stagger: 0.15
-    });
+    let animDelay = 1
+    if(pathname==="/") animDelay = 4.5
+    if(pathname==="/about") animDelay = 1.5
+    gsap.fromTo(".header", 
+      { yPercent: -150, opacity: 0 },
+      {
+        yPercent: 0,
+        opacity: 1,
+        duration: 0.8,
+        ease: "power3.out",
+        delay: animDelay,
+      }
+    );
   }, [pathname])
 
   return (
     <>
-      {/* ═══════════ DESKTOP HEADER (hidden on mobile) ═══════════ */}
       <header
-        className={`header opacity-0 fixed! h-fit! top-0 container left-0 w-full z-[10000] pointer-events-none hidden md:flex justify-center pt-5`}
+        className={`header   fixed! h-fit! top-0 container left-0! w-full z-[10000] pointer-events-none hidden md:flex justify-center pt-5`}
       >
         <div
           ref={headerRef}
           className={`px-4 py-2 pl-3 pointer-events-auto flex flex-col border border-white/10 rounded-lg justify-between w-full bg-transparent text-white
-            transition-all duration-500 ease-out ${(isScrolled || isForcedScrolled || isAiOpen || pathname === '/contact')
+            transition-all duration-500 ease-out ${(isScrolled || isForcedScrolled || isAiOpen)
               ? isAiOpen
                 ? 'max-w-xl bg-[#0B1A2C]! pb-3'
                 : 'max-w-xl bg-[#0B1A2C]!'
@@ -216,7 +216,7 @@ const Header = () => {
         >
           <div className="flex items-center justify-between w-full">
             <Link href={"/"} className="flex items-center group" aria-label="Piran Tarapore Home">
-              <Image src="/logo.svg" alt="Piran Tarapore Logo" className="w-10 transition-all duration-300 group-hover:scale-110" width={40} height={40} />
+              <Image src="/logo.svg" alt="logo" className="w-10 transition-all duration-300 group-hover:scale-110" width={40} height={40} />
             </Link>
             <nav className="flex gap-x-5 items-center">
               {navLinks.map((item, i) => (
@@ -254,7 +254,7 @@ const Header = () => {
               >
                 <button
                   onClick={handleAiClick}
-                  className="flex items-center gap-x-1 border  px-3 rounded-full py-1 bg-[#ECE3DB] text-[#883F27] border-[#883F27] hover:bg-[#883F27] hover:text-[#ECE3DB] transition-all duration-120"
+                  className="flex items-center gap-x-1 border  px-3 rounded-full py-1 bg-[#E3E2DC] text-[#883F27] border-[#883F27] hover:bg-[#883F27] hover:text-[#E3E2DC] transition-all duration-120"
                 >
                   <div className="transition-all duration-300">
                     <LinkParticles
@@ -276,7 +276,7 @@ const Header = () => {
             className={`w-full overflow-hidden transition-all duration-500 ease-in-out ${isAiOpen ? 'max-h-72 pt-4 opacity-100' : 'max-h-0 opacity-0'
               }`}
           >
-            <div className="w-full bg-[#ECE3DB] text-[#1E1E1E] rounded-md p-3 md:p-5 flex flex-col  select-none border border-black/5">
+            <div className="w-full bg-[#E3E2DC] text-[#1E1E1E] rounded-md p-3 md:p-5 flex flex-col  select-none border border-black/5">
               {/* Header row */}
               <div className="flex items-center  text-sm mb-4 ">
                 <Image src="/icons/ai-icon.gif" className='w-5 invert-100' alt="AI helper" width={20} height={20} />
@@ -330,8 +330,7 @@ const Header = () => {
 
       {/* ═══════════ MOBILE HEADER expandable (hidden on desktop) ═══════════ */}
       <header
-        className={`header opacity-0 fixed! border border-white/10 rounded-lg top-0 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)]  z-[200] pointer-events-none flex md:hidden flex-col mt-5 px-4 transition-all duration-500 ease-out ${(isMobileMenuOpen || pathname === '/contact') ? ' bg-[#0B1A2C]' : 'bg-transparent'
-          }`}
+        className={`header opacity-0 fixed! border border-white/10 rounded-lg top-0 left-1/2 -translate-x-1/2! w-[calc(100%-2rem)]  z-[200] pointer-events-none flex md:hidden flex-col mt-5 px-4 transition-all duration-500 ease-out bg-[#0B1A2C]`}
       >
         {/* Top bar  logo + menu/close toggle (always visible) */}
         <div
@@ -344,7 +343,7 @@ const Header = () => {
               setIsMobileMenuOpen(false);
             }}
             delay={600} href={"/"} className="flex items-center group" aria-label="Piran Tarapore Home">
-            <Image src="/logo.svg" alt="Piran Tarapore Logo" className="w-8 transition-all duration-300 group-hover:scale-110" width={32} height={32} />
+            <Image src="/logo.svg" alt="logo" className="w-8 transition-all duration-300 group-hover:scale-110" width={32} height={32} />
           </ViewTransitionLink>
           <button
             onClick={(e) => {

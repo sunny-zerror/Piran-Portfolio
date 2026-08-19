@@ -16,30 +16,30 @@ const InfiniteCarousel = ({ openGallerySwiper, setOpenGallerySwiper }) => {
 
   const validGalleries = galleryData.filter(g => g.galleryImages && g.galleryImages.length > 0);
   const currentIndex = validGalleries.findIndex(g => g.title === openGallerySwiper?.title);
-  
+
   const currentNum = String(currentIndex !== -1 ? currentIndex + 1 : 1).padStart(2, '0');
   const totalNum = String(validGalleries.length).padStart(2, '0');
 
   const switchGallery = (newGallery) => {
     gsap.to(".slide_width, .spli_txt", {
-        opacity: 0,
-        duration: 0.3,
-        onComplete: () => {
-            setOpenGallerySwiper(newGallery);
-        }
+      opacity: 0,
+      duration: 0.3,
+      onComplete: () => {
+        setOpenGallerySwiper(newGallery);
+      }
     });
   }
 
   const handlePrev = () => {
-      if(validGalleries.length === 0) return;
-      const nextIdx = currentIndex > 0 ? currentIndex - 1 : validGalleries.length - 1;
-      switchGallery(validGalleries[nextIdx]);
+    if (validGalleries.length === 0) return;
+    const nextIdx = currentIndex > 0 ? currentIndex - 1 : validGalleries.length - 1;
+    switchGallery(validGalleries[nextIdx]);
   }
 
   const handleNext = () => {
-      if(validGalleries.length === 0) return;
-      const nextIdx = (currentIndex !== -1 && currentIndex < validGalleries.length - 1) ? currentIndex + 1 : 0;
-      switchGallery(validGalleries[nextIdx]);
+    if (validGalleries.length === 0) return;
+    const nextIdx = (currentIndex !== -1 && currentIndex < validGalleries.length - 1) ? currentIndex + 1 : 0;
+    switchGallery(validGalleries[nextIdx]);
   }
 
   const [renderScroll, setRenderScroll] = useState(0)
@@ -49,7 +49,7 @@ const InfiniteCarousel = ({ openGallerySwiper, setOpenGallerySwiper }) => {
   const galleryImages = openGallerySwiper?.galleryImages || []
   let baseImages = [...galleryImages];
   while (baseImages.length > 0 && baseImages.length < 10) {
-      baseImages = [...baseImages, ...galleryImages];
+    baseImages = [...baseImages, ...galleryImages];
   }
 
   const totalItemWidth = itemWidth + gap
@@ -144,10 +144,10 @@ const InfiniteCarousel = ({ openGallerySwiper, setOpenGallerySwiper }) => {
     let splt_wrd;
     if (openGallerySwiper) {
       gsap.set(".spli_txt", { clearProps: "opacity,transform" }) // Clear inline styles from switchGallery fade out without breaking font-size
-      splt_wrd = SplitText.create(".spli_txt", { type: "words" , wordsClass: "splt_wrd", aria: "none" })
+      splt_wrd = SplitText.create(".spli_txt", { type: "words", wordsClass: "splt_wrd", aria: "none" })
       gsap.set(splt_wrd.words, {
         y: 50,
-        opacity:0
+        opacity: 0
       })
       gsap.set(".slide_width", {
         opacity: 0
@@ -169,8 +169,8 @@ const InfiniteCarousel = ({ openGallerySwiper, setOpenGallerySwiper }) => {
         duration: .5
       }, "<")
       openTl.to(splt_wrd.words, {
-        y:0,
-        opacity:1,
+        y: 0,
+        opacity: 1,
         duration: 0.5,
         stagger: 0.1
       }, "<+=0.5")
@@ -188,7 +188,7 @@ const InfiniteCarousel = ({ openGallerySwiper, setOpenGallerySwiper }) => {
         delay: 0.5
       })
     }
-    
+
     return () => {
       if (splt_wrd) splt_wrd.revert();
     }
@@ -196,11 +196,11 @@ const InfiniteCarousel = ({ openGallerySwiper, setOpenGallerySwiper }) => {
 
 
   return (
-    <div className=" gallery_swiper_paren  pointer-events-none opacity-0 fixed top-0 left-0   z-[9999] inset-0 bg-[#ECE3DB] text-[#18293A] overflow-hidden flex flex-col  justify-between">
+    <div className=" gallery_swiper_paren  pointer-events-none opacity-0 fixed top-0 left-0   z-[9999] inset-0 bg-[#E3E2DC] text-[#18293A] overflow-hidden flex flex-col  justify-between">
       <div className=''>
         <div className="w-full flex items-center justify-between p-2">
           <h5 key={openGallerySwiper?.title + "num"} className=' spli_txt '>{currentNum} / {totalNum}</h5>
-          <button onClick={() => setOpenGallerySwiper(false)} aria-label="Close gallery" className='w-6 cursor-pointer'><RiCloseLine size={30}/></button>
+          <button onClick={() => setOpenGallerySwiper(false)} aria-label="Close gallery" className='w-6 cursor-pointer'><RiCloseLine size={30} /></button>
         </div>
         <div
           ref={carouselRef}
@@ -230,7 +230,7 @@ const InfiniteCarousel = ({ openGallerySwiper, setOpenGallerySwiper }) => {
               >
                 {media?.type === 'img' ? (
                   <Image
-                   fill
+                    fill
                     alt={openGallerySwiper?.title || "Gallery Image"}
                     src={media.src}
                     className="cover"
@@ -257,10 +257,10 @@ const InfiniteCarousel = ({ openGallerySwiper, setOpenGallerySwiper }) => {
       <div className="w-full px-5 flex items-end justify-between">
         <button onClick={handlePrev} className=' cursor-pointer flex items-center gap-2 hover:gap-3 transition-all duration-300 pb-10 uppercase '>
           <p className="cursor-pointer!">
-          ←
+            ←
           </p>
           <h5 className='cursor-pointer!'>
-          Prev
+            Prev
           </h5>
         </button>
         <p
@@ -274,10 +274,10 @@ const InfiniteCarousel = ({ openGallerySwiper, setOpenGallerySwiper }) => {
         </p>
         <button onClick={handleNext} className=' cursor-pointer flex gap-2 items-center hover:gap-3 transition-all duration-300 pb-10 uppercase '>
           <h5 className='cursor-pointer!'>
-          Next
+            Next
           </h5>
           <p className="cursor-pointer!">
-           →
+            →
           </p>
         </button>
       </div>

@@ -70,7 +70,7 @@ const About = () => {
                         <div className=" above_img_txt absolute! container  top-[16%] opacity-0 text-white z-10 ">
                             <h4 className='md:w-[70%] mx-auto'>Piran Tarapore has spent seven years turning founders' ambiguity into brands the world can understand, trust, and want. He is building a practice where brand thinking is infrastructure, not a service layer on top of execution.</h4>
                         </div>
-                        <Image fill src={"/images/homepage/piran_pic.png"} className='cover piran_img opacity-0' alt='piran pic' />
+                        <Image fill src={"/images/homepage/piran_pic.png"} className='cover piran_img opacity-0' alt='Piran Tarapore' />
                     </div>
 
                     <div className="w-full container absolute! space-y-12 text-white inset-0 h-full center flex-col">

@@ -5,11 +5,13 @@
   user-select: none;
 }
 .custom_scroller::-webkit-scrollbar {
+  cursor: pointer;
   width: 4px;
 }
 .custom_scroller::-webkit-scrollbar-thumb {
-  background-color: #883f27;
+  background-color: #e3e2dc;
   border-radius: 999px;
+  cursor: pointer;
 }
 .custom_scroller::-webkit-scrollbar-track {
   background-color: transparent;
@@ -72,14 +74,27 @@ button {
 
 /* Remove browser autofill background color */
 input:-webkit-autofill,
-input:-webkit-autofill:hover, 
-input:-webkit-autofill:focus, 
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
 input:-webkit-autofill:active,
 textarea:-webkit-autofill,
 textarea:-webkit-autofill:hover,
 textarea:-webkit-autofill:focus,
 textarea:-webkit-autofill:active {
-  -webkit-box-shadow: 0 0 0 30px white inset !important;
-  -webkit-text-fill-color: black !important;
+  -webkit-box-shadow: 0 0 0 30px #0b1a2c inset !important;
+  -webkit-text-fill-color: white !important;
   transition: background-color 5000s ease-in-out 0s;
+}
+
+.fade-in {
+  animation: fadeIn 0.4s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }

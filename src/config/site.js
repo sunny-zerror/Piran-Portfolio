@@ -22,7 +22,7 @@ export const siteConfig = {
   ],
   contact: {
     phone: "",
-    email: "",
+    email: "piran@wearepointof.com",
   },
   address: {
     street: "",
@@ -33,9 +33,9 @@ export const siteConfig = {
   },
   socials: {
     facebook: "",
-    instagram: "",
+    instagram: "https://www.instagram.com/iampirantee/",
     twitter: "",
-    linkedin: "",
+    linkedin: "https://in.linkedin.com/in/iampirantee",
   },
 };
 

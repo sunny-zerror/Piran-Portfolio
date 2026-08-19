@@ -84,7 +84,7 @@ const RecordNotResume = () => {
                         <div className="flex-1 border-b border-[#0B1A2C20] border-dashed p-5 sm:p-8 flex flex-col justify-between gap-y-6">
                             <div className="w-14 h-14 rounded-full bg-white flex items-center justify-center">
                                 <div className="size-8 relative">
-                                    <Image width={40} height={40} src="/images/homepage/testimonials/handshake.svg" alt="" />
+                                    <Image width={40} height={40} src="/images/homepage/testimonials/handshake.svg" alt="icon" />
                                 </div>
                             </div>
                             <div className="">
@@ -97,7 +97,7 @@ const RecordNotResume = () => {
                             <div className="w-1/2 p-5 sm:p-8 border-r border-[#0B1A2C20] border-dashed flex flex-col justify-between gap-y-6">
                                 <div className="w-14 h-14 rounded-full bg-white flex items-center justify-center">
                                     <div className="size-8 relative">
-                                        <Image width={40} height={40} src="/images/homepage/testimonials/bounty.svg" alt="" />
+                                        <Image width={40} height={40} src="/images/homepage/testimonials/bounty.svg" alt="icon" />
                                     </div>
                                 </div>
                                 <div className="">
@@ -108,7 +108,7 @@ const RecordNotResume = () => {
                             <div className="w-1/2 p-5 sm:p-8 flex flex-col justify-between gap-y-6">
                                 <div className="w-14 h-14 rounded-full bg-white flex items-center justify-center">
                                     <div className="size-8 relative">
-                                        <Image width={40} height={40} src="/images/homepage/testimonials/earth.svg" alt="" />
+                                        <Image width={40} height={40} src="/images/homepage/testimonials/earth.svg" alt="icon" />
                                     </div>
                                 </div>
                                 <div className="">
@@ -134,12 +134,12 @@ const RecordNotResume = () => {
                                     <SwiperSlide key={t.id}>
                                         <div className={`w-full h-full flex flex-col justify-between max-sm:border max-sm:border-[#0B1A2C20] max-sm:border-dashed p-5 md:p-8 relative overflow-hidden ${t.bgColor} ${t.textColor}`}>
                                             <div className="absolute inset-0 w-full h-full">
-                                                <Image fill src="/images/homepage/testimonials/card_bg.png" alt="" />
+                                                <Image fill src="/images/homepage/testimonials/card_bg.png" alt="bg image" />
                                             </div>
                                             <div className="">
                                                 <div className="flex justify-between items-center mb-8 relative z-10">
                                                     <div className={`opacity-90 size-10 ${(i === 0 || i === 3) ? "invert-0 " : "invert-100"}`}>
-                                                        <Image width={100} height={50} src="/icons/quote.svg" alt="quote" />
+                                                        <Image width={100} height={50} src="/icons/quote.svg" alt="quote icon" />
                                                     </div>
                                                 </div>
 
@@ -168,7 +168,7 @@ const RecordNotResume = () => {
                                 >
                                     <div
                                         className={`w-10 h-10 relative ${activeIndex === i ? 'invert-100' : 'invert-0'}`}
-                                    ><Image fill className='object-contain' src={item.img} alt="testimonial logo" /></div>
+                                    ><Image fill className='object-contain' src={item.img} alt={item.name} /></div>
                                 </button>
                             ))}
                         </div>

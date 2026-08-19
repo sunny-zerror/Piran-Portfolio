@@ -12,6 +12,7 @@ import Image from 'next/image';
 import { Autoplay } from 'swiper/modules';
 import { RotatingText } from '../common/RotatingText';
 import { LiveTime } from '../common/LiveTime';
+import LogoParticlesNew from './LogoParticlesNew';
 gsap.registerPlugin(ScrollTrigger, SplitText)
 
 const MobileHero = () => {
@@ -86,7 +87,7 @@ const MobileHero = () => {
 
     gsap.set([heading_split.lines, paragraph_split.lines], { yPercent: 100 });
 
-    const masterTl = gsap.timeline({delay:1});
+    const masterTl = gsap.timeline({delay:3});
 
     masterTl.to(".mob_content_box", {
       opacity: 1,
@@ -140,7 +141,7 @@ const MobileHero = () => {
     <div className='bg-[#0B1A2C] overflow-hidden'>
 
       <div className="   w-full h-svh relative  text-white overflow-hidden">
-        <LogoParticles />
+        <LogoParticlesNew />
 
         <div className="mob_content_box opacity-0 flex items-end container pb-10 relative z-10 w-full h-full pointer-events-none">
           <div className="space-y-2">
@@ -162,8 +163,8 @@ const MobileHero = () => {
               <p className="opacity-60 mob_paragraph_split"><LiveTime /></p>
             </div>
 
-            <div className=" relative w-full aspect-video mb-2">
-              <video loop autoPlay muted playsInline src="https://vz-f76b55f9-7b8.b-cdn.net/2b3c385c-35e7-406c-bb11-8c7d71d90001/playlist.m3u8"></video>
+            <div className=" relative w-full aspect-video overflow-hidden mb-2">
+              <video loop autoPlay muted playsInline src="/videos/video.mp4"></video>
             </div>
           </div>
         </div>
@@ -176,7 +177,7 @@ const MobileHero = () => {
             }`}
           >
             <div className="flex justify-between items-start">
-              <Image height={20} width={20} className='invert-100' src="/icons/quote.svg" alt="" />
+              <Image height={20} width={20} className='invert-100' src="/icons/quote.svg" alt="quote icon" />
               <button
                 onClick={() => setActiveLogoIndex(null)}
                 aria-label="Close details"
@@ -204,7 +205,7 @@ const MobileHero = () => {
                   width={60}
                   height={40}
                   src={item.img}
-                  alt={`Company Logo ${item.id}`}
+                  alt={item.author}
                   className={`h-10 w-auto object-contain transition-opacity duration-300 ${activeLogoIndex === i ? 'opacity-100' : 'opacity-50'}`}
                 />
               </div>

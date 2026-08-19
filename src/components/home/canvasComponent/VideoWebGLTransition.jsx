@@ -80,6 +80,12 @@ const WebGLPlane = ({ targetRef, expanded, isAnimating, onComplete, videoUrl }) 
     
     const { viewport, size } = useThree();
     
+    useEffect(() => {
+        if (texture && texture.image) {
+            texture.image.muted = !expanded;
+        }
+    }, [expanded, texture]);
+    
     // Store the animating timeline so we don't conflict
     const tlRef = useRef(null);
 
@@ -217,7 +223,7 @@ const WebGLPlane = ({ targetRef, expanded, isAnimating, onComplete, videoUrl }) 
 };
 
 export const VideoWebGLTransition = ({ targetRef, expanded, isAnimating, onAnimationComplete }) => {
-    const videoUrl = "https://vz-f76b55f9-7b8.b-cdn.net/2b3c385c-35e7-406c-bb11-8c7d71d90001/playlist.m3u8";
+    const videoUrl = "/videos/video.mp4";
 
     return (
         <div className=" vid_cont  opacity-0 fixed inset-0 w-screen h-screen z-[998] pointer-events-none">

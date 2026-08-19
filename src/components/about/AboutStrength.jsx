@@ -41,7 +41,7 @@ const AboutStrength = () => {
                             </div>
 
                             {/* Static List */}
-                            <div className="mt-4 md:mt-8 flex flex-col">
+                            <div className="mt-4 md:mt-24 flex flex-col">
                                 {items.map((item) => (
                                     <div key={item.id} className="border-b border-dashed border-white/20 py-6 md:py-8 last:border-0">
                                         <h5 className="text-white mb-4">
@@ -64,7 +64,7 @@ const AboutStrength = () => {
                             <div
                                 className="relative w-full max-sm:aspect-square md:w-[80%] aspect-square md:aspect-auto min-h-100 overflow-hidden rounded-xl  flex items-center justify-center pointer-events-none"
                             >
-                                <Image fill className='cover' src={"/images/aboutpage/piran_pic.png"} alt='Piran Pic' />
+                                <Image fill className='cover' src={"/images/aboutpage/piran_pic.png"} alt='Piran Tarapore' />
                             </div>
                         </div>
                     </div>

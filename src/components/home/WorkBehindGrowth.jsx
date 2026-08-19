@@ -65,7 +65,7 @@ const WorkBehindGrowth = () => {
 
             tl.to(`.circ_${i + 1}`, {
                 scale: 1,
-                backgroundColor: "white",
+                backgroundColor: "#E3E2DC",
                 duration: 0.4,
                 ease: "power1.inOut"
             }, 0);
@@ -96,7 +96,7 @@ const WorkBehindGrowth = () => {
                         <div className=" circ_1 scale-90 absolute size-6 z-5 rounded-full -translate-x-1/2 left-1/2  top-0 -translate-y-1/2 bg-[#343F4B]"></div>
                         <div className="circ_2 scale-90 absolute size-6 z-5 rounded-full -translate-x-1/2 left-1/2  top-1/2 -translate-y-1/2 bg-[#343F4B]"></div>
                         <div className="circ_3 scale-90 absolute size-6 z-5 rounded-full -translate-x-1/2 left-1/2  bottom-0 translate-y-1/2 bg-[#343F4B]"></div>
-                        <div className=" fill_line w-0.5 translate-x-0.75 bg-white h-0"></div>
+                        <div className=" fill_line w-0.5 translate-x-0.75 bg-[#E3E2DC] h-0"></div>
                     </div>
 
                     {data.map((item, i) => (

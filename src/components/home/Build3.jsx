@@ -4,6 +4,7 @@ import Image from 'next/image';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { RiArrowRightUpLine } from '@remixicon/react';
+import CustomButton from '../common/CustomButton';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -104,12 +105,9 @@ const Build3 = () => {
 
                         {/* Positioned relatively down to sit near the bottom of the card */}
                         <div className="mt-8 md:mt-12">
-                            <button className="bg-white uppercase text-[#883F27] rounded-full  px-6 hover:pl-2 leading-none h-12 text-sm group   transition-all duration-300 flex items-center gap-2">
-                                <span className="w-2 h-2 center text-white group-hover:h-8 group-hover:w-8 rounded-full bg-[#883F27] transition-all duration-300">
-                                    <RiArrowRightUpLine className={` scale-0 group-hover:scale-100 transition-all duration-300`} />
-                                </span>
+                            <CustomButton href="/about">
                                 My path
-                            </button>
+                            </CustomButton>
                         </div>
                     </div>
                 </div>

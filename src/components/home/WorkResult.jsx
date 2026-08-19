@@ -9,8 +9,8 @@ const WorkResult = () => {
 
   return (
     <>
-      <div className="container pt-12 md:pt-24 space-y-8 md:space-y-16 bg-[#E3E2DC]">
-        <div className="w-full max-sm:space-y-2 md:grid grid-cols-6 items-end">
+      <div className="container pt-12 md:pt-24 space-y-8 md:space-y-16 ">
+        <div className="w-full max-sm:space-y-2 md:grid grid-cols-6">
           <h2 data-para-effect className=' col-span-4 leading-none'>Where I <br />Come In</h2>
           <p data-para-effect className='opacity-70 leading-tight col-span-2 text-lg'>Founders rarely call about strategy. They call because something feels misaligned drift, friction, growth that costs more than it returns. The problem is rarely effort. It's position. The brand never had one to organise around. Finding it is where I come in.</p>
         </div>
@@ -20,7 +20,7 @@ const WorkResult = () => {
           <div className=" md:h-100 md:grid grid-cols-8 p-5 md:p-8">
             <div className="  col-span-3 md:flex flex-col justify-between">
               <div className=" size-12 md:size-20">
-                <Image width={80} height={80} src="/images/homepage/workResult/clarity.svg" alt="Clarity icon" />
+                <Image width={80} height={80} src="/images/homepage/workResult/clarity.svg" alt="Clarity" />
               </div>
               <div className=" max-sm:pt-10 space-y-2">
                 <h4 data-para-effect>Clarity</h4>
@@ -41,7 +41,7 @@ const WorkResult = () => {
             <div className=""></div>
             <div className="  col-span-3 md:flex flex-col justify-between">
               <div className=" size-12 md:size-20">
-                <Image width={80} height={80} src="/images/homepage/workResult/execution.svg" alt="Execution icon" />
+                <Image width={80} height={80} src="/images/homepage/workResult/execution.svg" alt="Execution" />
               </div>
               <div className=" max-sm:pt-10 space-y-2">
                 <h4 data-para-effect>Execution</h4>
@@ -54,7 +54,7 @@ const WorkResult = () => {
           <div className=" md:h-100 md:grid grid-cols-8 p-5 md:p-8">
             <div className="  col-span-3 md:flex flex-col justify-between">
               <div className=' size-12 md:size-20'>
-                <Image width={80} height={80} src="/images/homepage/workResult/CA.svg" alt="Capital Access icon" />
+                <Image width={80} height={80} src="/images/homepage/workResult/CA.svg" alt="Capital Access" />
               </div>
 
               <div className=" max-sm:pt-10 space-y-2">

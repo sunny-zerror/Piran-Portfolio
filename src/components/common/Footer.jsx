@@ -5,6 +5,7 @@ import { RiArrowRightUpLine, RiArrowUpLine, RiInstagramFill, RiInstallFill, RiLi
 import FooterPhysicsBalls from './FooterPhysicsBalls';
 import Image from 'next/image';
 import { RotatingText } from './RotatingText';
+import CustomButton from './CustomButton';
 
 const Footer = () => {
 
@@ -14,12 +15,9 @@ const Footer = () => {
         <div className="relative pointer-events-none z-10 flex flex-col items-center gap-y-4 md:gap-y-5">
           <p data-para-effect className="text-sm font-medium opacity-90">Whenever you're ready</p>
           <h2 data-para-effect className="leading-none">Things that matter <br /> should begin. </h2>
-          <button className="bg-white uppercase text-[#883F27] rounded-full  px-6 hover:pl-1 leading-none h-10 text-sm group   transition-all duration-300 pointer-events-auto flex items-center gap-2">
-            <span className="w-2 h-2 center text-white group-hover:h-8 group-hover:w-8 rounded-full bg-[#883F27] transition-all duration-300">
-              <RiArrowRightUpLine size={18} className={` scale-0 group-hover:scale-100 transition-all duration-300`} />
-            </span>
+          <CustomButton href="/contact">
             Begin
-          </button>
+          </CustomButton>
         </div>
         <FooterPhysicsBalls />
       </div>
@@ -30,7 +28,7 @@ const Footer = () => {
             <RotatingText />
             <div className="flex items-center gap-3">
               <Link href={"/"} aria-label="Piran Tarapore Home">
-                <Image className="w-14 h-14 shrink-0 md:w-15 md:h-15" width={60} height={60} src="/logo.svg" alt="Piran Tarapore Logo" />
+                <Image className="w-14 h-14 shrink-0 md:w-15 md:h-15" width={60} height={60} src="/logo.svg" alt="logo" />
               </Link>
               <p className="text-[12vw] whitespace-nowrap md:text-7xl">Piran Tarapore</p>
             </div>
@@ -50,10 +48,10 @@ const Footer = () => {
             </div>
             <div className=" flex md:justify-end">
               <div className="flex flex-col gap-2 font-medium">
-                <a href="#" className="flex items-center gap-1 group"> <div className="size-2 opacity-0 group-hover:opacity-100 transition-all duration-300 bg-white rounded-full"></div>
+                <a target="_blank" href="https://www.instagram.com/iampirantee/" className="flex items-center gap-1 group"> <div className="size-2 opacity-0 group-hover:opacity-100 transition-all duration-300 bg-white rounded-full"></div>
                   Instagram
                 </a>
-                <a href="#" className="flex items-center gap-1 group "> <div className="size-2 opacity-0 group-hover:opacity-100 transition-all duration-300 bg-white rounded-full"></div>
+                <a target="_blank" href="https://in.linkedin.com/in/iampirantee" className="flex items-center gap-1 group "> <div className="size-2 opacity-0 group-hover:opacity-100 transition-all duration-300 bg-white rounded-full"></div>
                   Linkedin
                 </a>
               </div>
