@@ -148,12 +148,12 @@ const Hero = () => {
         <div className=" absolute w-full h-full flex items-center pointer-events-auto">
           <h1 className=" w-full leading-18">
             <div className="wrapper_heading block w-full overflow-hidden">
-              <div className="txt2_head translate-x-[31%]">
+              <div className="txt2_head">
                 Building brands.
               </div>
             </div>
             <div className="wrapper_heading block w-full overflow-hidden">
-              <div className="txt2_head translate-x-[28%]">
+              <div className="txt2_head">
                 Backing founders.
               </div>
             </div>

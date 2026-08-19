@@ -44,6 +44,8 @@ const FAQ = () => {
     };
 
     return (
+        <>
+        <div className="hidden md:block w-full h-screen"></div>
         <section className=" faq_paren w-full py-12 md:py-24 md:relative z-10 bg-[#E3E2DC]">
             <div className="container">
                 <div className="grid grid-cols-1 md:grid-cols-5 ">
@@ -94,6 +96,7 @@ const FAQ = () => {
                 </div>
             </div>
         </section>
+        </>
     );
 };
 

@@ -94,7 +94,7 @@ const ContactHero = () => {
     });
 
     return (
-        <section ref={heroRef} className="w-full md:h-screen pb-12 md:pb-24 flex items-end bg-[#0B1A2C] md:sticky top-0 z-0">
+        <section ref={heroRef} className="w-full md:h-screen pb-12 md:pb-24 flex items-end bg-[#0B1A2C] md:fixed top-0 z-0">
             <div ref={contentRef} className="container h-fit!">
                 <div className="flex max-sm:pt-[30vh] flex-col md:flex-row justify-between md:items-end gap-8 border-b border-dashed border-[#ffffff30] pb-5">
                     <h1 className="hero-anim-fade-up leading-none text-[#ffffff] tracking-tight m-0 p-0">

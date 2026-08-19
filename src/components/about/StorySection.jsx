@@ -8,6 +8,17 @@ import * as THREE from 'three';
 
 gsap.registerPlugin(ScrollTrigger);
 
+const coreValues = [
+  "Ambition with Integrity",
+  "Fairness & Equity",
+  "Create Value",
+  "Discipline & Consistency",
+  "Generosity without Calculation",
+  "Respect & Admiration",
+  "Inspire through Action",
+  "Make Memories",
+];
+
 const storySteps = [
   {
     id: 1,
@@ -292,8 +303,38 @@ const StorySection = () => {
   const activeStory = storySteps[Math.max(0, activeIndex)];
 
   return (
-    <div ref={triggerRef} className={`w-full h-auto md:h-[500vh] relative transition-colors duration-500 ${activeStory?.id === 5 ? 'bg-[#0B1A2C]' : 'bg-[#E3E2DC]'}`}>
+    <div ref={triggerRef} className="w-full h-auto md:h-[500vh] relative bg-[#E3E2DC]">
+      <div className={`absolute inset-0 w-full h-full transition-opacity duration-700 pointer-events-none ${activeStory?.id === 5 ? 'opacity-100' : 'opacity-0'}`} style={{ background: '#0B1A2C' }} />
       <div className={`relative md:sticky top-0 h-auto md:h-screen w-full overflow-hidden flex flex-col justify-between py-12 transition-colors duration-500 ${activeStory?.id === 5 ? 'text-white' : 'text-[#0B1A2C]'}`}>
+
+        <style>{`
+          @keyframes radialMove {
+            0% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
+            50% { transform: translate(-50%, -50%) scale(1.5); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
+          }
+          .animate-radial-blob {
+            animation: radialMove 12s ease-in-out infinite;
+          }
+          @keyframes bubbleIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            60% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
+          }
+          .animate-bubble {
+            animation: bubbleIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+          }
+        `}</style>
+
+        {/* Animated Radial Background Gradients (Sticky to viewport) */}
+        <div className={`absolute inset-0 pointer-events-none transition-opacity duration-1000 ease-in-out overflow-hidden ${activeStory?.id === 5 ? 'opacity-100 z-0' : 'opacity-0 -z-10'}`}>
+          <div className="absolute top-0 left-0 w-[120vw] h-[120vw] md:w-[60vw] md:h-[60vw] animate-radial-blob rounded-full"
+            style={{ background: 'radial-gradient(circle at center, #1e3a5f 0%, transparent 70%)' }} />
+        </div>
+        <div className={`absolute inset-0 pointer-events-none transition-opacity duration-1000 ease-in-out overflow-hidden ${activeStory?.id !== 5 ? 'opacity-100 z-0' : 'opacity-0 -z-10'}`}>
+          <div className="absolute top-0 left-0 w-[120vw] h-[120vw] md:w-[60vw] md:h-[60vw] animate-radial-blob rounded-full"
+            style={{ background: 'radial-gradient(circle at center, #ffffff 0%, transparent 70%)' }} />
+        </div>
 
         {/* Main Content Layout Container */}
         <div className="container h-full flex flex-col  justify-center gap-y-8 md:gap-y-32 relative z-10">
@@ -315,12 +356,12 @@ const StorySection = () => {
                   key={step.id}
                   onClick={() => handleDotClick(idx)}
                   className={`relative group p-3 md:p-4 rounded-full transition-all duration-300 flex items-center justify-center cursor-pointer shrink-0 ${isActive
-                      ? isStep5Active
-                        ? 'bg-white border border-dashed border-[#0B1A2C]'
-                        : 'bg-[#0B1A2C] border border-dashed border-[#0B1A2C]'
-                      : isStep5Active
-                        ? 'bg-transparent border border-dashed border-white/50 hover:border-white'
-                        : 'bg-transparent border border-dashed border-gray-400 hover:border-[#0B1A2C]'
+                    ? isStep5Active
+                      ? 'bg-white border border-dashed border-[#0B1A2C]'
+                      : 'bg-[#0B1A2C] border border-dashed border-[#0B1A2C]'
+                    : isStep5Active
+                      ? 'bg-transparent border border-dashed border-white/50 hover:border-white'
+                      : 'bg-transparent border border-dashed border-gray-400 hover:border-[#0B1A2C]'
                     }`}
                 >
                   <div className="w-6 h-6 md:w-7 md:h-7 relative flex items-center justify-center">
@@ -330,8 +371,8 @@ const StorySection = () => {
                       width={28}
                       height={28}
                       className={`w-full h-full object-contain transition-all duration-300 ${isActive
-                          ? isStep5Active ? 'brightness-0' : 'brightness-0 invert'
-                          : isStep5Active ? 'brightness-0 invert opacity-70 group-hover:opacity-100' : 'group-hover:opacity-100'
+                        ? isStep5Active ? 'brightness-0' : 'brightness-0 invert'
+                        : isStep5Active ? 'brightness-0 invert opacity-70 group-hover:opacity-100' : 'group-hover:opacity-100'
                         }`}
                     />
                   </div>
@@ -343,20 +384,17 @@ const StorySection = () => {
           {/* Mobile Canvas Illustration */}
           <div className="w-full md:hidden z-0 relative">
             {activeStory?.id === 5 ? (
-              <div className="flex items-center justify-center py-6 px-2 w-full h-full">
+              <div className="flex items-center justify-center  p-4 rounded-lg border border-dashed border-[#ffffff30] w-full h-full">
                 <div className="space-y-4 ">
                   <h3 className="text-xl font-medium leading-tight text-white">
                     Dream Boldly, Act Fearlessly & Live with Purpose.
                   </h3>
                   <div className="flex flex-wrap  gap-x-2 gap-y-2 text-xs text-white/80">
-                    <span className="border border-white/20 rounded-full px-3 py-1">Ambition with Integrity</span>
-                    <span className="border border-white/20 rounded-full px-3 py-1">Fairness & Equity</span>
-                    <span className="border border-white/20 rounded-full px-3 py-1">Discipline & Consistency</span>
-                    <span className="border border-white/20 rounded-full px-3 py-1">Generosity without Calculation</span>
-                    <span className="border border-white/20 rounded-full px-3 py-1">Respect & Admiration</span>
-                    <span className="border border-white/20 rounded-full px-3 py-1">Inspire through Action</span>
-                    <span className="border border-white/20 rounded-full px-3 py-1">Make Memories</span>
-                    <span className="border border-white/20 rounded-full px-3 py-1">Create Value</span>
+                    {coreValues.map((value, i) => (
+                      <span key={i} className={`border border-white/20 rounded-full px-3 py-1 animate-bubble ${i % 3 === 0 ? "bg-white/12" : "bg-[#883F27]"}`} style={{ animationDelay: `${i * 0.08}s` }}>
+                        {value}
+                      </span>
+                    ))}
                   </div>
                 </div>
               </div>
@@ -380,24 +418,21 @@ const StorySection = () => {
         </div>
 
         {/* Right Side Illustration Canvas Container */}
-        <div className="hidden md:flex absolute right-0 top-0 bottom-0 w-full md:w-3/5 lg:w-1/2 h-full overflow-hidden z-0 items-center justify-end p-4">
+        <div className="hidden md:flex absolute right-0 top-0 bottom-0 w-full md:w-3/5 lg:w-1/2 h-full overflow-hidden z-0 items-center justify-end">
           <div className={`absolute inset-0 transition-opacity duration-500 pointer-events-none ${activeStory?.id === 5 ? 'opacity-0' : 'opacity-100'}`}>
             <StoryWaterDropCanvas activeIndex={activeIndex} />
           </div>
-          <div className={`absolute inset-0 transition-opacity duration-500 flex items-center justify-center p-8 lg:p-24 ${activeStory?.id === 5 ? 'opacity-100 pointer-events-auto z-10' : 'opacity-0 pointer-events-none -z-10'}`}>
-            <div className="flex flex-col gap-8 justify-center w-full h-full items-start text-left">
+          <div className={`absolute inset-0 transition-opacity  duration-500 flex items-center justify-center pr-10  ${activeStory?.id === 5 ? 'opacity-100 pointer-events-auto z-10' : 'opacity-0 pointer-events-none -z-10'}`}>
+            <div className="flex flex-col gap-8 justify-center w-full  p-8 rounded-lg border border-dashed border-[#ffffff30] items-start text-left">
               <h3 className="text-3xl lg:text-5xl font-medium leading-tight text-white max-w-xl">
                 Dream Boldly, Act Fearlessly & Live with Purpose.
               </h3>
               <div className="flex flex-wrap gap-x-3 gap-y-3 text-sm lg:text-base text-white/80 max-w-xl font-medium">
-                <span className="border border-white/20 rounded-full px-4 py-2">Ambition with Integrity</span>
-                <span className="border border-white/20 rounded-full px-4 py-2">Fairness & Equity</span>
-                <span className="border border-white/20 rounded-full px-4 py-2">Discipline & Consistency</span>
-                <span className="border border-white/20 rounded-full px-4 py-2">Generosity without Calculation</span>
-                <span className="border border-white/20 rounded-full px-4 py-2">Respect & Admiration</span>
-                <span className="border border-white/20 rounded-full px-4 py-2">Inspire through Action</span>
-                <span className="border border-white/20 rounded-full px-4 py-2">Make Memories</span>
-                <span className="border border-white/20 rounded-full px-4 py-2">Create Value</span>
+                {coreValues.map((value, i) => (
+                  <span key={i} className={`border border-white/20 rounded-full px-4 py-2 transition-all duration-300 ${i % 2 === 0 ? "bg-white/12" : "bg-[#883F27]"} ${activeStory?.id === 5 ? 'animate-bubble' : 'opacity-0 scale-50'}`} style={{ animationDelay: `${i * 0.08}s` }}>
+                    {value}
+                  </span>
+                ))}
               </div>
             </div>
           </div>
