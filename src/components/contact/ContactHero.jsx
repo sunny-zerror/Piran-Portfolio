@@ -22,6 +22,11 @@ const ContactHero = () => {
     const [errors, setErrors] = useState({});
     const [status, setStatus] = useState('idle');
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    
+    const locationRef = useRef(null);
+    const emailRef = useRef(null);
+    const messageRef = useRef(null);
+    const aboutRef = useRef(null);
     const validateEmail = (email) => {
         return email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/);
     };
@@ -140,6 +145,12 @@ const ContactHero = () => {
                                             setFormData({ ...formData, name: e.target.value });
                                             if (errors.name) setErrors({ ...errors, name: false });
                                         }}
+                                        onKeyDown={(e) => {
+                                            if (e.key === 'Enter') {
+                                                e.preventDefault();
+                                                locationRef.current?.focus();
+                                            }
+                                        }}
                                         placeholder="( your name ) *"
                                         className={`w-full border-b ${errors.name ? 'border-white text-white' : 'border-[#ffffff15] focus:border-[#ffffff]'} bg-transparent outline-none  text-center placeholder:text-base placeholder:opacity-40 transition-colors`}
                                     />
@@ -149,10 +160,17 @@ const ContactHero = () => {
                                 <div className="relative flex-1 min-w-62.5">
                                     <input
                                         type="text"
+                                        ref={locationRef}
                                         value={formData.location}
                                         onChange={(e) => {
                                             setFormData({ ...formData, location: e.target.value });
                                             if (errors.location) setErrors({ ...errors, location: false });
+                                        }}
+                                        onKeyDown={(e) => {
+                                            if (e.key === 'Enter') {
+                                                e.preventDefault();
+                                                emailRef.current?.focus();
+                                            }
                                         }}
                                         placeholder="( your company or city ) *"
                                         className={`w-full border-b ${errors.location ? 'border-white text-white' : 'border-[#ffffff15] focus:border-[#ffffff]'} bg-transparent outline-none  text-center placeholder:text-base placeholder:opacity-40 transition-colors`}
@@ -166,10 +184,17 @@ const ContactHero = () => {
                                 <div className="relative flex-1 min-w-62.5">
                                     <input
                                         type="text"
+                                        ref={emailRef}
                                         value={formData.email}
                                         onChange={(e) => {
                                             setFormData({ ...formData, email: e.target.value });
                                             if (errors.email) setErrors({ ...errors, email: false });
+                                        }}
+                                        onKeyDown={(e) => {
+                                            if (e.key === 'Enter') {
+                                                e.preventDefault();
+                                                messageRef.current?.focus();
+                                            }
                                         }}
                                         placeholder="( your@email.com ) *"
                                         className={`w-full border-b ${errors.email ? 'border-white text-white' : 'border-[#ffffff15] focus:border-[#ffffff]'} bg-transparent outline-none  text-center placeholder:text-base placeholder:opacity-40 transition-colors`}
@@ -184,8 +209,15 @@ const ContactHero = () => {
                                 <div className="relative flex-1 min-w-75">
                                     <input
                                         type="text"
+                                        ref={messageRef}
                                         value={formData.message}
                                         onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                                        onKeyDown={(e) => {
+                                            if (e.key === 'Enter') {
+                                                e.preventDefault();
+                                                aboutRef.current?.focus();
+                                            }
+                                        }}
                                         placeholder="( start the right conversation )"
                                         className="w-full border-b border-[#ffffff15] bg-transparent outline-none  text-center placeholder:text-base placeholder:opacity-40 focus:border-[#ffffff] transition-colors"
                                     />
@@ -195,13 +227,15 @@ const ContactHero = () => {
                             <div className="flex flex-wrap items-baseline gap-x-4 gap-y-6 mt-10">
                                 <span className="whitespace-nowrap">This is about:</span>
                                 <div className="relative flex-1 min-w-50">
-                                    <div
+                                    <button
+                                        type="button"
+                                        ref={aboutRef}
                                         onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                                        className="w-full border-b border-[#ffffff15] hover:border-[#ffffff] bg-transparent outline-none  text-center transition-colors cursor-pointer"
+                                        className="w-full border-b border-[#ffffff15] hover:border-[#ffffff] bg-transparent outline-none  text-center transition-colors cursor-pointer flex justify-center items-center py-1 relative"
                                     >
                                         {formData.about}
                                         <RiArrowDownSLine className={`size-5 absolute right-2 top-1/2 -translate-y-1/2 ${isDropdownOpen ? "rotate-180" : "rotate-0"} transition-all duration-300`} />
-                                    </div>
+                                    </button>
 
                                     {isDropdownOpen && (
                                         <>

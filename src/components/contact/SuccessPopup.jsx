@@ -17,7 +17,7 @@ const SuccessPopup = ({ isOpen, onClose }) => {
     return (
         <div className={`fixed inset-0 z-[100000] flex items-center justify-center transition-all duration-500 ${isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
             <div className="absolute inset-0 bg-[#0B1A2C]/80 backdrop-blur-sm" onClick={onClose} />
-            <div className={`relative bg-[#EAE9E4] h-80 rounded-xl p-6 max-w-xl w-[90%] transition-transform duration-500 ${isOpen ? 'scale-100 translate-y-0' : 'scale-95 translate-y-4'}`}>
+            <div className={`relative bg-[#EAE9E4] h-60 rounded-xl p-6 max-w-xl w-[90%] transition-transform duration-500 ${isOpen ? 'scale-100 translate-y-0' : 'scale-95 translate-y-4'}`}>
                 <button 
                     onClick={onClose}
                     aria-label="Close popup"
