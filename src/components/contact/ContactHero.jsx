@@ -22,7 +22,7 @@ const ContactHero = () => {
     const [errors, setErrors] = useState({});
     const [status, setStatus] = useState('idle');
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-    
+
     const locationRef = useRef(null);
     const emailRef = useRef(null);
     const messageRef = useRef(null);
@@ -105,24 +105,14 @@ const ContactHero = () => {
                     <h1 className="hero-anim-fade-up leading-none text-[#ffffff] tracking-tight m-0 p-0">
                         Let's Talk
                     </h1>
-                    <p className="hero-anim-fade-up text-[#ffffff] opacity-70 max-w-[22rem] md:text-right pb-3">
-                        Whatever brings you here, I read everything myself, and you'll hear back within two days.
-                    </p>
+
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-5 pt-8 md:pt-16">
                     <div className="hero-anim-fade-up flex flex-col col-span-2 justify-between h-full max-sm:space-y-4">
                         <div className="space-y-8">
-                            <a href="mailto:piran@wearepointof.com" className="flex group items-center gap-3 w-fit text-[#ffffff]">
-                                <div className="w-10 h-10 rounded-full border border-dashed border-[#ffffff30] flex items-center group-hover:bg-[#ffffff] group-hover:text-[#0B1A2C] transition-all duration-300 justify-center text-[#ffffff]">
-                                    <RiMailLine className='size-4' />
-                                </div>
-                                <div className="text-2xl relative  cursor-pointer">piran@wearepointof.com
-                                    <div
-                                        className={`absolute bottom-0 left-0 w-full h-px bg-[#ffffff] transition-transform duration-300 rounded-full 
-                      scale-x-0 origin-right group-hover:scale-x-100 group-hover:origin-left`}
-                                    ></div>
-                                </div>
-                            </a>
+                            <p className="hero-anim-fade-up text-[#ffffff] opacity-70 max-w-sm">
+                                Whatever brings you here, I read everything myself, and you'll hear back within two days.
+                            </p>
                         </div>
                         <div className="flex flex-wrap gap-4">
                             <Link target="_blank" href="https://in.linkedin.com/in/iampirantee" aria-label="LinkedIn Profile" className="w-10 h-10 rounded-full border border-dashed border-[#ffffff30] flex items-center hover:bg-[#ffffff] hover:text-[#0B1A2C] transition-all duration-300 justify-center text-[#ffffff]">

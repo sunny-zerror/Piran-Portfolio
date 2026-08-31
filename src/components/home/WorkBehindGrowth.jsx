@@ -86,7 +86,7 @@ const WorkBehindGrowth = () => {
     return (
         <>
             <div className="container  bg-[#0B1A2C] mt-12 md:mt-24 pt-12 md:pt-24 space-y-8 md:space-y-16">
-                <div className="w-full relative z-10 text-center">
+                <div className="w-full relative z-10 md:text-center">
                     <h2 data-para-effect className='leading-none text-white'>How I Work</h2>
                 </div>
 
@@ -125,6 +125,9 @@ const WorkBehindGrowth = () => {
                     ))}
                 </div>
 
+            </div>
+            <div className="md:text-center bg-[#0B1A2C] pt-8 max-sm:px-4">
+                <h2 data-para-effect className='leading-none text-white'>Partners may rotate. I don't.</h2>
             </div>
                 <div className="w-full h-[60vh] bg-[#0B1A2C] relative">
                     <WavePlaneCanvas/>

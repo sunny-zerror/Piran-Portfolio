@@ -1,3 +1,4 @@
+import Footer from "@/components/common/Footer";
 import About from "@/components/home/About";
 import Hero from "@/components/home/Hero";
 import MobileHero from "@/components/home/MobileHero";
@@ -10,13 +11,16 @@ import { createPageMetadata } from "@/lib/seo";
 const HomePage = () => {
   return (
     <>
-    <Hero />
-    <MobileHero/>
-    <About/>
-    <WorkResult/>
-    <WorkBehindGrowth/>
-    <Partners/>
-    <RecordNotResume/>
+      <Hero />
+      <MobileHero />
+      <About />
+      <WorkResult />
+      <WorkBehindGrowth />
+      <Partners />
+      <RecordNotResume />
+      <footer>
+        <Footer />
+      </footer>
     </>
   );
 };

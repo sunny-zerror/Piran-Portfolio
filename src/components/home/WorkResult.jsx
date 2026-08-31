@@ -45,7 +45,7 @@ const WorkResult = () => {
               </div>
               <div className=" max-sm:pt-10 space-y-2">
                 <h4 data-para-effect>Execution</h4>
-                <p className='opacity-70 leading-tight'>Then we walk it identity, materials, and systems, built with Point Of and its vetted brand partners.</p>
+                <p className='opacity-70 leading-tight'>Then we walk it: identity, materials, and systems, built with Point Of and its vetted brand partners.</p>
               </div>
             </div>
           </div>
@@ -60,7 +60,7 @@ const WorkResult = () => {
               <div className=" max-sm:pt-10 space-y-2">
                 <h4 data-para-effect>Backing</h4>
                 <p className="opacity-70 leading-tight">
-                   And for the right founders, I go further equity, introductions, and a network that travels with you.</p>
+                   And for the right founders, I go further: equity, introductions, and a network that travels with you.</p>
               </div>
             </div>
 

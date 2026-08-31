@@ -46,7 +46,7 @@ const FooterPhysicsBalls = () => {
     // Create obstacle bodies for the text and button
     // Find text elements and button in parent container
     const parentContainer = container.parentElement;
-    const textElements = parentContainer ? parentContainer.querySelectorAll('p, h2, button') : [];
+    const textElements = parentContainer ? parentContainer.querySelectorAll('p, h2,h4, button') : [];
     const obstacles = [];
     const obstacleBodiesMap = new Map();
 

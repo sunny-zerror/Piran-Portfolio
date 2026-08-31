@@ -92,7 +92,7 @@ const ThesisCardContent = ({ isExpanded, onExpand, onClose }) => {
             </div>
             <div className="">
                 <CustomButton onClick={() => onExpand()}>
-                    Read Full Thesis
+                    Read The Full Thesis
                 </CustomButton>
             </div>
         </div>
