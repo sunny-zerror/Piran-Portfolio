@@ -6,20 +6,13 @@ import FooterPhysicsBalls from './FooterPhysicsBalls';
 import Image from 'next/image';
 import { RotatingText } from './RotatingText';
 import CustomButton from './CustomButton';
+import PhysicsTextCta from './PhysicsTextCta';
 
 const AboutFooter = () => {
 
   return (
     <div className="w-full h-screen flex flex-col justify-between bg-[#883F27] text-white relative z-[100000]">
-      <div className="w-full  relative  flex-1  flex flex-col items-center  py-12 md:py-24 text-center overflow-hidden">
-        <div className="relative pointer-events-none z-10 flex flex-col items-center gap-y-4 md:gap-y-5">
-          <h4 data-para-effect className="leading-none max-w-2xl">The relationship begins with the project and ends when the brand stops growing. If that's how you're building, let's begin.</h4>
-          <CustomButton href="/contact">
-            Begin
-          </CustomButton>
-        </div>
-        <FooterPhysicsBalls />
-      </div>
+      <PhysicsTextCta />
 
       <div className="container h-fit! py-6 md:py-12 pb-2 md:pb-5 relative z-10 space-y-6 md:space-y-6">
         <div className="flex flex-col md:grid md:grid-cols-8 gap-y-6 md:gap-y-0">

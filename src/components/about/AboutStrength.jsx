@@ -26,7 +26,7 @@ const items = [
 const AboutStrength = () => {
     return (
         <>
-            <div className="w-full py-12 md:py-24 bg-[#0B1A2C] text-white">
+            <div className="w-full py-12 md:py-24 bg-[#0B1A2C] relative z-[100] text-white">
                 <div className="container h-fit!">
                     <div className="grid grid-cols-1 md:grid-cols-2">
                         {/* Left Column: Strengths & Accordion */}

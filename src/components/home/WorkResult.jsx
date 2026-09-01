@@ -4,12 +4,14 @@ import Image from 'next/image';
 import ExecutionCanvas from './canvasComponent/ExecutionCanvas';
 import CapitalAccess from './canvasComponent/CapitalAccess';
 import ClarityCanvas from './canvasComponent/ClarityCanvas';
+import HalftoneJellyCanvas from './canvasComponent/HalftoneJellyCanvas';
 
 const WorkResult = () => {
 
   return (
-    <>
-      <div className="container pt-12 md:pt-24 space-y-8 md:space-y-16 ">
+    <div className="relative w-full overflow-hidden">
+      <HalftoneJellyCanvas color1="#0B1A2C" color2="#e3e2dc" />
+      <div className="container  pt-12 md:pt-24 space-y-8 md:space-y-16 relative z-10">
         <div className="w-full max-sm:space-y-2 md:grid grid-cols-6">
           <h2 data-para-effect className=' col-span-4 leading-none'>Where I <br />Come In</h2>
           <p data-para-effect className='opacity-70 leading-tight col-span-2 text-lg'>Founders rarely call about strategy. They call because something feels misaligned drift, friction, growth that costs more than it returns. The problem is rarely effort. It's position. The brand never had one to organise around. Finding it is where I come in.</p>
@@ -60,7 +62,7 @@ const WorkResult = () => {
               <div className=" max-sm:pt-10 space-y-2">
                 <h4 data-para-effect>Backing</h4>
                 <p className="opacity-70 leading-tight">
-                   And for the right founders, I go further: equity, introductions, and a network that travels with you.</p>
+                  And for the right founders, I go further: equity, introductions, and a network that travels with you.</p>
               </div>
             </div>
 
@@ -72,7 +74,7 @@ const WorkResult = () => {
           </div>
         </div>
       </div>
-    </>
+    </div>
   )
 }
 

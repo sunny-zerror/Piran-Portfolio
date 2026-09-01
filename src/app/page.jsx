@@ -3,6 +3,7 @@ import About from "@/components/home/About";
 import Hero from "@/components/home/Hero";
 import MobileHero from "@/components/home/MobileHero";
 import Partners from "@/components/home/Partners";
+import Thesis from "@/components/home/Thesis";
 import RecordNotResume from "@/components/home/RecordNotResume";
 import WorkBehindGrowth from "@/components/home/WorkBehindGrowth";
 import WorkResult from "@/components/home/WorkResult";
@@ -17,6 +18,7 @@ const HomePage = () => {
       <WorkResult />
       <WorkBehindGrowth />
       <Partners />
+      <Thesis />
       <RecordNotResume />
       <footer>
         <Footer />

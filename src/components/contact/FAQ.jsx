@@ -1,5 +1,7 @@
 "use client";
 import React, { useState } from 'react';
+import CustomButton from '../common/CustomButton';
+import { useThesisStore } from '@/store/useThesisStore';
 
 const faqs = [
     {
@@ -8,7 +10,8 @@ const faqs = [
     },
     {
         question: "Who do you typically work with?",
-        answer: "Founders early in the journey. The equity work leans brand-led; the investments sit in wellness, healthcare, and financial services. A handful at a time, never more."
+        answer: "Founders early in the journey. The equity work leans brand-led; the investments sit in wellness, healthcare, and financial services. A handful at a time, never more.",
+        hasThesisButton: true
     },
     {
         question: "Is this coaching, consulting, or advisory work?",
@@ -37,6 +40,7 @@ const faqs = [
 ];
 
 const FAQ = () => {
+    const { openThesis } = useThesisStore();
     const [openIndex, setOpenIndex] = useState(null); // Set second item open by default to match screenshot, or just null. Let's do 1.
 
     const toggleFaq = (index) => {
@@ -64,7 +68,7 @@ const FAQ = () => {
                             return (
                                 <div 
                                     key={index} 
-                                    className={` group border border-dashed border-[#0B1A2C30] transition-colors duration-300 ${isOpen ? 'bg-[#ffffff]' : 'bg-transparent'}`}
+                                    className={` border border-dashed border-[#0B1A2C30] transition-colors duration-300 ${isOpen ? 'bg-[#ffffff]' : 'bg-transparent'}`}
                                 >
                                     <button
                                         onClick={() => toggleFaq(index)}
@@ -86,6 +90,13 @@ const FAQ = () => {
                                             <p className="text-[#0B1A2C] opacity-70 w-[80%] pb-6">
                                                 {faq.answer}
                                             </p>
+                                            {faq.hasThesisButton && (
+                                                <div className="pb-6">
+                                                    <CustomButton theme='dark' onClick={openThesis} className="w-fit">
+                                                        Read the full thesis
+                                                    </CustomButton>
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
                                 </div>

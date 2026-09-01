@@ -173,7 +173,7 @@ const Hero = () => {
                 <div className="hero_logos opacity-0">
                   <RotatingText />
                 </div>
-                <p className="opacity-60 paragraph_split"><LiveTime /></p>
+                <p className="hero_logos opacity-0 "><LiveTime /></p>
               </div>
 
               <div className=" vid_cont opacity-0  relative w-72 aspect-video">

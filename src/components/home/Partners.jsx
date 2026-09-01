@@ -24,85 +24,13 @@ const newPartnersData = {
     invested: [
         { id: 'i1', name: 'Marengo Asia Hospitals', role: 'Private Investor', desc: 'A multispecialty hospital network across the NCR, Rajasthan, and Gujarat, with 2,500 beds and counting. Marengo Asia is expanding healthcare capacity for a country that needs decades more of it.', logo: '/images/homepage/partners/marengo.png' },
         { id: 'i2', name: 'Edme Insurance', role: 'Private Investor', desc: 'An insurance-broking platform built through acquisition, including Aditya Birla Insurance Brokers, one of the country\'s leading broking houses. Edme is consolidating India\'s insurance distribution around a single customer-first thesis, alongside institutional capital.', logo: '/images/homepage/partners/edme.png' },
-        { id: 'i3', name: 'Samara Capital', role: 'Limited Partner', desc: 'An India-focused investment firm that has deployed over 1.5 billion dollars since 2007. Samara Capital backs operators who transform fragmented businesses into scalable enterprises, across healthcare, insurance, and retail.', logo: '/images/homepage/partners/samara.png' }
+        { id: 'i3', name: 'Samara Capital', role: 'Limited Partner', desc: 'An India-focused investment firm that has deployed over 1.5 billion dollars since 2007. Samara Capital backs operators who transform fragmented businesses into scalable enterprises, across healthcare, insurance, and retail.', logo: '/images/homepage/partners/samara.svg' }
     ]
-};
-
-const ThesisCardContent = ({ isExpanded, onExpand, onClose }) => {
-    return isExpanded ? (
-        <div key="expanded" data-lenis-prevent className="w-full h-[75%] fade-in">
-            <button
-                onClick={(e) => { e.stopPropagation(); onClose(); }}
-                className="absolute top-4 right-4 md:top-8 md:right-8 w-10 h-10 bg-white/10 hover:bg-white hover:text-[#0B1A2C] rounded-full flex items-center justify-center transition-all duration-300 z-50"
-                aria-label="Close Thesis"
-            >
-                <RiCloseLine size={20} />
-            </button>
-            <div className="space-y-8 pr-2 pb-12  md:pr-4">
-                <div>
-                    <h4 className="mb-2 text-xl text-white">The Thesis</h4>
-                    <p className="opacity-80 text-lg text-white">Most early-stage founders don't fail because the product was wrong or the money ran out. They fail because clarity was missing in the year it mattered most. The pre-institutional phase is where decisions compound fastest: positioning, narrative, market understanding, direction. Everything downstream inherits that clarity or its absence.</p>
-                    <p className="opacity-80 text-lg mt-6 text-white">The support around founders is fragmented by design. Consultants optimise for the recommendation, agencies for the asset, capital for the board seat. Each exits before the hardest part: the pivots, the repositioning, the translation of strategy into something real. No one holds the full picture, and no one stays. That gap is the practice.</p>
-                </div>
-
-                <div>
-                    <h4 className="mb-2 text-xl text-white">Where I Work</h4>
-                    <p className="opacity-80 text-lg text-white">Home ground: wellness, healthcare, and financial services. That is where the conviction has clustered, in equity earned through the work and in positions taken early. What I bring into these markets is the brand lens: the early bottleneck is rarely the science or the licence, it is positioning, narrative, and direction. That is the bottleneck I unlock.</p>
-                    <p className="opacity-80 text-lg mt-6 text-white">I come in early: pre-revenue or early revenue, before institutional capital, while the strategic decisions still compound. Selectively, the work reaches beyond the home ground, into consumer and craft-led businesses where positioning carries the same weight. If positioning isn't the problem, I'm not the answer.</p>
-                </div>
-
-                <div>
-                    <h4 className="mb-2 text-xl text-white">How I Choose</h4>
-                    <p className="opacity-80 text-lg text-white">A handful of founders at a time, never more. The formal read covers strategic intent, decision-making, execution and ownership, equity alignment, and time horizon. The informal read decides more: how a founder treats people with nothing to offer them, whether they arrive prepared, how they respond to challenge, what their follow-through looks like between meetings.</p>
-                    <p className="opacity-80 text-lg mt-6 text-white">What has to be true: the founder has fire. They're coachable without being dependent. The problem is real and they've been inside it, testing and adapting, not theorising. And there's a clear leverage point for the thinking. What makes me walk away: misalignment in values or commitment, founders who want capital without partnership, and resistance to what the market is plainly saying.</p>
-                </div>
-
-                <div>
-                    <h4 className="mb-2 text-xl text-white">The Ask</h4>
-                    <p className="opacity-80 text-lg text-white">Strategic equity is the default and the anchor. I earn it by creating value, not by deploying capital. Structures are agreed upfront and tied to clear dependencies: milestones delivered, scope fulfilled, value unlocked. Shares vest when the agreed condition is met.</p>
-                    <p className="opacity-80 text-lg mt-6 text-white">Capital itself is rare. It follows conviction built through an engagement that's already proving itself, and when it happens it's structured simply and accompanies a relationship that's been tested. My upside is the founder's upside. I don't extract. I earn.</p>
-                </div>
-
-                <div>
-                    <h4 className="mb-2 text-xl text-white">How I Work</h4>
-                    <p className="opacity-80 text-lg text-white">It starts with a conversation that isn't a pitch but a read, on both sides. If there's mutual interest, a structured questionnaire follows, and after that the deeper conversations: scope, involvement, equity, milestones, cadence. Nothing is implied, everything is agreed, and a signed agreement comes before any work and any doors open. Typically seven or more meetings before commitment is discussed seriously.</p>
-                    <p className="opacity-80 text-lg mt-6 text-white">The engagement then moves through three phases. Intensive: close rhythm, the foundational decisions, the phase where value concentrates. Building: partners step in, Point Of and vetted specialists, while I hold the strategic layer. Steady: reports and open availability, a sounding board and a door-opener as the company grows. Partners are introduced transparently, and the founder always chooses. Through every phase, I'm a message away.</p>
-                </div>
-
-                <div>
-                    <h4 className="mb-2 text-xl text-white">What I Don't Do</h4>
-                    <p className="opacity-80 text-lg text-white">No passive involvement: if I'm in, I'm embedded. No template-first work: playbooks are starting points, never the deliverable. No operational takeover: the founder leads the business. No engagements where clarity isn't the bottleneck. And no capital without conviction that's been earned in the room. The boundaries protect every engagement and the model itself. Restraint is structural, not posturing.</p>
-                </div>
-
-                <div className="pt-8 border-t border-white/10">
-                    <p className="opacity-80 text-lg mb-8 text-white">If you're building something that deserves this kind of attention, the door is one form away.</p>
-                    <CustomButton href="/contact" className="w-fit">
-                        Begin
-                    </CustomButton>
-                </div>
-            </div>
-        </div>
-    ) : (
-        <div key="collapsed" className="inner-content h-full flex flex-col justify-between w-full fade-in">
-            <div>
-                <h3 className="text-2xl font-medium mb-4 md:mb-6 text-white">How I Choose</h3>
-                <p className="opacity-80 md:text-lg text-white">
-                    Consultants leave after the recommendation. Agencies leave after the deliverable. Investors show up for board meetings. Nobody stays. I stay. I come in before the institutions do, usually pre-seed to seed, where positioning is the bottleneck rather than the product. Home ground: wellness, healthcare, and financial services. The ask is simple and documented: strategic equity, agreed before the work begins.
-                </p>
-            </div>
-            <div className="">
-                <CustomButton onClick={() => onExpand()}>
-                    Read The Full Thesis
-                </CustomButton>
-            </div>
-        </div>
-    );
 };
 
 const Partners = () => {
     const [selectedPartner, setSelectedPartner] = useState(null);
     const [isPopupOpen, setIsPopupOpen] = useState(false);
-    const [isThesisOpen, setIsThesisOpen] = useState(false);
     const [activeIndex, setActiveIndex] = useState(0);
 
     const containerRef = useRef(null);
@@ -121,42 +49,23 @@ const Partners = () => {
         };
     }, [isPopupOpen]);
 
-    useEffect(() => {
-        if (!isThesisOpen) return;
-
-        let initialScroll = window.lenis ? window.lenis.scroll : window.scrollY;
-
-        const handleScroll = () => {
-            const currentScroll = window.lenis ? window.lenis.scroll : window.scrollY;
-            if (Math.abs(currentScroll - initialScroll) > 30) {
-                setIsThesisOpen(false);
-            }
-        };
-
-        window.addEventListener('scroll', handleScroll, { passive: true });
-        if (window.lenis) {
-            window.lenis.on('scroll', handleScroll);
-        }
-
-        return () => {
-            window.removeEventListener('scroll', handleScroll);
-            if (window.lenis) {
-                window.lenis.off('scroll', handleScroll);
-            }
-        };
-    }, [isThesisOpen]);
-
     useGSAP(() => {
 
-        gsap.to(".bottom_bar", {
+        const bar_tl = gsap.timeline({
             scrollTrigger: {
                 trigger: containerRef.current,
                 start: "top top",
                 end: "bottom bottom",
                 scrub: true
             },
+        })
+        bar_tl.to(".bottom_bar", {
             width: "100%",
             ease: "none"
+        })
+        bar_tl.to(".bottom_bar", {
+            opacity: 0,
+            duration: 0
         })
 
         let mm = gsap.matchMedia();
@@ -307,12 +216,18 @@ const Partners = () => {
                 return (
                     <div key={`section-${index}`} className={`card-section card-section-${index} absolute inset-0 w-full flex flex-wrap gap-2 items-center`}>
                         <div
-                            data-lenis-prevent
                             ref={el => cardsRefs.current[3][0] = el}
-                            className={`bg-[#152535] p-8 md:p-12 rounded-lg w-full flex flex-col transition-[height] duration-500 overflow-hidden relative ${isThesisOpen ? 'h-[75vh] overflow-y-auto custom_scroller z-[100]' : 'justify-between h-[25rem]'}`}
+                            className={`bg-[#152535] p-8 md:p-12 rounded-lg w-full flex flex-col justify-between  overflow-hidden relative`}
                             style={{ flexBasis: '100%' }}
                         >
-                            <ThesisCardContent isExpanded={isThesisOpen} onExpand={() => setIsThesisOpen(true)} onClose={() => setIsThesisOpen(false)} />
+                            <div className="inner-content h-full flex flex-col justify-between w-full fade-in">
+                                <div>
+                                    <h3 className="text-2xl font-medium mb-4 md:mb-6 text-white">Founder</h3>
+                                    <p className="opacity-80 w-[80%] md:text-lg text-white">
+                                        A company of my own is underway a wellness and nutraceutical brand, in stealth. After years of building for founders, it was time. The name arrives only when it's ready.
+                                    </p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 );
@@ -366,9 +281,8 @@ const Partners = () => {
                         </div>
                         <div className="title-section title-section-3 w-full absolute inset-0 flex flex-col justify-center">
                             <div className="flex items-center gap-4 mb-4">
-                                <h2 className="leading-none m-0 p-0">Founder</h2>
+                                <h2 className="leading-none m-0 p-0">Now</h2>
                             </div>
-                            <p className="opacity-60 leading-tight text-lg mt-2">A company of my own is underway a wellness and nutraceutical brand, in stealth. After years of building for founders, it was time. The name arrives only when it's ready.</p>
                         </div>
                     </div>
                 </div>
@@ -451,15 +365,15 @@ const Partners = () => {
 
                 {/* Mobile NOW */}
                 <div className="space-y-6">
-                    <div>
-                        <div className="flex items-center gap-4 mb-2">
-                            <h2 data-para-effect className="leading-none m-0 p-0">Founder</h2>
-                        </div>
-                        <p className="opacity-60 leading-tight mt-2">A company of my own is underway a wellness and nutraceutical brand, in stealth. After years of building for founders, it was time. The name arrives only when it's ready.</p>
+                    <div className="flex items-center gap-4 mb-2">
+                        <h2 data-para-effect className="leading-none m-0 p-0">Now</h2>
                     </div>
 
-                    <div className={`bg-[#152535] p-5 rounded-lg w-full flex flex-col transition-[height] duration-500 overflow-hidden relative ${isThesisOpen ? 'h-[80vh] overflow-y-auto custom_scroller z-[100]' : ' h-[30rem] justify-between'}`}>
-                        <ThesisCardContent isExpanded={isThesisOpen} onExpand={() => setIsThesisOpen(true)} onClose={() => setIsThesisOpen(false)} />
+                    <div className="bg-[#152535] p-5 rounded-lg w-full flex flex-col overflow-hidden relative justify-between">
+                        <h3 className="text-2xl font-medium mb-4 md:mb-6 text-white">Founder</h3>
+                        <p className="opacity-80 md:text-lg text-white">
+                            A company of my own is underway a wellness and nutraceutical brand, in stealth. After years of building for founders, it was time. The name arrives only when it's ready.
+                        </p>
                     </div>
                 </div>
             </div>

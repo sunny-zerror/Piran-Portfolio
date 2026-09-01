@@ -300,6 +300,14 @@ const StorySection = () => {
     }
   };
 
+  const handleSkip = () => {
+    if (triggerRef.current) {
+      const rect = triggerRef.current.getBoundingClientRect();
+      const scrollPos = window.scrollY + rect.bottom;
+      window.scrollTo({ top: scrollPos, behavior: 'smooth' });
+    }
+  };
+
   const activeStory = storySteps[Math.max(0, activeIndex)];
 
   return (
@@ -436,6 +444,19 @@ const StorySection = () => {
               </div>
             </div>
           </div>
+        </div>
+
+        {/* Skip Button */}
+        <div className=" hidden md:block absolute bottom-6 left-1/2 -translate-x-1/2 z-50">
+          <button
+            onClick={handleSkip}
+            className={`px-6 py-2 rounded-full border border-dashed transition-all duration-300 text-xs md:text-sm tracking-wider uppercase flex items-center gap-2  backdrop-blur-sm
+              ${activeStory?.id === 5 
+                ? 'border-white/50 text-white hover:border-white hover:bg-white hover:text-[#0B1A2C] ' 
+                : 'border-[#0B1A2C]/50 text-[#0B1A2C] hover:border-[#0B1A2C] hover:bg-[#0B1A2C] hover:text-white'}`}
+          >
+            <span>Skip</span>
+          </button>
         </div>
 
       </div>
