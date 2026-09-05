@@ -4,6 +4,7 @@ import { RiMailLine, RiPhoneLine, RiLinkedinFill, RiInstagramLine, RiInstagramFi
 import Link from 'next/link';
 import SuccessPopup from './SuccessPopup';
 import CustomButton from '../common/CustomButton';
+import AsciiImageBackground from '../common/AsciiImageBackground';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -70,7 +71,7 @@ const ContactHero = () => {
         }
     };
 
-    const heroRef = useRef(null);
+    const asciiRef = useRef(null);
     const contentRef = useRef(null);
 
     useGSAP(() => {
@@ -86,7 +87,7 @@ const ContactHero = () => {
         let mm = gsap.matchMedia();
 
         mm.add("(min-width: 768px)", () => {
-            gsap.to(contentRef.current, {
+            gsap.to([asciiRef.current, contentRef.current], {
                 scrollTrigger: {
                     trigger: ".faq_paren",
                     start: "top bottom",
@@ -99,8 +100,15 @@ const ContactHero = () => {
     });
 
     return (
-        <section ref={heroRef} className="w-full md:h-screen pb-12 md:pb-24 flex items-end bg-[#0B1A2C] md:fixed top-0 z-0">
-            <div ref={contentRef} className="container h-fit!">
+        <section className="w-full md:h-screen pb-12 md:pb-24 flex items-end bg-[#0B1A2C] md:fixed top-0 z-0 overflow-hidden">
+            <AsciiImageBackground
+                ref={asciiRef}
+                src="/images/hand_connect_contact_bg.png"
+                cols={400}
+                chars=" •●"
+                className=" opacity-40 text-white mix-blend-screen"
+            />
+            <div ref={contentRef} className="container h-fit! relative z-10">
                 <div className="flex max-sm:pt-[30vh] flex-col md:flex-row justify-between md:items-end gap-8 border-b border-dashed border-[#ffffff30] pb-5">
                     <h1 className="hero-anim-fade-up leading-none text-[#ffffff] tracking-tight m-0 p-0">
                         Let's Talk
