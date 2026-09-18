@@ -5,7 +5,7 @@ import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { flushSync } from 'react-dom';
-import { RiArrowRightUpLine, RiCloseLine } from '@remixicon/react';
+import { RiAddLine, RiCloseLine } from '@remixicon/react';
 import 'swiper/css';
 import { Link } from 'next-view-transitions';
 import CustomButton from '../common/CustomButton';
@@ -217,7 +217,7 @@ const Partners = () => {
                     <div key={`section-${index}`} className={`card-section card-section-${index} absolute inset-0 w-full flex flex-wrap gap-2 items-center`}>
                         <div
                             ref={el => cardsRefs.current[3][0] = el}
-                            className={`bg-[#152535] p-8 md:p-12 rounded-lg w-full flex flex-col justify-between  overflow-hidden relative`}
+                            className={`bg-[#8E4932]  p-8 md:p-12 rounded-lg w-full flex flex-col justify-between  overflow-hidden relative`}
                             style={{ flexBasis: '100%' }}
                         >
                             <div className="inner-content h-full flex flex-col justify-between w-full fade-in">
@@ -241,15 +241,15 @@ const Partners = () => {
                             ref={el => cardsRefs.current[index][i] = el}
                             onClick={() => handlePartnerClick(item)}
                             style={{ flexBasis: cardBasis }}
-                            className={`group relative flex items-center justify-center aspect-6/5 bg-white/5 rounded-lg cursor-pointer hover:bg-[#253646] transition-colors duration-300`}
+                            className={`group relative flex items-center justify-center aspect-6/5 bg-white/5 rounded-lg cursor-pointer hover:bg-[#E3E2DC] transition-colors duration-300`}
                         >
                             <div className="w-full absolute bottom-0 flex items-end justify-between p-3 leading-none">
-                                <p className='text-sm uppercase w-[80%]'>{item.name}</p>
-                                <button aria-label={`View ${item.name} details`} className='p-1.5 bg-white/10 rounded-full group-hover:bg-white group-hover:text-[#0B1A2C] transition-all duration-300 '><RiArrowRightUpLine className='size-4' /></button>
+                                <p className='text-sm uppercase w-[80%] group-hover:text-black transition-all duration-300'>{item.name}</p>
+                                <button aria-label={`View ${item.name} details`} className='p-1.5 bg-white/10 rounded-full group-hover:bg-white group-hover:text-[#0B1A2C] transition-all duration-300 '><RiAddLine className='size-4' /></button>
                             </div>
                             <div className="w-full h-full absolute inset-0 flex items-center justify-center">
                                 <div className="w-44 h-20 center relative">
-                                    <Image fill src={item.logo} alt={item.name} className="object-contain invert-100" />
+                                    <Image fill src={item.logo} alt={item.name} className="object-contain group-hover:invert-0 invert-100 transition-all duration-300" />
                                 </div>
                             </div>
                         </div>
@@ -260,7 +260,7 @@ const Partners = () => {
     };
 
     return (
-        <div ref={containerRef} className="container bg-[#0B1A2C] text-white relative h-auto md:h-[400vh]! w-full">
+        <div ref={containerRef} className="container bg-[#883F27] text-white relative h-auto md:h-[400vh]! w-full">
             <div ref={stickyRef} className="hidden md:block sticky! top-0 w-full h-screen! overflow-hidden ">
 
                 <div className="bottom_bar absolute h-1 bg-[#E3E2DC] w-0 left-0 bottom-1 rounded-full"></div>
@@ -302,10 +302,10 @@ const Partners = () => {
                     </div>
                     <div className="grid grid-cols-2 gap-2">
                         {newPartnersData.founded.map((item) => (
-                            <div key={item.id} onClick={() => { setSelectedPartner(item); setIsPopupOpen(true); }} className="flex relative items-center justify-center w-full aspect-6/5 bg-white/5 rounded-md cursor-pointer active:bg-[#253646] transition-colors border border-white/10 shrink-0">
+                            <div key={item.id} onClick={() => { setSelectedPartner(item); setIsPopupOpen(true); }} className="flex relative items-center justify-center w-full aspect-6/5 bg-white/5 rounded-md cursor-pointer active:bg-[#E3E2DC] transition-colors border border-white/10 shrink-0">
                                 <div className="w-full absolute bottom-0 flex items-end justify-between p-2 leading-none">
                                     <p className='text-xs uppercase w-[80%]'>{item.name}</p>
-                                    <button aria-label={`View ${item.name} details`} className='p-1 bg-white/10 rounded-full group-hover:bg-white group-hover:text-[#0B1A2C] transition-all duration-300 '><RiArrowRightUpLine className='size-4' /></button>
+                                    <button aria-label={`View ${item.name} details`} className='p-1 bg-white/10 rounded-full group-hover:bg-white group-hover:text-[#0B1A2C] transition-all duration-300 '><RiAddLine className='size-4' /></button>
                                 </div>
                                 <div className="w-full h-full absolute inset-0 flex items-center justify-center">
                                     <div className="w-24 h-10 center relative">
@@ -325,10 +325,10 @@ const Partners = () => {
                     </div>
                     <div className="grid grid-cols-2 gap-2">
                         {newPartnersData.backed.map((item) => (
-                            <div key={item.id} onClick={() => { setSelectedPartner(item); setIsPopupOpen(true); }} className="flex relative items-center justify-center w-full aspect-6/5 bg-white/5 rounded-md cursor-pointer active:bg-[#253646] transition-colors border border-white/10 shrink-0">
+                            <div key={item.id} onClick={() => { setSelectedPartner(item); setIsPopupOpen(true); }} className="flex relative items-center justify-center w-full aspect-6/5 bg-white/5 rounded-md cursor-pointer active:bg-[#E3E2DC] transition-colors border border-white/10 shrink-0">
                                 <div className="w-full absolute bottom-0 flex items-end justify-between p-2 leading-none">
                                     <p className='text-xs uppercase w-[80%]'>{item.name}</p>
-                                    <button aria-label={`View ${item.name} details`} className='p-1 bg-white/10 rounded-full group-hover:bg-white group-hover:text-[#0B1A2C] transition-all duration-300 '><RiArrowRightUpLine className='size-4' /></button>
+                                    <button aria-label={`View ${item.name} details`} className='p-1 bg-white/10 rounded-full group-hover:bg-white group-hover:text-[#0B1A2C] transition-all duration-300 '><RiAddLine className='size-4' /></button>
                                 </div>
                                 <div className="w-full h-full absolute inset-0 flex items-center justify-center">
                                     <div className="w-24 h-10 center relative">
@@ -348,10 +348,10 @@ const Partners = () => {
                     </div>
                     <div className="grid grid-cols-2 gap-2">
                         {newPartnersData.invested.map((item) => (
-                            <div key={item.id} onClick={() => { setSelectedPartner(item); setIsPopupOpen(true); }} className="flex relative items-center justify-center w-full aspect-6/5 bg-white/5 rounded-md cursor-pointer active:bg-[#253646] transition-colors border border-white/10 shrink-0">
+                            <div key={item.id} onClick={() => { setSelectedPartner(item); setIsPopupOpen(true); }} className="flex relative items-center justify-center w-full aspect-6/5 bg-white/5 rounded-md cursor-pointer active:bg-[#E3E2DC] transition-colors border border-white/10 shrink-0">
                                 <div className="w-full absolute bottom-0 flex items-end justify-between p-2 leading-none">
                                     <p className='text-xs uppercase w-[80%]'>{item.name}</p>
-                                    <button aria-label={`View ${item.name} details`} className='p-1 bg-white/10 rounded-full group-hover:bg-white group-hover:text-[#0B1A2C] transition-all duration-300 '><RiArrowRightUpLine className='size-4' /></button>
+                                    <button aria-label={`View ${item.name} details`} className='p-1 bg-white/10 rounded-full group-hover:bg-white group-hover:text-[#0B1A2C] transition-all duration-300 '><RiAddLine className='size-4' /></button>
                                 </div>
                                 <div className="w-full h-full absolute inset-0 flex items-center justify-center">
                                     <div className="w-24 h-10 center relative">
@@ -369,8 +369,8 @@ const Partners = () => {
                         <h2 data-para-effect className="leading-none m-0 p-0">Now</h2>
                     </div>
 
-                    <div className="bg-[#152535] p-5 rounded-lg w-full flex flex-col overflow-hidden relative justify-between">
-                        <h3 className="text-2xl font-medium mb-4 md:mb-6 text-white">Founder</h3>
+                    <div className="bg-[#8E4932] p-5 rounded-lg w-full flex flex-col overflow-hidden relative justify-between">
+                        <h4 className=" font-medium mb-4 md:mb-6 text-white">Founder</h4>
                         <p className="opacity-80 md:text-lg text-white">
                             A company of my own is underway a wellness and nutraceutical brand, in stealth. After years of building for founders, it was time. The name arrives only when it's ready.
                         </p>

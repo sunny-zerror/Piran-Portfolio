@@ -127,11 +127,11 @@ void main(){
   // Smooth anti-aliased horizontal lines
   float alphaY = smoothstep(thick, thick - 0.015, linePosY) + smoothstep(1.0 - thick, 1.0 - thick + 0.015, linePosY);
   
-  // Warm gold / beige color from the image
-  vec3 lineCol = vec3(0.82, 0.73, 0.58);
+  // White color for grid strip lines
+  vec3 lineCol = vec3(1.0, 1.0, 1.0);
   
-  // Background color #0B1A2C
-  vec3 bgColor = vec3(0.0431, 0.1020, 0.1725);
+  // Background color #883F27
+  vec3 bgColor = vec3(0.5333, 0.2471, 0.1529);
   
   // Soft radial fade-out (fog) at the edges of the plane for the lines
   float dist = distance(vUv, vec2(0.5, 0.5));
@@ -485,7 +485,7 @@ export const WavePlaneCanvas = ({
       className={className}
       camera={{ position: [0, 0, 5], fov: 60, far: 20, near: 0.001 }}
       gl={{ alpha: true, antialias: false, powerPreference: "high-performance" }}
-      style={{ background: "#0B1A2C" }}
+      style={{ background: "#883F27" }}
     >
       <MoonGlobe />
       <WavePlane showGrid={showGrid} palette={palette} />

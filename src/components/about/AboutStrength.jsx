@@ -64,7 +64,7 @@ const AboutStrength = () => {
                             <div
                                 className="relative w-full max-sm:aspect-square md:w-[80%] aspect-square md:aspect-auto min-h-100 overflow-hidden rounded-xl  flex items-center justify-center pointer-events-none"
                             >
-                                <Image fill className='cover' src={"/images/aboutpage/piran_pic.png"} alt='Piran Tarapore' />
+                                <Image fill className='cover' src={"/images/aboutpage/piran.JPG"} alt='Piran Tarapore' />
                             </div>
                         </div>
                     </div>

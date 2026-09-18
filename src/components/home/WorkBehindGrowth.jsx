@@ -85,17 +85,17 @@ const WorkBehindGrowth = () => {
 
     return (
         <>
-            <div className="container  bg-[#0B1A2C] mt-12 md:mt-24 pt-12 md:pt-24 space-y-8 md:space-y-16">
+            <div className="container  bg-[#883F27] mt-12 md:mt-24 pt-12 md:pt-24 space-y-8 md:space-y-16">
                 <div className="w-full relative z-10 md:text-center">
                     <h2 data-para-effect className='leading-none text-white'>How I Work</h2>
                 </div>
 
                 <div className="anim_pren relative z-10 space-y-5">
 
-                    <div className="hidden md:block w-2 h-full bg-[#343F4B] absolute left-1/2 -translate-x-1/2 top-0">
-                        <div className=" circ_1 scale-90 absolute size-6 z-5 rounded-full -translate-x-1/2 left-1/2  top-0 -translate-y-1/2 bg-[#343F4B]"></div>
-                        <div className="circ_2 scale-90 absolute size-6 z-5 rounded-full -translate-x-1/2 left-1/2  top-1/2 -translate-y-1/2 bg-[#343F4B]"></div>
-                        <div className="circ_3 scale-90 absolute size-6 z-5 rounded-full -translate-x-1/2 left-1/2  bottom-0 translate-y-1/2 bg-[#343F4B]"></div>
+                    <div className="hidden md:block w-2 h-full bg-[#915541] absolute left-1/2 -translate-x-1/2 top-0">
+                        <div className=" circ_1 scale-90 absolute size-6 z-5 rounded-full -translate-x-1/2 left-1/2  top-0 -translate-y-1/2 bg-[#915541]"></div>
+                        <div className="circ_2 scale-90 absolute size-6 z-5 rounded-full -translate-x-1/2 left-1/2  top-1/2 -translate-y-1/2 bg-[#915541]"></div>
+                        <div className="circ_3 scale-90 absolute size-6 z-5 rounded-full -translate-x-1/2 left-1/2  bottom-0 translate-y-1/2 bg-[#915541]"></div>
                         <div className=" fill_line w-0.5 translate-x-0.75 bg-[#E3E2DC] h-0"></div>
                     </div>
 
@@ -110,7 +110,7 @@ const WorkBehindGrowth = () => {
                                     <p className='opacity-70 leading-tight text-xs md:text-sm max-w-52 sm:max-w-xs md:w-80'>{item.desc}</p>
                                     <div className="flex flex-wrap gap-1.5 mt-1 md:hidden">
                                         {item.tags.map((tag, i) => (
-                                            <button key={i} className={` tags_btns scale-0 px-3 py-1.5 rounded-full center leading-none h-fit block text-[10px] uppercase text-white ${i % 2 === 0 ? "bg-white/12" : "bg-[#883F27]"} `}>{tag}</button>
+                                            <button key={i} className={` tags_btns scale-0 px-3 py-1.5 rounded-full center leading-none h-fit block text-[10px] uppercase border border-transparent ${i % 2 === 0 ? "bg-[#E3E2DC] text-[#883F27]" : "bg-[#883F27] text-[#E3E2DC] border-[#E3E2DC]!"} `}>{tag}</button>
                                         ))}
                                     </div>
                                 </div>
@@ -118,7 +118,7 @@ const WorkBehindGrowth = () => {
                             <div className="hidden md:block"></div>
                             <div className="hidden md:flex col-span-1 flex-wrap px-5 items-center content-center gap-2 border border-dashed  md:h-30 overflow-hidden rounded-xl border-white/20">
                                 {item.tags.map((tag, i) => (
-                                    <button key={i} className={` tags_btns scale-0 px-4 py-2 rounded-full center leading-none h-fit block text-sm uppercase text-white ${i % 2 === 0 ? "bg-white/12" : "bg-[#883F27]"} `}>{tag}</button>
+                                    <button key={i} className={` tags_btns scale-0 px-4 py-2 rounded-full center leading-none h-fit block text-sm uppercase border border-transparent ${i % 2 === 0 ? "bg-[#E3E2DC] text-[#883F27]" : "bg-[#883F27] text-[#E3E2DC] border-[#E3E2DC]!"} `}>{tag}</button>
                                 ))}
                             </div>
                         </div>
@@ -126,10 +126,10 @@ const WorkBehindGrowth = () => {
                 </div>
 
             </div>
-            <div className="md:text-center bg-[#0B1A2C] pt-8 max-sm:px-4">
+            <div className="md:text-center bg-[#883F27] pt-8 max-sm:px-4">
                 <h2 data-para-effect className='leading-none text-white'>Partners may rotate. I don't.</h2>
             </div>
-                <div className="w-full h-[60vh] bg-[#0B1A2C] relative">
+                <div className="w-full h-[60vh] bg-[#883F27] relative">
                     <WavePlaneCanvas/>
                 </div>
         </>

@@ -329,7 +329,7 @@ const Header = () => {
 
       {/* ═══════════ MOBILE HEADER expandable (hidden on desktop) ═══════════ */}
       <header
-        className={`header opacity-0 fixed! border border-white/10 rounded-lg top-0 left-1/2 -translate-x-1/2! w-[calc(100%-2rem)]  z-[200] pointer-events-none flex md:hidden flex-col mt-5 px-4 transition-all duration-500 ease-out bg-[#0B1A2C]`}
+        className={`header opacity-0 z-[99999] fixed! border border-white/10 rounded-lg top-0 left-1/2 -translate-x-1/2! w-[calc(100%-2rem)]  z-[200] pointer-events-none flex md:hidden flex-col mt-5 px-4 transition-all duration-500 ease-out bg-[#0B1A2C]`}
       >
         {/* Top bar  logo + menu/close toggle (always visible) */}
         <div
@@ -357,7 +357,7 @@ const Header = () => {
         </div>
       </header>
       <div
-        className={` fixed! z-[100] pt-20 container top-0 w-full pointer-events-auto flex flex-col  h-dvh bg-[#0B1A2C] overflow-hidden transition-all duration-500 ${isMobileMenuOpen
+        className={` fixed! z-[1000] pt-20 container top-0 w-full pointer-events-auto flex flex-col  h-dvh bg-[#0B1A2C] overflow-hidden transition-all duration-500 ${isMobileMenuOpen
           ? 'left-0'
           : 'left-[101%]'
           }`}

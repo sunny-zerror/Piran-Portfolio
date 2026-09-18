@@ -25,28 +25,28 @@ const storySteps = [
     title: "Born Watching",
     desc: "I grew up in South Bombay. At school I was the one in my own head, happier watching the room than holding it. Observation came long before conversation.",
     icon: "/images/aboutpage/story/icons/icon1.svg",
-    img: "/images/aboutpage/story/images/img1.svg",
+    img: "/images/aboutpage/story/images/img1.png",
   },
   {
     id: 2,
     title: "Leaving Home",
     desc: "What pulled me out was leaving, and it started closer to home than a passport. The Rotaract Club at H.R. College meant events almost every other day, and people from across Bombay, sometimes across India. Then participating in exchanges took me further: Ukraine, Prague, and Egypt with AIESEC, a summer in Sweden with CISV. Rooms full of people who didn't share my language or my context, where the only way through was to actually talk to someone.",
     icon: "/images/aboutpage/story/icons/icon2.svg",
-    img: "/images/aboutpage/story/images/img2.svg",
+    img: "/images/aboutpage/story/images/img2.png",
   },
   {
     id: 3,
     title: "The Thread",
     desc: "I got good at finding the common thread quickly, building a conversation, turning strangers into people I'd still know years later. It's still, by some distance, the thing I'm best at.",
     icon: "/images/aboutpage/story/icons/icon3.svg",
-    img: "/images/aboutpage/story/images/img3.svg",
+    img: "/images/aboutpage/story/images/img3.png",
   },
   {
     id: 4,
     title: "Everything at Once",
     desc: "The work came after that, and I was good at it. I was also, for a long stretch, completely scattered: optimising everything at once, mistaking motion for progress, certain that doing more was the same as getting somewhere. It wasn't.",
     icon: "/images/aboutpage/story/icons/icon4.svg",
-    img: "/images/aboutpage/story/images/img4.svg",
+    img: "/images/aboutpage/story/images/img4.png",
   },
   {
     id: 5,
@@ -60,14 +60,14 @@ const storySteps = [
     title: "What Comes First",
     desc: "The work absorbed all of it, and one discipline settled above the rest: the brand comes first, before the founder's instinct, even before mine. The same goes for how I measure the years: I'd rather grow by helping the people around me grow, and take them with me.",
     icon: "/images/aboutpage/story/icons/icon6.svg",
-    img: "/images/aboutpage/story/images/img6.svg",
+    img: "/images/aboutpage/story/images/img6.png",
   },
   {
     id: 7,
     title: "The Short List",
     desc: "I'm still figuring most of it out, and that's never felt like a problem. I just want fewer things now, made carefully, with the people I'd keep for the long version of all of it.",
     icon: "/images/aboutpage/story/icons/icon7.svg",
-    img: "/images/aboutpage/story/images/img7.svg",
+    img: "/images/aboutpage/story/images/img7.png",
   },
 ];
 
@@ -129,6 +129,9 @@ const StoryWaterDropCanvas = ({ activeIndex }) => {
         const w = canvas.width;
         const h = canvas.height;
         if (w === 0 || h === 0) return;
+
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'high';
 
         ctx.clearRect(0, 0, w, h);
 
@@ -207,15 +210,23 @@ const StoryWaterDropCanvas = ({ activeIndex }) => {
     }
   }, [activeIndex]);
 
-  // Handle canvas sizing
+  // Handle canvas sizing with High-DPI (Retina) DPR scaling
   useEffect(() => {
     const handleResize = () => {
       const canvas = canvasRef.current;
       if (canvas && canvas.parentElement) {
-        canvas.width = canvas.parentElement.clientWidth;
-        canvas.height = canvas.parentElement.clientHeight;
+        const dpr = Math.max(1, window.devicePixelRatio || 1);
+        const cssW = canvas.parentElement.clientWidth;
+        const cssH = canvas.parentElement.clientHeight;
+        if (cssW === 0 || cssH === 0) return;
+
+        canvas.width = Math.round(cssW * dpr);
+        canvas.height = Math.round(cssH * dpr);
 
         const ctx = canvas.getContext('2d');
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'high';
+
         const currImg = imagesRef.current[activeIndex];
         if (currImg) {
           if (currImg.complete && currImg.naturalWidth > 0) {
@@ -224,6 +235,8 @@ const StoryWaterDropCanvas = ({ activeIndex }) => {
             currImg.onload = () => {
               if (canvasRef.current) {
                 const currentCtx = canvasRef.current.getContext('2d');
+                currentCtx.imageSmoothingEnabled = true;
+                currentCtx.imageSmoothingQuality = 'high';
                 currentCtx.drawImage(currImg, 0, 0, canvasRef.current.width, canvasRef.current.height);
               }
             };
@@ -236,7 +249,7 @@ const StoryWaterDropCanvas = ({ activeIndex }) => {
     return () => window.removeEventListener('resize', handleResize);
   }, [activeIndex]);
 
-  return <canvas ref={canvasRef} className="w-full h-full object-contain" />;
+  return <canvas ref={canvasRef} className="w-full aspect-[1536/1024]" />;
 };
 
 const StorySection = () => {
@@ -355,7 +368,7 @@ const StorySection = () => {
           </div>
 
           {/* Icon Timeline / Stepper Buttons */}
-          <div className="flex items-center justify-between  md:justify-start md:gap-x-2 scroller_none pb-2 w-full">
+          <div className="flex items-center justify-start gap-x-2 scroller_none pb-2 w-full">
             {storySteps.map((step, idx) => {
               const isStep5Active = activeStory?.id === 5;
               const isActive = idx === activeIndex;
@@ -407,7 +420,7 @@ const StorySection = () => {
                 </div>
               </div>
             ) : (
-              <div className="w-full aspect-video pointer-events-none">
+              <div className="w-full aspect-[1536/1024] pointer-events-none">
                 <StoryWaterDropCanvas activeIndex={activeIndex} />
               </div>
             )}
@@ -427,7 +440,7 @@ const StorySection = () => {
 
         {/* Right Side Illustration Canvas Container */}
         <div className="hidden md:flex absolute right-0 top-0 bottom-0 w-full md:w-3/5 lg:w-1/2 h-full overflow-hidden z-0 items-center justify-end">
-          <div className={`absolute inset-0 transition-opacity duration-500 pointer-events-none ${activeStory?.id === 5 ? 'opacity-0' : 'opacity-100'}`}>
+          <div className={`absolute inset-0 center transition-opacity duration-500 pointer-events-none ${activeStory?.id === 5 ? 'opacity-0' : 'opacity-100'}`}>
             <StoryWaterDropCanvas activeIndex={activeIndex} />
           </div>
           <div className={`absolute inset-0 transition-opacity  duration-500 flex items-center justify-center pr-10  ${activeStory?.id === 5 ? 'opacity-100 pointer-events-auto z-10' : 'opacity-0 pointer-events-none -z-10'}`}>
@@ -451,8 +464,8 @@ const StorySection = () => {
           <button
             onClick={handleSkip}
             className={`px-6 py-2 rounded-full border border-dashed transition-all duration-300 text-xs md:text-sm tracking-wider uppercase flex items-center gap-2  backdrop-blur-sm
-              ${activeStory?.id === 5 
-                ? 'border-white/50 text-white hover:border-white hover:bg-white hover:text-[#0B1A2C] ' 
+              ${activeStory?.id === 5
+                ? 'border-white/50 text-white hover:border-white hover:bg-white hover:text-[#0B1A2C] '
                 : 'border-[#0B1A2C]/50 text-[#0B1A2C] hover:border-[#0B1A2C] hover:bg-[#0B1A2C] hover:text-white'}`}
           >
             <span>Skip</span>

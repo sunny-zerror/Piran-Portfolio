@@ -8,6 +8,7 @@ import RecordNotResume from "@/components/home/RecordNotResume";
 import WorkBehindGrowth from "@/components/home/WorkBehindGrowth";
 import WorkResult from "@/components/home/WorkResult";
 import { createPageMetadata } from "@/lib/seo";
+import LogoDotSpreadCanvas from "@/components/home/canvasComponent/LogoDotSpreadCanvas";
 
 const HomePage = () => {
   return (
@@ -15,6 +16,7 @@ const HomePage = () => {
       <Hero />
       <MobileHero />
       <About />
+      <LogoDotSpreadCanvas colorBg="#0B1A2C" colorDots="#e3e2dc" />
       <WorkResult />
       <WorkBehindGrowth />
       <Partners />

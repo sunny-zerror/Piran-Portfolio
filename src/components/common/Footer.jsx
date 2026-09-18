@@ -10,8 +10,8 @@ import CustomButton from './CustomButton';
 const Footer = () => {
 
   return (
-    <div className="w-full h-screen flex flex-col justify-between bg-[#883F27] text-white relative z-[100000]">
-      <div className="w-full  relative  flex-1  flex flex-col items-center  py-12 md:py-24 text-center overflow-hidden">
+    <div className="w-full relative">
+      <div className="w-full border-t border-dashed border-[#0B1A2C20]   relative flex flex-col items-center  py-12 md:py-24 text-center overflow-hidden">
         <div className="relative pointer-events-none z-10 flex flex-col items-center gap-y-4 md:gap-y-5">
           <p data-para-effect className="text-sm font-medium opacity-90">Whenever you're ready</p>
           <h2 data-para-effect className="leading-none">Things that matter <br /> should begin. </h2>
@@ -19,10 +19,9 @@ const Footer = () => {
             Begin
           </CustomButton>
         </div>
-        <FooterPhysicsBalls />
       </div>
 
-      <div className="container h-fit! py-6 md:py-12 pb-2 md:pb-5 relative z-10 space-y-6 md:space-y-6">
+      <div className="container bg-[#883F27] text-white h-fit! py-6 md:py-12 pb-2 md:pb-5 relative z-10 space-y-6 md:space-y-6">
         <div className="flex flex-col md:grid md:grid-cols-8 gap-y-6 md:gap-y-0">
           <div className="col-span-8 md:col-span-6 md:space-y-6">
             <RotatingText />

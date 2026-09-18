@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { RiCloseLine } from '@remixicon/react';
 import CustomButton from '../common/CustomButton';
 
@@ -7,29 +7,15 @@ import { useThesisStore } from '@/store/useThesisStore';
 
 const ThesisOverlay = () => {
     const { isOpen, closeThesis } = useThesisStore();
-    const [isMounted, setIsMounted] = useState(false);
-    const [isVisible, setIsVisible] = useState(false);
-
-    useEffect(() => {
-        if (isOpen) {
-            setIsMounted(true);
-            setTimeout(() => setIsVisible(true), 10);
-        } else {
-            setIsVisible(false);
-            setTimeout(() => {
-                setIsMounted(false);
-            }, 300);
-        }
-    }, [isOpen]);
 
     useEffect(() => {
         const handleKeyDown = (e) => {
-            if (e.key === 'Escape' && isVisible) {
+            if (e.key === 'Escape' && isOpen) {
                 closeThesis();
             }
         };
 
-        if (isVisible) {
+        if (isOpen) {
             document.body.style.overflow = 'hidden';
             window.addEventListener('keydown', handleKeyDown);
         } else {
@@ -41,12 +27,10 @@ const ThesisOverlay = () => {
             document.body.style.overflow = 'unset';
             window.removeEventListener('keydown', handleKeyDown);
         };
-    }, [isVisible, closeThesis]);
-
-    if (!isMounted) return null;
+    }, [isOpen, closeThesis]);
 
     return (
-        <div data-lenis-prevent className={`fixed inset-0 z-[999999] bg-[#0B1A2C] text-white overflow-y-auto w-full h-full transition-opacity duration-300 ease-in-out ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
+        <div data-lenis-prevent className={`fixed inset-0 z-[999999] bg-[#0B1A2C] text-white overflow-y-auto w-full h-full transition-all duration-300 ease-in-out ${isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
             {/* Close Button */}
             <button
                 onClick={closeThesis}

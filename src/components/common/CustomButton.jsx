@@ -1,7 +1,7 @@
 "use client";
 import React from 'react';
 import { Link } from 'next-view-transitions';
-import { RiArrowRightUpLine } from '@remixicon/react';
+import { RiAddLine, RiArrowRightUpLine } from '@remixicon/react';
 
 const CustomButton = ({ 
   children, 
@@ -10,17 +10,20 @@ const CustomButton = ({
   type = "button",
   className = "", 
   disabled = false,
-  theme = "light" // "light" or "dark"
+  theme = "light", // "light" or "dark"
+  icon = "arrow"
 }) => {
   const isLight = theme === "light";
   
   const btnThemeClass = isLight ? "bg-white text-[#883F27]" : "bg-[#883F27] text-[#ffffff]";
   const dotThemeClass = isLight ? "text-white bg-[#883F27]" : "text-[#883F27] bg-[#ffffff]";
 
+  const IconComponent = icon === "add" ? RiAddLine : RiArrowRightUpLine;
+
   const content = (
     <>
       <span className={`w-2 h-2 flex items-center justify-center ${dotThemeClass} group-hover:h-8 group-hover:w-8 rounded-full transition-all duration-300`}>
-        <RiArrowRightUpLine size={18} className={`scale-0 group-hover:scale-100 transition-all duration-300`} />
+        <IconComponent size={18} className={`scale-0 group-hover:scale-100 transition-all duration-300`} />
       </span>
       {children}
     </>

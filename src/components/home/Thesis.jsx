@@ -1,36 +1,74 @@
 "use client";
-import React from 'react';
+import React, { useRef } from 'react';
 import CustomButton from '../common/CustomButton';
 import ThesisOverlay from './ThesisOverlay';
 import { useThesisStore } from '@/store/useThesisStore';
+import Image from 'next/image';
+import { useGSAP } from '@gsap/react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 const Thesis = () => {
     const { openThesis } = useThesisStore();
+    const containerRef = useRef(null);
+    const imgRef = useRef(null);
 
+    useGSAP(() => {
+        const mm = gsap.matchMedia();
+        // Desktop / Laptop only (min-width: 1024px)
+        mm.add("(min-width: 1024px)", () => {
+            gsap.fromTo(
+                imgRef.current,
+                { y: -200 },
+                {
+                    y: 200,
+                    ease: "none",
+                    scrollTrigger: {
+                        trigger: containerRef.current,
+                        start: "top bottom",
+                        end: "bottom top",
+                        scrub: true,
+                    },
+                }
+            );
+        });
+    }, { scope: containerRef });
 
     return (
         <>
-            {/* Main Section on Page */}
-            <section className="container py-12 border-b border-dashed border-[#0B1A2C20] md:py-24 relative space-y-8 md:space-y-16   ">
-                <div className="w-full max-sm:space-y-2 md:grid grid-cols-6">
-                    <h2 data-para-effect className=' col-span-4 leading-none'>The Thesis</h2>
-                    <p data-para-effect className='opacity-70 leading-tight col-span-2 text-lg'>Consultants leave after the recommendation. Agencies leave after the deliverable. Investors show up for board meetings.</p>
+            <div ref={containerRef} className="w-full h-screen md:h-auto md:aspect-square  overflow-hidden relative">
+                <div ref={imgRef} className="w-full h-full relative">
+                    <Image fill src="/images/homepage/partners/full_img.webp" className='cover' alt="Thesis background" />
                 </div>
-                <div className="max-w-4xl md:mx-auto md:text-center space-y-3 md:space-y-5 w-full flex flex-col md:items-center">
 
+                <div className="absolute! z-99 h-fit! top-12 md:top-[10%] text-white container">
                     <h2 data-para-effect className="">
-                        Nobody stays. I stay.
+                        Nobody stays. <br /> I stay.
                     </h2>
+                </div>
 
-                    <p data-para-effect className="opacity-70 leading-tight col-span-2 text-xl">
-                        Consultants leave after the recommendation. Agencies leave after the deliverable. Investors show up for board meetings. Nobody stays. I stay. I come in before the institutions do, usually pre-seed to seed, where positioning is the bottleneck rather than the product. Home ground: wellness, healthcare, and financial services. The ask is simple and documented: strategic equity, agreed before the work begins.
-                    </p>
+                <div className="absolute! z-99 h-fit! bottom-12 md:bottom-[10%] space-y-10 md:max-w-xl! right-0 text-white container">
+                    <div className="space-y-4 opacity-70 leading-tight text-xl">
+                        <p data-para-effect>
+                            Consultants leave after the recommendation. Agencies leave after the deliverable. Investors show up for board meetings.
+                        </p>
+                        <p data-para-effect>
+                            Nobody stays. I stay. I come in before the institutions do, usually pre-seed to seed, where positioning is the bottleneck rather than the product.
+                        </p>
+                        <p data-para-effect>
+                            Home ground: wellness, healthcare, and financial services. The ask is simple and documented: strategic equity, agreed before the work begins.
+                        </p>
+                    </div>
 
-                    <CustomButton onClick={openThesis} className='w-fit'>
+                    <CustomButton icon='add' onClick={openThesis} className='w-fit'>
                         Read the full thesis
                     </CustomButton>
                 </div>
-            </section>
+            </div>
             <ThesisOverlay />
         </>
     );
