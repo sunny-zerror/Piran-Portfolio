@@ -2,11 +2,13 @@
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import Image from 'next/image'
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 
 const About = () => {
 
     const containerRef = useRef()
+    const [currentImg, setCurrentImg] = useState("/images/homepage/about_section/piran_pic_3.png")
+
     useGSAP(() => {
         const tl = gsap.timeline({
             scrollTrigger: {
@@ -22,9 +24,12 @@ const About = () => {
             duration:0.25,
         })
         tl.to(".int_hd", {
-            y: -25,
+            y: -200,
+            duration:1
+        })
+        tl.to(".int_hd", {
             opacity: 0,
-            duration:0.25,
+            duration:0.5
         })
         tl.to(".piran_img", {
             opacity: 1,
@@ -39,7 +44,7 @@ const About = () => {
             duration:0.25,
             delay:0.5,
         })
-        tl.to([".above_img_txt",".piran_img"], {
+        tl.to([".above_img_txt",".piran_img", ".img_toggle_btns"], {
             opacity: 0,
             duration:0.25,
             delay:0.5,
@@ -70,8 +75,32 @@ const About = () => {
                         <div className=" above_img_txt absolute! container  top-[16%] opacity-0 text-white z-10 ">
                             <h4 className='md:w-[70%] mx-auto'>Piran Tarapore has spent seven years turning founders' ambiguity into brands the world can understand, trust, and want. He is building a practice where brand thinking is infrastructure, not a service layer on top of execution.</h4>
                         </div>
-                        <div className="h-[70vh] absolute aspect-video left-1/2 -translate-x-1/2 bottom-0">
-                        <Image fill src={"/images/homepage/piran_pic.png"} className='cover piran_img grayscale-100 opacity-0' alt='Piran Tarapore' />
+                        <div className="h-[70vh] absolute z-99 aspect-video left-1/2 -translate-x-1/2 bottom-0">
+                            <Image fill src={currentImg} className='cover piran_img grayscale-100 opacity-0' alt='Piran Tarapore' />
+                            
+                            {/* Image Switcher Buttons */}
+                            <div className="img_toggle_btns absolute bottom-4 left-1/2 -translate-x-1/2 z-30 flex items-center  bg-black/40 backdrop-blur-md px-2 py-1.5 rounded-full border border-white/20 pointer-events-auto cursor-pointer z-99999">
+                                <button
+                                    onClick={() => setCurrentImg("/images/homepage/about_section/piran_pic.png")}
+                                    className={`px-3 py-1 rounded-full text-xs font-medium transition-all duration-300 ${
+                                        currentImg.includes("piran_pic.png")
+                                            ? "bg-white text-[#0B1A2C] shadow-sm"
+                                            : "text-white/70 hover:text-white"
+                                    }`}
+                                >
+                                    Img 1
+                                </button>
+                                <button
+                                    onClick={() => setCurrentImg("/images/homepage/about_section/piran_pic_3.png")}
+                                    className={`px-3 py-1 rounded-full text-xs font-medium transition-all duration-300 ${
+                                        currentImg.includes("piran_pic_3.png")
+                                            ? "bg-white text-[#0B1A2C] shadow-sm"
+                                            : "text-white/70 hover:text-white"
+                                    }`}
+                                >
+                                    Img 2
+                                </button>
+                            </div>
                         </div>
                     </div>
 

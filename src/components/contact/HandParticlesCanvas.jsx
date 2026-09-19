@@ -8,8 +8,8 @@ if (typeof window !== "undefined") {
 }
 
 const HandParticlesCanvas = ({
-  leftHandSrc = "/images/left_hand.png",
-  rightHandSrc = "/images/right_hand.png",
+  leftHandSrc = "/images/leftBump.png",
+  rightHandSrc = "/images/rightBump.png",
   colorBg = "#0B1A2C",
   colorDots = "255, 255, 255", // RGB values for dots
 }) => {
@@ -32,7 +32,7 @@ const HandParticlesCanvas = ({
     let leftAspect = 1;
     let rightAspect = 1;
 
-    // Helper to sample non-transparent pixels from an image
+    // Helper to sample non-transparent pixels from an image with 3D depth details
     const sampleHandImage = (imageSrc) => {
       return new Promise((resolve) => {
         const img = new Image();
@@ -40,7 +40,7 @@ const HandParticlesCanvas = ({
         img.src = imageSrc;
         img.onload = () => {
           const aspect = img.naturalWidth / img.naturalHeight;
-          const sampleW = 150;
+          const sampleW = 400;
           const sampleH = Math.round(sampleW / aspect);
 
           const sampleCanvas = document.createElement("canvas");
@@ -54,11 +54,13 @@ const HandParticlesCanvas = ({
           const imgData = sampleCtx.getImageData(0, 0, sampleW, sampleH).data;
           const points = [];
 
-          // Grid step sampling for particle dots
-          const step = 2;
+          // High density sampling step for detailed 3D structure
+          const step = 1.4;
           for (let y = 0; y < sampleH; y += step) {
             for (let x = 0; x < sampleW; x += step) {
-              const idx = (y * sampleW + x) * 4;
+              const ix = Math.floor(x);
+              const iy = Math.floor(y);
+              const idx = (iy * sampleW + ix) * 4;
               const alpha = imgData[idx + 3];
               const r = imgData[idx];
               const g = imgData[idx + 1];
@@ -66,11 +68,14 @@ const HandParticlesCanvas = ({
               const brightness = (r + g + b) / 3;
 
               // Only include pixels with visible content
-              if (alpha > 40 && brightness > 20) {
+              if (alpha > 40 && brightness > 30) {
+                // 3D depth layer calculated from lighting intensity + micro offset
+                const depth = (brightness / 255) * 0.7 + Math.random() * 0.3;
                 points.push({
                   normX: x / sampleW,
                   normY: y / sampleH,
-                  baseAlpha: Math.min(1.0, Math.max(0.3, alpha / 255)),
+                  baseAlpha: Math.min(1.0, Math.max(0.25, (alpha / 255) * (0.5 + depth * 0.5))),
+                  depth,
                 });
               }
             }
@@ -117,10 +122,19 @@ const HandParticlesCanvas = ({
       particles = [];
 
       const isMobile = width < 768;
-      // Increased hand height to completely cover the screen without extra padding
-      const maxHandH = isMobile
-        ? Math.max(height * 1.08, width * 0.85)
-        : Math.max(height * 1.18, width * 0.52);
+      const isTablet = width >= 768 && width < 1024;
+
+      // Fully responsive hand height calculation:
+      // Ensures wrists reach off-screen edges on all devices while keeping the fists comfortably sized
+      let maxHandH;
+      if (isMobile) {
+        maxHandH = Math.max(width * 0.55, height * 0.32);
+      } else if (isTablet) {
+        maxHandH = Math.max(width * 0.50, height * 0.45);
+      } else {
+        // Desktop & Ultrawide
+        maxHandH = Math.max(height * 0.75, width * 0.48);
+      }
 
       // Left hand dimensions
       const leftH = maxHandH;
@@ -130,51 +144,62 @@ const HandParticlesCanvas = ({
       const rightH = maxHandH;
       const rightW = rightH * rightAspect;
 
-      // Positioning left and right hands flush with screen edges
-      let leftCenterX, leftCenterY, rightCenterX, rightCenterY;
+      // Knuckles meet exactly at the screen center (touchX, touchY)
+      const touchX = width * 0.5;
+      const touchY = height * 0.5;
 
-      if (isMobile) {
-        leftCenterX = leftW * 0.42;
-        leftCenterY = height * 0.48;
-        rightCenterX = width - rightW * 0.42;
-        rightCenterY = height * 0.52;
-      } else {
-        // Desktop: Flush against left and right edges to cover all side padding
-        leftCenterX = leftW * 0.45;
-        leftCenterY = height * 0.5;
-        rightCenterX = width - rightW * 0.45;
-        rightCenterY = height * 0.5;
-      }
+      // Exact normalized knuckle tips identified from the particle bounds
+      const leftTipNormX = 0.6825;
+      const leftTipNormY = 0.5558;
+      const rightTipNormX = 0.3150;
+      const rightTipNormY = 0.5514;
 
-      // Create Left Hand Particles
+      // Small touch gap so knuckles just touch without colliding/merging
+      const touchGap = isMobile ? 2 : 4;
+
+      const leftCenterX = (touchX - touchGap * 0.5) - (leftTipNormX - 0.5) * leftW;
+      const leftCenterY = touchY - (leftTipNormY - 0.5) * leftH;
+
+      const rightCenterX = (touchX + touchGap * 0.5) - (rightTipNormX - 0.5) * rightW;
+      const rightCenterY = touchY - (rightTipNormY - 0.5) * rightH;
+
+      // Create Left Hand Particles with 3D depth info
       leftHandPoints.forEach((pt) => {
         const targetX = leftCenterX + (pt.normX - 0.5) * leftW;
         const targetY = leftCenterY + (pt.normY - 0.5) * leftH;
+
+        const baseSize = isMobile ? 1.4 : 2.2;
+        const dotSize = baseSize * (0.6 + pt.depth * 0.7);
 
         particles.push({
           targetX,
           targetY,
           hand: "left",
           baseAlpha: pt.baseAlpha,
+          depth: pt.depth,
           phase: Math.random() * Math.PI * 2,
-          blinkSpeed: 1.2 + Math.random() * 2.5,
-          dotSize: isMobile ? 1.85 : 3,
+          blinkSpeed: 1.0 + Math.random() * 2.0,
+          dotSize,
         });
       });
 
-      // Create Right Hand Particles
+      // Create Right Hand Particles with 3D depth info
       rightHandPoints.forEach((pt) => {
         const targetX = rightCenterX + (pt.normX - 0.5) * rightW;
         const targetY = rightCenterY + (pt.normY - 0.5) * rightH;
+
+        const baseSize = isMobile ? 1.4 : 2.2;
+        const dotSize = baseSize * (0.6 + pt.depth * 0.7);
 
         particles.push({
           targetX,
           targetY,
           hand: "right",
           baseAlpha: pt.baseAlpha,
+          depth: pt.depth,
           phase: Math.random() * Math.PI * 2,
-          blinkSpeed: 1.2 + Math.random() * 2.5,
-          dotSize: isMobile ? 1.85 : 3,
+          blinkSpeed: 1.0 + Math.random() * 2.0,
+          dotSize,
         });
       });
     };
@@ -184,9 +209,10 @@ const HandParticlesCanvas = ({
 
     // GSAP ScrollTrigger listening to 200vh section
     const trigger = ScrollTrigger.create({
-      trigger: container.closest("section") || container,
+      trigger: ".contact_hero",
       start: "top top",
       end: "bottom bottom",
+      endTrigger: containerRef.current,
       scrub: 1,
       onUpdate: (self) => {
         scrollProgress = self.progress;
@@ -203,25 +229,27 @@ const HandParticlesCanvas = ({
 
         ctx.clearRect(0, 0, width, height);
 
-        // Calculate horizontal offset based on scroll progress (animating from -50% / +50% width to 0)
-        const leftOffsetX = (1 - scrollProgress) * (-width * 0.35);
-        const rightOffsetX = (1 - scrollProgress) * (width * 0.35);
+        const clampedProgress = Math.min(1, Math.max(0, scrollProgress));
+        const leftOffsetX = (1 - clampedProgress) * (-width * 0.55);
+        const rightOffsetX = (1 - clampedProgress) * (width * 0.55);
 
-        // Render each particle dot with horizontal scroll offset
+        // Render particles with 3D depth parallax
         const len = particles.length;
         for (let i = 0; i < len; i++) {
           const p = particles[i];
-          const currentOffsetX = p.hand === "left" ? leftOffsetX : rightOffsetX;
+          // 3D parallax multiplier: foreground dots move slightly faster during horizontal travel
+          const depthMultiplier = 0.8 + p.depth * 0.4;
+          const currentOffsetX = (p.hand === "left" ? leftOffsetX : rightOffsetX) * depthMultiplier;
           const drawX = p.targetX + currentOffsetX;
           const drawY = p.targetY;
 
           // Particle Dot Blink Effect
           const sinVal = Math.sin(time * p.blinkSpeed + p.phase);
           const cosVal = Math.cos(time * (p.blinkSpeed * 0.7) + p.phase);
-          
-          let blinkFactor = 0.3 + 0.7 * ((sinVal + 1) / 2);
+
+          let blinkFactor = 0.35 + 0.65 * ((sinVal + 1) / 2);
           if (sinVal > 0.85 && cosVal > 0.3) {
-            blinkFactor = Math.min(1.2, blinkFactor * 1.4);
+            blinkFactor = Math.min(1.25, blinkFactor * 1.35);
           }
 
           const currentAlpha = Math.min(1, p.baseAlpha * blinkFactor);
@@ -257,11 +285,11 @@ const HandParticlesCanvas = ({
   return (
     <div
       ref={containerRef}
-      className="relative w-full  h-screen  overflow-hidden flex items-center justify-center pointer-events-none"
+      className="relative w-full  h-screen bg-[#0B1A2C] overflow-hidden flex items-center justify-center pointer-events-none"
     >
       <canvas
         ref={canvasRef}
-        className="absolute inset-0 w-full h-full block"
+        className="absolute inset-0 w-full h-full block opacity-50"
       />
     </div>
   );
