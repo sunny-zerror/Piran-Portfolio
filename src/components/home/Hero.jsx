@@ -1,7 +1,6 @@
 "use client";
 import React, { useRef, useState, useEffect } from 'react';
 import { RiPlayFill, RiCloseLine } from '@remixicon/react';
-import LogoParticles from './LogoParticles';
 import { VideoWebGLTransition } from './canvasComponent/VideoWebGLTransition';
 
 import gsap from 'gsap';
@@ -200,7 +199,7 @@ const Hero = () => {
                     className="h-14 w-auto object-contain opacity-50 group-hover:opacity-100 transition-opacity duration-300"
                   />
 
-                  <div className="absolute bottom-full left-0 space-y-4 mb-2 w-80 bg-[#eaf4fa] text-black p-6 rounded-md shadow-2xl opacity-0 translate-y-5 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 pointer-events-none z-50">
+                  <div className="absolute bottom-full left-0 space-y-4 mb-2 w-80 bg-[#ffffff] text-black p-6 rounded-md shadow-2xl opacity-0 translate-y-5 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 pointer-events-none z-50">
                     <div className="">
                       <Image height={20} width={20} className='invert-100' src="/icons/quote.svg" alt="quote icon" />
                     </div>

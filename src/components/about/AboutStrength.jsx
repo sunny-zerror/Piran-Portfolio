@@ -3,11 +3,9 @@ import Image from 'next/image';
 import React, { useState } from 'react';
 
 const STRENGTH_IMAGES = [
+    "/images/aboutpage/piran_4.JPG",
     "/images/aboutpage/piran.JPG",
     "/images/aboutpage/piran_2.JPG",
-    "/images/aboutpage/piran_3.jpg",
-    "/images/aboutpage/piran_4.JPG",
-    "/images/aboutpage/piran_5.JPG",
 ];
 
 const items = [

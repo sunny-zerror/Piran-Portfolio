@@ -252,7 +252,7 @@ const LogoDotSpreadCanvas = ({
         <div className=" sticky! top-1/2 -translate-y-1/2 w-full  container h-fit!  meet_txt  flex flex-col items-center leading-none ">
           <h2 className="text-white">Where I</h2>
           <h2 className="text-white">Come In.</h2>
-          <div className="w-full absolute max-sm:space-y-2 md:grid grid-cols-6">
+          <div className="w-full pr-4 md:pr-10 absolute max-sm:space-y-2 md:grid grid-cols-6">
             <div className=' col-span-4 '></div>
             <p className='opacity-0 par_res_hed leading-tight col-span-2 text-lg'>Founders rarely call about strategy. They call because something feels misaligned drift, friction, growth that costs more than it returns. The problem is rarely effort. It's position. The brand never had one to organise around. Finding it is where I come in.</p>
           </div>

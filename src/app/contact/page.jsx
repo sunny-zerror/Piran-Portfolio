@@ -8,7 +8,7 @@ const ContactPage = () => {
   return (
     <>
       <ContactHero />
-                    <HandParticlesCanvas />
+      <HandParticlesCanvas />
       <FAQ />
       <ThesisOverlay />
     </>

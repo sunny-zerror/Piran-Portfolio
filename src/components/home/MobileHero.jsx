@@ -1,7 +1,6 @@
 "use client";
 import React, { useRef, useState, useEffect } from 'react';
 import { RiPlayFill, RiCloseLine } from '@remixicon/react';
-import LogoParticles from './LogoParticles';
 import { VideoWebGLTransition } from './canvasComponent/VideoWebGLTransition';
 
 import gsap from 'gsap';

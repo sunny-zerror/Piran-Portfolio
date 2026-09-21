@@ -4,11 +4,18 @@ import gsap from 'gsap'
 import Image from 'next/image'
 import React, { useRef, useState } from 'react'
 
+const images = [
+    "/images/homepage/about_section/piran_pic.png",
+    "/images/homepage/about_section/piran_pic_2.png",
+    "/images/homepage/about_section/piran_pic_3.png",
+    "/images/homepage/about_section/piran_pic_4.png",
+]
+
 const About = () => {
 
     const containerRef = useRef()
-    const [currentImg, setCurrentImg] = useState("/images/homepage/about_section/piran_pic_3.png")
-
+    const [currentImg, setCurrentImg] = useState(images[0])
+    
     useGSAP(() => {
         const tl = gsap.timeline({
             scrollTrigger: {
@@ -75,31 +82,24 @@ const About = () => {
                         <div className=" above_img_txt absolute! container  top-[16%] opacity-0 text-white z-10 ">
                             <h4 className='md:w-[70%] mx-auto'>Piran Tarapore has spent seven years turning founders' ambiguity into brands the world can understand, trust, and want. He is building a practice where brand thinking is infrastructure, not a service layer on top of execution.</h4>
                         </div>
-                        <div className="h-[70vh] absolute z-99 aspect-video left-1/2 -translate-x-1/2 bottom-0">
-                            <Image fill src={currentImg} className='cover piran_img grayscale-100 opacity-0' alt='Piran Tarapore' />
+                        <div className=" h-[70vh] absolute z-99 aspect-2/3 left-1/2 -translate-x-1/2 bottom-0">
+                            <Image fill  src={currentImg} className=' cover piran_img grayscale-100 opacity-0' alt='Piran Tarapore' />
                             
                             {/* Image Switcher Buttons */}
-                            <div className="img_toggle_btns absolute bottom-4 left-1/2 -translate-x-1/2 z-30 flex items-center  bg-black/40 backdrop-blur-md px-2 py-1.5 rounded-full border border-white/20 pointer-events-auto cursor-pointer z-99999">
-                                <button
-                                    onClick={() => setCurrentImg("/images/homepage/about_section/piran_pic.png")}
-                                    className={`px-3 py-1 rounded-full text-xs font-medium transition-all duration-300 ${
-                                        currentImg.includes("piran_pic.png")
-                                            ? "bg-white text-[#0B1A2C] shadow-sm"
-                                            : "text-white/70 hover:text-white"
-                                    }`}
-                                >
-                                    Img 1
-                                </button>
-                                <button
-                                    onClick={() => setCurrentImg("/images/homepage/about_section/piran_pic_3.png")}
-                                    className={`px-3 py-1 rounded-full text-xs font-medium transition-all duration-300 ${
-                                        currentImg.includes("piran_pic_3.png")
-                                            ? "bg-white text-[#0B1A2C] shadow-sm"
-                                            : "text-white/70 hover:text-white"
-                                    }`}
-                                >
-                                    Img 2
-                                </button>
+                            <div className="img_toggle_btns absolute bottom-4 left-1/2 -translate-x-1/2 z-30 flex items-center gap-1 bg-black/40 backdrop-blur-md px-2 py-1.5 rounded-full border border-white/20 pointer-events-auto cursor-pointer z-99999">
+                                {images.map((img, index) => (
+                                    <button
+                                        key={index}
+                                        onClick={() => setCurrentImg(img)}
+                                        className={`px-2 py-1 rounded-full text-xs font-medium transition-all duration-300 ${
+                                            currentImg === img
+                                                ? "bg-white text-[#0B1A2C] shadow-sm"
+                                                : "text-white/70 hover:text-white"
+                                        }`}
+                                    >
+                                         {index + 1}
+                                    </button>
+                                ))}
                             </div>
                         </div>
                     </div>
