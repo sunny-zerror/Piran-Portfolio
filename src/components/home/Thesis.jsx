@@ -13,12 +13,10 @@ if (typeof window !== "undefined") {
 }
 
 const THESIS_IMAGES = [
+    "/images/homepage/partners/full_img_5.JPG",
   "/images/homepage/partners/full_img.jpg",
   "/images/homepage/partners/full_img_2.jpg",
-  "/images/homepage/partners/full_img_3.JPG",
   "/images/homepage/partners/full_img_4.JPG",
-  "/images/homepage/partners/full_img_5.JPG",
-  "/images/homepage/partners/full_img_6.JPG",
   "/images/homepage/partners/full_img_7.JPG",
 ];
 

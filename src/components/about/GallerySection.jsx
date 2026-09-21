@@ -5,6 +5,10 @@ import Link from "next/link";
 import { RiAddLine, RiArrowLeftLine, RiEyeLine, RiFilter3Line } from "@remixicon/react";
 import DemoInfiniteCarousel from './../../app/demo/DemoInfiniteCarousel';
 import { demoGalleryData } from './../../app/demo/demoGalleryData';
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
+import ScrollTrigger from "gsap/dist/ScrollTrigger";
+gsap.registerPlugin(ScrollTrigger)
 
 export default function GallerySection() {
     const [openGallerySwiper, setOpenGallerySwiper] = useState(null);
@@ -26,8 +30,21 @@ export default function GallerySection() {
     const placesCount = demoGalleryData.filter((i) => i.category === "Place").length;
     const doingCount = demoGalleryData.filter((i) => i.category === "Doing").length;
 
+    useGSAP(() => {
+        gsap.to(".wall_frames", {
+            opacity: 1,
+            scale:1,
+            stagger: 0.05,
+            scrollTrigger: {
+                trigger: ".gallery-paren",
+                start: "top 60%",
+                toggleActions: "play none none reverse"
+            }
+        })
+    })
+
     return (
-        <main className="relative w-screen h-screen overflow-hidden bg-[#121417] flex items-center justify-center select-none font-sans">
+        <main className=" gallery-paren relative  overflow-hidden flex items-center justify-center select-none font-sans">
 
             {/* Main 16:9 Living Room Stage */}
             <div
@@ -53,7 +70,7 @@ export default function GallerySection() {
                             <div
                                 key={item.id}
                                 id={`frame-${item.id}`}
-                                className={`absolute pointer-events-auto cursor-pointer group drop-shadow-2xl ${isHovered && "z-50"} `}
+                                className={` wall_frames scale-90 opacity-0 absolute pointer-events-auto cursor-pointer group drop-shadow-2xl ${isHovered && "z-50"} `}
                                 style={{
                                     left: item.left,
                                     top: item.top,

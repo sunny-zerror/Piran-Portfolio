@@ -48,7 +48,6 @@ const GlobalParaReveal = () => {
 
         gsap.set(split.lines, {
           yPercent: 100,
-          rotateX: -80,
           transformOrigin: "center top",
           transformStyle: "preserve-3d",
           willChange: "transform, opacity",
@@ -56,7 +55,6 @@ const GlobalParaReveal = () => {
 
         gsap.to(split.lines, {
           yPercent: -6,
-          rotateX: 0,
           duration: 1,
           stagger: 0.1,
           ease: "power4.out",

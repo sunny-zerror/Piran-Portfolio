@@ -13,7 +13,7 @@ const AboutFooter = () => {
   return (
     <div className="w-full  relative">
 
-<div className="w-full border-t border-dashed border-[#0B1A2C20]   relative flex flex-col items-center  py-12 md:py-24 text-center overflow-hidden">
+<div className="w-full    relative flex flex-col items-center  py-12 md:py-24 text-center overflow-hidden">
         <div className="relative pointer-events-none z-10 flex flex-col items-center gap-y-4 md:gap-y-5">
           <h2 data-para-effect className="leading-none  max-w-3xl">The relationship begins with the project and ends when the brand stops growing. If that's how you're building, let's begin.</h2>
           <CustomButton href="/contact">

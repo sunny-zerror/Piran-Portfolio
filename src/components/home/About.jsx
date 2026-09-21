@@ -7,8 +7,6 @@ import React, { useRef, useState } from 'react'
 const images = [
     "/images/homepage/about_section/piran_pic.png",
     "/images/homepage/about_section/piran_pic_2.png",
-    "/images/homepage/about_section/piran_pic_3.png",
-    "/images/homepage/about_section/piran_pic_4.png",
 ]
 
 const About = () => {
